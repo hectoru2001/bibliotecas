@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  {% load static %}
+  <meta charset="UTF-8">
+  <title>Confirmación de Reserva</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+  <style>
+    .card-header-custom { background-color: #1b0108; color: #fff; font-weight: bold; }
+    .btn-danger-custom { background-color: #50232f; color: #fff; }
+    .border-top-custom { border-top: 4px solid #440d1c; }
+
+    .button {
+      display: inline-block;
+      padding: 10px 16px;
+      background-color: #6b1c2f;
+      color: #fff;
+      border: 0;
+      border-radius: 6px;
+      transition: background-color .25s ease;
+      cursor: pointer;
+      font-size: 14px;
+      text-decoration: none;
+    }
+    .button:hover { background-color: #8b2c4f; }
+
+    .actions {
+      text-align: center;
+      margin: 16px auto 8px;
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .logo-juarez { height: 60px; }
+    .printable-form header { display:flex; align-items:center; gap:12px; margin-bottom:10px; }
+
+    .printable-form {
+      font-family: Arial, sans-serif;
+      font-size: 12px;
+      width: 100%;
+      max-width: 800px;
+      margin: 20px auto;
+      padding: 15px;
+      border: 1px solid #000;
+      background: #fff;
+    }
+    .signature {
+        /* 1. Define un ancho fijo para el div */
+        /* Este ancho debe ser menor al 100% del contenedor */
+        width: 300px; 
+        
+        /* 2. Usa margin auto para centrar el bloque */
+        margin-left: auto;
+        margin-right: auto; 
+        
+        /* O la forma abreviada: */
+        /* margin: 0 auto; */
+        
+        /* Opcional: Centrar el texto DENTRO del div */
+        text-align: center;
+    }
+
+    .printable-form h2, .printable-form h3 { font-size: 16px; margin: 10px 0; }
+    .printable-form p, .printable-form td, .printable-form th { font-size: 12px; padding: 6px; }
+    .printable-form table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+    .printable-form table, .printable-form th, .printable-form td { border: 1px solid #000; }
+    .printable-form th, .printable-form td { padding: 8px; text-align: left; }
+    .printable-form .signature { margin-top: 10px; }
+    .printable-form .seal { width: 50px; height: 50px; border: 1px solid #000; display: inline-block; margin-left: 10px; }
+
+    /* Solo se imprime el oficio */
+    @media print {
+      body { margin: 0; padding: 0; }
+      @page { size: A4 portrait; margin: 10mm; }
+      .no-print, .actions { display: none !important; }
+
+      body * { visibility: hidden !important; }
+      .printable-form, .printable-form * { visibility: visible !important; }
+      .printable-form {
+        border: none; padding: 0; margin: 0 auto;
+        position: absolute; top: 0; left: 0; width: 100%;
+      }
+    }
+  </style>
+</head>
+<body class="bg-light">
+
+<div class="container mt-5">
+
+  {% if preconfirmacion %}
+    <h2>Confirmar reserva</h2>
+    <form method="POST" action="{% url 'confirmar_sala' %}" id="confirm-form" class="card p-4 shadow-sm">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <div class="text-end">
+        <button type="submit" class="btn btn-success">Confirmar reserva</button>
+      </div>
+    </form>
+
+  {% elif confirmado %}
+    <script>
+      // Si quieres mantener la impresión automática, deja esto activo.
+      window.onload = function() {
+        window.print();
+      };
+    </script>
+
+    <div class="actions">
+      <button id="btnDescargar" class="button" type="button">Descargar oficio (PDF)</button>
+    </div>
+
+    <!-- OFICIO -->
+    <div class="printable-form" id="oficio">
+
+      <header>
+        <img class="logo-juarez" src="{% static 'images/Juarez2024-2027-01.png' %}" alt="Logo Municipio">
+        <div>
+          <strong>Dirección de Educación</strong><br>
+          Gobierno Municipal de Ciudad Juárez
+        </div>
+      </header>
+
+      <p>Ciudad Juárez, Chih., a {{ sala.created_at|date:"d \\d\\e F \\d\\e Y" }}.</p>
+      <h2 style="text-align:center; margin-bottom:10px;">Solicitud de préstamo de sala</h2>
+      <p><strong>Profesor: Guillermo Enrique Alvidrez Olivas</strong><br>Director de Educación</p>
+
+      <h3>Datos de la Biblioteca</h3>
+      <table>
+        <tr><th>Biblioteca:</th><td>{{ sala.biblioteca }}</td></tr>
+        <tr><th>Dirección:</th><td>{{ sala.biblioteca.direccion|default:"[Dirección de la biblioteca]" }}</td></tr>
+      </table>
+
+      <h3>Datos de la Institución solicitante</h3>
+      <table>
+        <tr><th>Institución:</th><td>{{ sala.nombre_institucion }}</td></tr>
+        <tr>
+          <th>Nombre de quien solicita:</th>
+          <td>
+              {{ sala.nombre_resp }} 
+              {{ sala.apellido_paterno }} 
+              {{ sala.apellido_materno}}
+          </td>
+        </tr>
+        <tr>
+          <th>Tipo de evento:</th>
+          <td>
+            {{ sala.tipo_evento }} - {{ sala.nombre_evento }}
+          </td>
+        </tr>
+        <th>Teléfono:</th><td>{{ sala.telefono }}</td></tr>
+        <tr><th>Fecha del evento:</th><td>{{ sala.fecha_reserva|date:"d \\d\\e F \\d\\e Y" }}</td></tr>
+        <tr>
+          <th>Horario:</th>
+          <td>
+            {# Si fecha_reserva es DateTimeField, esto mostrará la hora; si es DateField, evita usar H:i #}
+            {% if sala.fecha_reserva %}
+              {{ sala.fecha_reserva|date:"H:i" }}
+            {% endif %}
+            {% if sala.horario %} {{ sala.get_horario_display|default:sala.horario }}{% endif %}
+          </td>
+        </tr>
+        <tr><th>Reseña del Proyecto:</th><td>{{ sala.resena_proyecto }}</td></tr>
+      </table>
+
+      <div class="signature">
+        <tr>
+          <td>
+              {{ sala.nombre_resp }} 
+              {{ sala.apellido_paterno }} 
+              {{ sala.apellido_materno}}
+          </td>
+        </tr>
+        <hr>
+        Nombre y firma del solicitante
+      </div>
+
+      <p>
+        Es necesario entregar impresa esta solicitud en la Dirección de Educación, ubicada en C. Ignacio Ramírez 351, Col. Partido Romero.
+        Horario de lunes a viernes de 8:00 a 15:00 horas. Recuerda recibir la confirmación de tu solicitud vía telefónica.
+      </p>
+    </div>
+  {% endif %}
+
+</div>
+
+<!-- Bootstrap Icons -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+
+  <script src="https://cdn.jsdelivr.net/npm/html2pdf.js@0.10.1/dist/html2pdf.bundle.min.js"></script>
+  <script>
+  (function() {
+    const btn = document.getElementById('btnDescargar');
+    if (!btn) return;
+
+    btn.addEventListener('click', function () {
+      const oficio = document.getElementById('oficio');
+      if (!oficio) return;
+
+      // Clonamos el nodo para ajustar estilos sin tocar el original
+      const clone = oficio.cloneNode(true);
+      clone.style.margin = '0';
+      clone.style.boxShadow = 'none';
+      clone.style.border = '1px solid #000';
+      clone.style.width = '794px';      // ≈ A4 a ~96dpi
+      clone.style.minHeight = '1123px'; // ≈ A4 alto
+
+      // Contenedor temporal fuera de pantalla
+      const tmp = document.createElement('div');
+      tmp.style.position = 'fixed';
+      tmp.style.left = '-99999px';
+      tmp.appendChild(clone);
+      document.body.appendChild(tmp);
+
+      const nombreArchivo = `Solicitud_reserva_sala_{{ sala.id }}.pdf`;
+
+      html2pdf()
+        .from(clone)
+        .set({
+          margin:       [10, 10, 10, 10],
+          filename:     nombreArchivo,
+          image:        { type: 'jpeg', quality: 0.98 },
+          html2canvas:  { scale: 2, useCORS: true, logging: false },
+          jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+        })
+        .save()
+        .finally(() => {
+          document.body.removeChild(tmp);
+        });
+    });
+  })();
+  </script>
+
+
+</body>
+</html>

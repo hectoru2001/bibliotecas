@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <div class="bg-white rounded-lg shadow-lg p-6">
+        <h1 class="text-2xl font-bold mb-6">Mi Perfil</h1>
+        
+        <!-- Tarjeta de usuario -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <!-- Columna izquierda: Foto y datos básicos -->
+            <div class="bg-blue-50 p-6 rounded-lg shadow text-center">
+                <div class="w-32 h-32 mx-auto mb-4 bg-blue-200 rounded-full flex items-center justify-center">
+                    <svg class="w-16 h-16 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                    </svg>
+                </div>
+                <h2 class="text-xl font-bold">{{ user.username }}</h2>
+                <p class="text-gray-600">
+                    {{ user.role }}
+                    {% if user.is_superuser %}
+                    <span class="bg-yellow-500 text-black px-1 rounded text-xs ml-1">Superadmin</span>
+                    {% endif %}
+                </p>
+                <p class="mt-4">Miembro desde: {{ user.date_joined|date:"d/m/Y" }}</p>
+            </div>
+            
+            <!-- Columna central: Información personal -->
+            <div class="col-span-2">
+                <div class="mb-6 bg-white p-6 rounded-lg shadow">
+                    <h2 class="text-xl font-bold mb-4 text-blue-700">Información Personal</h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="mb-4">
+                            <p class="text-sm text-gray-600">Nombre completo</p>
+                            <p class="font-semibold">{{ user.first_name }} {{ user.last_name }}</p>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <p class="text-sm text-gray-600">Correo electrónico</p>
+                            <p class="font-semibold">{{ user.email }}</p>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <p class="text-sm text-gray-600">Ocupación</p>
+                            <p class="font-semibold">{{ user.ocupacion|default:"No especificada" }}</p>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <p class="text-sm text-gray-600">Teléfono</p>
+                            <p class="font-semibold">{{ user.telefono|default:"No especificado" }}</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Biblioteca y otras info -->
+                <div class="mb-6 bg-white p-6 rounded-lg shadow">
+                    <h2 class="text-xl font-bold mb-4 text-blue-700">Información Adicional</h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="mb-4">
+                            <p class="text-sm text-gray-600">Biblioteca Asociada</p>
+                            <p class="font-semibold">{{ user.biblioteca.nombre|default:"No asociada" }}</p>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <p class="text-sm text-gray-600">Escuela/Trabajo</p>
+                            <p class="font-semibold">{{ user.escuela_trabajo|default:"No especificado" }}</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Botones de acción -->
+                <div class="flex justify-end">
+                    <a href="#" class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded transition-colors duration-200">
+                        Editar Perfil
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Préstamos Recientes -->
+        <div class="mt-8 bg-white p-6 rounded-lg shadow">
+            <h2 class="text-xl font-bold mb-4 text-blue-700">Préstamos Recientes</h2>
+            
+            {% if prestamos %}
+                <table class="min-w-full bg-white">
+                    <thead class="bg-gray-100">
+                        <tr>
+                            <th class="py-2 px-4 text-left">Libro</th>
+                            <th class="py-2 px-4 text-left">Fecha Préstamo</th>
+                            <th class="py-2 px-4 text-left">Fecha Devolución</th>
+                            <th class="py-2 px-4 text-left">Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for prestamo in prestamos %}
+                        <tr class="border-b hover:bg-gray-50">
+                            <td class="py-2 px-4">{{ prestamo.libro.titulo }}</td>
+                            <td class="py-2 px-4">{{ prestamo.fecha_prestamo|date:"d/m/Y" }}</td>
+                            <td class="py-2 px-4">{{ prestamo.fecha_devolucion|date:"d/m/Y" }}</td>
+                            <td class="py-2 px-4">
+                                {% if prestamo.devuelto %}
+                                <span class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs">Devuelto</span>
+                                {% else %}
+                                <span class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded text-xs">Pendiente</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p class="text-gray-600">No tienes préstamos recientes.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

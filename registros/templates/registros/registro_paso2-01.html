@@ -1,0 +1,155 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<!-- Bloque de mensajes -->
+{% if messages %}
+<div class="container mx-auto px-4 mb-4">
+    {% for message in messages %}
+    <div class="p-4 mb-4 {% if message.tags == 'error' %}bg-red-100 text-red-700 border-red-400{% elif message.tags == 'success' %}bg-green-100 text-green-700 border-green-400{% else %}bg-blue-100 text-blue-700 border-blue-400{% endif %} border-l-4 rounded">
+        {{ message }}
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+<div class="container mx-auto px-4 py-8">
+    <div class="max-w-md mx-auto bg-white rounded-lg shadow-md p-6">
+        <h2 class="text-2xl font-bold mb-6 text-center">Registro - Paso 2 de 3: Información del Fiador</h2>
+        
+        <!-- Indicador de progreso -->
+        <div class="mb-6">
+            <div class="w-full bg-gray-200 rounded-full h-2.5">
+                <div class="bg-red-900 h-2.5 rounded-full" style="width: 66%"></div>
+            </div>
+            <div class="flex justify-between mt-1 text-sm">
+                <span>Paso 1</span>
+                <span class="font-bold">Paso 2</span>
+                <span>Paso 3</span>
+            </div>
+        </div>
+
+        <form method="post" class="space-y-4">
+            {% csrf_token %}
+            
+            <!-- Campos del fiador -->
+            <div class="mb-4">
+                <label for="id_nombre" class="block text-sm font-medium text-gray-700 mb-1">
+                    Nombre(s) <span class="text-red-600">*</span>
+                </label>
+                <input type="text" name="nombre" id="id_nombre" required 
+                       class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-600">
+                {% if form.errors.nombre %}
+                    <p class="text-red-500 text-xs mt-1">{{ form.errors.nombre.0 }}</p>
+                {% endif %}
+            </div>
+            
+            <div class="mb-4">
+                <label for="id_apellido_paterno" class="block text-sm font-medium text-gray-700 mb-1">
+                    Apellido Paterno <span class="text-red-600">*</span>
+                </label>
+                <input type="text" name="apellido_paterno" id="id_apellido_paterno" required 
+                       class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-600">
+                {% if form.apellido_paterno.errors %}
+                    <p class="text-red-500 text-xs mt-1">{{ form.apellido_paterno.errors.0 }}</p>
+                {% endif %}
+            </div>
+            
+            <div class="mb-4">
+                <label for="id_apellido_materno" class="block text-sm font-medium text-gray-700 mb-1">
+                    Apellido Materno
+                </label>
+                <input type="text" name="apellido_materno" id="id_apellido_materno"
+                       class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-600">
+                {% if form.apellido_materno.errors %}
+                    <p class="text-red-500 text-xs mt-1">{{ form.apellido_materno.errors.0 }}</p>
+                {% endif %}
+            </div>
+            
+            <div class="mb-4">
+                <label for="id_edad" class="block text-sm font-medium text-gray-700 mb-1">
+                    Edad <span class="text-red-600">*</span>
+                </label>
+                <input type="number" name="edad" id="id_edad" required min="18"
+                       class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-600">
+                {% if form.edad.errors %}
+                    <p class="text-red-500 text-xs mt-1">{{ form.edad.errors.0 }}</p>
+                {% endif %}
+            </div>
+            
+            <div class="mb-4">
+                <label for="id_domicilio" class="block text-sm font-medium text-gray-700 mb-1">
+                    Domicilio <span class="text-red-600">*</span>
+                </label>
+                <input type="text" name="domicilio" id="id_domicilio" required
+                       class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-600">
+                {% if form.domicilio.errors %}
+                    <p class="text-red-500 text-xs mt-1">{{ form.domicilio.errors.0 }}</p>
+                {% endif %}
+            </div>
+            
+            <div class="mb-4">
+                <label for="id_telefono" class="block text-sm font-medium text-gray-700 mb-1">
+                    Teléfono <span class="text-red-600">*</span>
+                </label>
+                <input type="tel" name="telefono" id="id_telefono" required
+                       class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-600">
+                {% if form.telefono.errors %}
+                    <p class="text-red-500 text-xs mt-1">{{ form.telefono.errors.0 }}</p>
+                {% endif %}
+            </div>
+            
+            <div class="mb-4">
+                <label for="id_email" class="block text-sm font-medium text-gray-700 mb-1">
+                    Correo electrónico <span class="text-red-600">*</span>
+                </label>
+                <input type="email" name="email" id="id_email" required
+                       class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-600">
+                {% if form.email.errors %}
+                    <p class="text-red-500 text-xs mt-1">{{ form.email.errors.0 }}</p>
+                {% endif %}
+            </div>
+            
+            <div class="mb-4">
+                <label for="id_ocupacion" class="block text-sm font-medium text-gray-700 mb-1">
+                    Ocupación <span class="text-red-600">*</span>
+                </label>
+                <input type="text" name="ocupacion" id="id_ocupacion" required
+                       class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-600">
+                {% if form.ocupacion.errors %}
+                    <p class="text-red-500 text-xs mt-1">{{ form.ocupacion.errors.0 }}</p>
+                {% endif %}
+            </div>
+            
+            <div class="mb-4">
+                <label for="id_parentesco" class="block text-sm font-medium text-gray-700 mb-1">
+                    Parentesco <span class="text-red-600">*</span>
+                </label>
+                <input type="text" name="parentesco" id="id_parentesco" required
+                       class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-600">
+                {% if form.parentesco.errors %}
+                    <p class="text-red-500 text-xs mt-1">{{ form.parentesco.errors.0 }}</p>
+                {% endif %}
+            </div>
+            
+            <div class="flex justify-between pt-4">
+                <a href="{% url 'registro_paso1' %}" class="px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400">
+                    Anterior
+                </a>
+                <button type="submit" class="px-4 py-2 bg-red-900 text-white rounded hover:bg-red-800">
+                    Continuar
+                </button>
+            </div>
+        </form>
+        
+        <!-- Script para verificar datos de sesión -->
+        <script>
+            // Verificar si hay datos de registro en la sesión
+            {% if not request.session.registro_data %}
+                // Solo si accede directamente sin completar paso 1
+                alert('Por favor complete el paso 1 del registro primero.');
+                window.location.href = "{% url 'registro_paso1' %}";
+            {% endif %}
+        </script>
+    </div>
+</div>
+{% endblock %}

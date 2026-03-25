@@ -1,0 +1,169 @@
+{% extends "base_admin.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+
+    <div class="flex justify-between items-center mb-6">
+      <h1 class="text-2xl font-bold">Gestión de Eventos</h1>
+
+      <div class="flex gap-3">
+        <a href="{% url 'crear_biblioaprende' %}" 
+          class="bg-blue-700 hover:bg-blue-800 text-white px-4 py-2 rounded flex items-center">
+          <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+          </svg>
+          Nuevo BiblioAprende
+        </a>
+
+        <a href="{% url 'crear_agenda_cultural' %}" 
+          class="bg-red-700 hover:bg-red-800 text-white px-4 py-2 rounded flex items-center">
+          <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+          </svg>
+          Nueva Agenda Cultural
+        </a>
+      </div>
+    </div>
+
+    <div class="mb-6">
+      <form method="get" class="flex">
+        <input type="text" name="q" value="{{ q }}" placeholder="Buscar por título"
+          class="flex-grow px-4 py-2 border rounded-l focus:outline-none focus:ring-2 focus:ring-red-500"
+        />
+        <button type="submit" class="bg-red-700 hover:bg-red-800 text-white px-4 py-2 rounded-r">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+            </svg>
+        </button>
+      </form>
+    </div>
+
+  <!-- Tabla -->
+  <div class="bg-white shadow-md rounded-lg overflow-hidden">
+    <div class="overflow-x-auto">
+      <table class="min-w-full bg-white shadow-md rounded">
+        <thead class="bg-gray-200 text-gray-700">
+          <tr>
+            <th class="py-3 px-4 text-left">Evento</th>
+            <th class="py-3 px-4 text-left">Tipo</th>
+            <th class="py-3 px-4 text-left">Fecha</th>
+            <th class="py-3 px-4 text-left">Hora</th>
+            <th class="py-3 px-4 text-left">Estado</th>
+            <th class="py-3 px-4 text-center">Acciones</th>
+          </tr>
+        </thead>
+
+        <tbody class="text-gray-600">
+          {% for item in page_obj %}
+          <tr class="border-b hover:bg-gray-50">
+            <td class="px-4 py-3">
+              <div class="text-sm font-medium text-gray-900">{{ item.titulo }}</div>
+            </td>
+
+            <td class="px-4 py-3">
+              {% if item.tipo == 'biblio' %}
+                <span class="text-xs px-2 py-1 rounded bg-blue-100 text-blue-700">BiblioAprende</span>
+              {% else %}
+                <span class="text-xs px-2 py-1 rounded bg-purple-100 text-purple-700">Agenda Cultural</span>
+              {% endif %}
+            </td>
+
+            <td class="px-4 py-3 text-sm text-gray-700">
+              {{ item.fecha|date:"d/M/Y" }}
+            </td>
+
+            <td class="px-4 py-3 text-sm text-gray-700">
+              {% if item.hora %}{{ item.hora|time:"H:i" }}{% else %}-{% endif %}
+            </td>
+
+            <td class="px-4 py-3">
+              {% if item.estado == 'Finalizado' %}
+                <span class="text-xs px-2 py-1 rounded bg-gray-200 text-gray-700">Finalizado</span>
+              {% else %}
+                <span class="text-xs px-2 py-1 rounded bg-green-100 text-green-700">Próximo</span>
+              {% endif %}
+            </td>
+
+            <td class="px-4 py-3">
+              <div class="flex items-center justify-center gap-3">
+                <!-- Editar -->
+                <a href="{{ item.edit_url }}" class="text-indigo-600 hover:text-indigo-800" title="Editar">
+                  <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                  </svg>
+                </a>
+
+                <!-- Eliminar (POST + CSRF) -->
+                <form method="post" action="{{ item.delete_url }}" onsubmit="return confirm('¿Eliminar este evento?');">
+                  {% csrf_token %}
+                  <button type="submit" class="text-red-600 hover:text-red-800" title="Eliminar">
+                    <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                    </svg>
+                  </button>
+                </form>
+              </div>
+            </td>
+          </tr>
+          {% empty %}
+          <tr>
+              <td colspan="6" class="py-4 px-4 text-center">No hay bibliotecarios registrados</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  {% if page_obj.has_other_pages %}
+  <div class="bg-white px-4 py-3 border-t border-gray-200 mt-4 rounded">
+    <div class="flex items-center justify-between">
+      <p class="text-sm text-gray-700">
+        Mostrando
+        <span class="font-medium">{{ page_obj.start_index }}</span>
+        a
+        <span class="font-medium">{{ page_obj.end_index }}</span>
+        de
+        <span class="font-medium">{{ page_obj.paginator.count }}</span>
+        eventos
+      </p>
+
+      <nav class="inline-flex -space-x-px rounded-md shadow-sm" aria-label="Pagination">
+        {% if page_obj.has_previous %}
+          <a href="?page={{ page_obj.previous_page_number }}{% if q %}&q={{ q|urlencode }}{% endif %}"
+             class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm text-gray-500 hover:bg-gray-50">
+            <span class="sr-only">Anterior</span>
+            
+          </a>
+        {% else %}
+          <span class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm text-gray-300 cursor-not-allowed"></span>
+        {% endif %}
+
+        {% for i in page_obj.paginator.page_range %}
+          {% if i == page_obj.number %}
+            <span class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-red-50 text-sm font-medium text-red-700">{{ i }}</span>
+          {% elif i > page_obj.number|add:"-3" and i < page_obj.number|add:"3" %}
+            <a href="?page={{ i }}{% if q %}&q={{ q|urlencode }}{% endif %}"
+               class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm text-gray-700 hover:bg-gray-50">
+              {{ i }}
+            </a>
+          {% endif %}
+        {% endfor %}
+
+        {% if page_obj.has_next %}
+          <a href="?page={{ page_obj.next_page_number }}{% if q %}&q={{ q|urlencode }}{% endif %}"
+             class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm text-gray-500 hover:bg-gray-50">
+            <span class="sr-only">Siguiente</span>
+            
+          </a>
+        {% else %}
+          <span class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm text-gray-300 cursor-not-allowed"></span>
+        {% endif %}
+      </nav>
+    </div>
+  </div>
+  {% endif %}
+
+</div>
+{% endblock %}

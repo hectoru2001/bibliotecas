@@ -1,0 +1,132 @@
+{% extends "base_admin.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <!-- Encabezado con título y botón de volver -->
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-2xl font-bold">Agregar Nueva Biblioteca</h1>
+        <a href="{% url 'list_biblioteca' %}" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded flex items-center">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+            </svg>
+            Volver
+        </a>
+    </div>
+
+    <div class="bg-white shadow-md rounded-lg overflow-hidden">
+        <div class="p-6">
+            <form action="{% url 'add_biblioteca' %}" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Columna izquierda: Información General -->
+                    <div class="space-y-4">
+                        <h2 class="text-lg font-semibold">Información General</h2>
+                        
+                        <div>
+                            <label for="nombre" class="block text-sm font-medium text-gray-700">Nombre de la biblioteca *</label>
+                            <input type="text" id="nombre" name="nombre" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-red-500 focus:border-red-500">
+                        </div>
+                        
+                        <div>
+                            <label for="nombre_corto" class="block text-sm font-medium text-gray-700">Nombre corto</label>
+                            <input type="text" id="nombre_corto" name="nombre_corto" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-red-500 focus:border-red-500">
+                        </div>
+                        
+                        <div>
+                            <label for="num_coleccion" class="block text-sm font-medium text-gray-700">Numero de coleccion</label>
+                            <input type="number" name="num_coleccion" id="num_coleccion" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-red-500 focus:border-red-500">
+                        </div>
+                        
+                        <div>
+                            <label for="direccion" class="block text-sm font-medium text-gray-700">Dirección *</label>
+                            <input type="text" id="direccion" name="direccion" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-red-500 focus:border-red-500">
+                        </div>
+                        
+                        <div>
+                            <label for="ubicacion" class="block text-sm font-medium text-gray-700">Ubicación</label>
+                            <input type="text" id="ubicacion" name="ubicacion" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-red-500 focus:border-red-500">
+                        </div>
+                        <!-- Horarios -->
+                        <div>
+                        <label for="opening_time" class="block text-sm font-medium text-gray-700">
+                            Hora de apertura *
+                        </label>
+                        <input
+                            type="time"
+                            id="opening_time"
+                            name="opening_time"
+                            required
+                            step="60"
+                            class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-red-500 focus:border-red-500"
+                        >
+                        <p class="text-xs text-gray-500 mt-1">Formato 24h (ej. 09:00)</p>
+                        </div>
+
+                        <div>
+                        <label for="closing_time" class="block text-sm font-medium text-gray-700">
+                            Hora de cierre *
+                        </label>
+                        <input
+                            type="time"
+                            id="closing_time"
+                            name="closing_time"
+                            required
+                            step="60"
+                            class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-red-500 focus:border-red-500"
+                        >
+                        <p class="text-xs text-gray-500 mt-1">Formato 24h (ej. 18:00)</p>
+                        </div>
+                        
+                        <div>
+                            <label for="role" class="block text-sm font-medium text-gray-700">Rol *</label>
+                            <select id="role" name="role" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-red-500 focus:border-red-500">
+                                <option value="admin">Admin</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <!-- Columna derecha: Información de Contacto -->
+                    <div class="space-y-4">
+                        <h2 class="text-lg font-semibold">Información de Contacto</h2>
+                        
+                        <div>
+                            <label for="director" class="block text-sm font-medium text-gray-700">Director</label>
+                            <input type="text" id="director" name="director" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-red-500 focus:border-red-500">
+                        </div>
+                        
+                        <div>
+                            <label for="telefono" class="block text-sm font-medium text-gray-700">Teléfono</label>
+                            <input type="text" id="telefono" name="telefono" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-red-500 focus:border-red-500">
+                        </div>
+                        
+                        <div>
+                            <label for="email" class="block text-sm font-medium text-gray-700">Correo electrónico</label>
+                            <input type="email" id="email" name="email" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-red-500 focus:border-red-500">
+                        </div>
+                        
+                        <div>
+                            <label for="reseña" class="block text-sm font-medium text-gray-700">Reseña</label>
+                            <textarea id="reseña" name="reseña" rows="4" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-red-500 focus:border-red-500"></textarea>
+                        </div>
+                        
+                        <div>
+                            <label for="foto" class="block text-sm font-medium text-gray-700">Fotografía</label>
+                            <input type="file" id="foto" name="foto" class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-red-50 file:text-red-700 hover:file:bg-red-100">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mt-6 pt-4 border-t flex justify-end space-x-3">
+                    <a href="{% url 'list_biblioteca' %}" class="bg-gray-500 hover:bg-gray-600 text-white py-2 px-4 rounded">
+                        Cancelar
+                    </a>
+                    <button type="submit" class="bg-red-700 hover:bg-red-800 text-white py-2 px-6 rounded">
+                        Guardar Biblioteca
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock content %}

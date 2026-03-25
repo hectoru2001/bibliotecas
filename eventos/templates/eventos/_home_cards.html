@@ -1,0 +1,31 @@
+{# projects/eventos/templates/eventos/_home_cards.html #}
+<div class="event-container">
+  {% for it in eventos %}
+    <div class="event-card" style="display:flex;gap:16px;align-items:flex-start;border:1px solid #e6e6e6;border-radius:10px;padding:12px;margin:10px 0;background:#fff">
+      {% if it.img_url %}
+        <img src="{{ it.img_url }}" alt="{{ it.title }}" style="width:140px;height:auto;border-radius:8px;object-fit:cover">
+      {% else %}
+        <img src="https://via.placeholder.com/140x160.png?text=Evento" alt="{{ it.title }}" style="width:140px;border-radius:8px;object-fit:cover">
+      {% endif %}
+
+      <div class="info" style="flex:1;min-width:0">
+        <h3 style="margin:0 0 6px 0;font-size:18px;font-weight:700">{{ it.title }}</h3>
+
+        <p style="margin:0 0 4px 0;color:#333">
+          {% if it.date %}??? {{ it.date|date:"d \\d\\e F, Y" }}{% endif %}
+          {% if it.time_str %} — ? {{ it.time_str }}{% endif %}
+        </p>
+
+        {% if it.place %}
+          <p style="margin:0 0 6px 0;color:#555"><strong>Lugar:</strong> {{ it.place }}</p>
+        {% endif %}
+
+        {% if it.link %}
+          <a href="{{ it.link }}" style="display:inline-block;margin-top:6px;padding:8px 12px;border:1px solid #b21f3a;border-radius:8px;color:#b21f3a;text-decoration:none">Leer más</a>
+        {% endif %}
+      </div>
+    </div>
+  {% empty %}
+    <p>No hay eventos próximos.</p>
+  {% endfor %}
+</div>

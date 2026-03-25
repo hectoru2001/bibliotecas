@@ -1,0 +1,181 @@
+{% extends "base_admin.html" %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <!-- Bloque de mensajes -->
+    {% if messages %}
+    <div class="mb-6">
+        {% for message in messages %}
+        <div class="p-4 mb-4 {% if message.tags == 'error' %}bg-red-100 text-red-700 border-red-400{% elif message.tags == 'success' %}bg-green-100 text-green-700 border-green-400{% else %}bg-blue-100 text-blue-700 border-blue-400{% endif %} border-l-4 rounded">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <div class="max-w-3xl mx-auto bg-white rounded-lg shadow-md overflow-hidden">
+        <div class="bg-gradient-to-r from-red-800 to-red-900 px-6 py-4">
+            <h1 class="text-xl font-bold text-white">Registro - Paso 2 de 3: Datos del Fiador</h1>
+        </div>
+        
+        <!-- Indicador de progreso -->
+        <div class="px-6 pt-4">
+            <div class="w-full bg-gray-200 rounded-full h-2.5 mb-1">
+                <div class="bg-red-900 h-2.5 rounded-full" style="width: 66%"></div>
+            </div>
+            <div class="flex justify-between text-xs text-gray-500">
+                <span>Paso 1</span>
+                <span class="font-bold text-red-900">Paso 2</span>
+                <span>Paso 3</span>
+            </div>
+        </div>
+        
+        <form method="post" class="p-6">
+            {% csrf_token %}
+
+            <!-- Datos personales -->
+            <div class="mb-8">
+                <h2 class="text-lg font-semibold text-gray-800 mb-4 pb-2 border-b">Datos personales del fiador</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                        <label for="id_nombres" class="block text-sm font-medium text-gray-700 mb-1">Nombres*</label>
+                        <input type="text" name="nombres" id="id_nombres" required 
+                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500" 
+                               value="{{ form.nombres.value|default:'' }}">
+                        {% if form.nombres.errors %}
+                        <p class="text-red-600 text-xs mt-1">{{ form.nombres.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+                    
+                    <div>
+                        <label for="id_apellido_paterno" class="block text-sm font-medium text-gray-700 mb-1">Apellido Paterno*</label>
+                        <input type="text" name="apellido_paterno" id="id_apellido_paterno" required 
+                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500" 
+                               value="{{ form.apellido_paterno.value|default:'' }}">
+                        {% if form.apellido_paterno.errors %}
+                        <p class="text-red-600 text-xs mt-1">{{ form.apellido_paterno.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+                    
+                    <div>
+                        <label for="id_apellido_materno" class="block text-sm font-medium text-gray-700 mb-1">Apellido Materno*</label>
+                        <input type="text" name="apellido_materno" id="id_apellido_materno" required 
+                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500" 
+                               value="{{ form.apellido_materno.value|default:'' }}">
+                        {% if form.apellido_materno.errors %}
+                        <p class="text-red-600 text-xs mt-1">{{ form.apellido_materno.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Dirección y contacto -->
+            <div class="mb-8">
+                <h2 class="text-lg font-semibold text-gray-800 mb-4 pb-2 border-b">Dirección y contacto</h2>
+                <div class="grid grid-cols-1 md:grid-cols-6 gap-4 mb-4">
+                    <div class="col-span-6 md:col-span-4">
+                        <label for="id_domicilio" class="block text-sm font-medium text-gray-700 mb-1">Domicilio*</label>
+                        <input type="text" name="domicilio" id="id_domicilio" required 
+                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500" 
+                               value="{{ form.domicilio.value|default:'' }}">
+                        {% if form.domicilio.errors %}
+                        <p class="text-red-600 text-xs mt-1">{{ form.domicilio.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="col-span-6 md:col-span-2">
+                        <label for="id_codigo_postal" class="block text-sm font-medium text-gray-700 mb-1">Código Postal*</label>
+                        <input type="text" name="codigo_postal" id="id_codigo_postal" required 
+                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500" 
+                               value="{{ form.codigo_postal.value|default:'' }}">
+                        {% if form.codigo_postal.errors %}
+                        <p class="text-red-600 text-xs mt-1">{{ form.codigo_postal.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label for="id_telefono" class="block text-sm font-medium text-gray-700 mb-1">Teléfono*</label>
+                        <input type="text" name="telefono" id="id_telefono" required 
+                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500" 
+                               value="{{ form.telefono.value|default:'' }}">
+                        {% if form.telefono.errors %}
+                        <p class="text-red-600 text-xs mt-1">{{ form.telefono.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+                    
+                    <div>
+                        <label for="id_email" class="block text-sm font-medium text-gray-700 mb-1">Correo electrónico*</label>
+                        <input type="email" name="email" id="id_email" required 
+                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500" 
+                               value="{{ form.email.value|default:'' }}">
+                        {% if form.email.errors %}
+                        <p class="text-red-600 text-xs mt-1">{{ form.email.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Información profesional -->
+            <div class="mb-8">
+                <h2 class="text-lg font-semibold text-gray-800 mb-4 pb-2 border-b">Información profesional</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <label for="id_ocupacion" class="block text-sm font-medium text-gray-700 mb-1">Ocupación*</label>
+                        <input type="text" name="ocupacion" id="id_ocupacion" required 
+                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500" 
+                               value="{{ form.ocupacion.value|default:'' }}">
+                        {% if form.ocupacion.errors %}
+                        <p class="text-red-600 text-xs mt-1">{{ form.ocupacion.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+                    
+                    <div>
+                        <label for="id_nombre_direccion_trabajo" class="block text-sm font-medium text-gray-700 mb-1">Nombre y dirección del trabajo*</label>
+                        <input type="text" name="nombre_direccion_trabajo" id="id_nombre_direccion_trabajo" required 
+                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500" 
+                               value="{{ form.nombre_direccion_trabajo.value|default:'' }}">
+                        {% if form.nombre_direccion_trabajo.errors %}
+                        <p class="text-red-600 text-xs mt-1">{{ form.nombre_direccion_trabajo.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <div>
+                    <label for="id_telefono_trabajo" class="block text-sm font-medium text-gray-700 mb-1">Teléfono del trabajo*</label>
+                    <input type="text" name="telefono_trabajo" id="id_telefono_trabajo" required 
+                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500" 
+                           value="{{ form.telefono_trabajo.value|default:'' }}">
+                    {% if form.telefono_trabajo.errors %}
+                    <p class="text-red-600 text-xs mt-1">{{ form.telefono_trabajo.errors.0 }}</p>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <!-- Campos adicionales ocultos -->
+            <input type="hidden" name="role" value="visitor">
+            <input type="hidden" name="responsabilidad" value="true">
+            <input type="hidden" name="retraso" value="No">
+            <input type="hidden" name="suspension" value="No">
+            <input type="hidden" name="aviso_usuario" value="No">
+            
+            <!-- Botones de acción -->
+            <div class="flex justify-between pt-6 border-t">
+                <a href="{% url 'registro_paso1' %}" class="px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 flex items-center">
+                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                    </svg>
+                    Regresar
+                </a>
+                <button type="submit" class="px-5 py-2 bg-red-900 text-white rounded-md hover:bg-red-800 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 flex items-center">
+                    Siguiente
+                    <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                    </svg>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

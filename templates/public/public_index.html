@@ -1,0 +1,1213 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    {% load static %}
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <title>Biblioteca Municipal</title>
+    <style>
+
+
+        body{ background:#f5f5f5; color:#111; }            /* texto base legible */
+        .nav-link{ color: var(--guinda); }
+        .nav-link:hover{ color: var(--guinda-2); }
+        .account-btn{ background: var(--guinda-2); }
+        .account-btn:hover{ background: var(--guinda); }
+        .account-btn::before{ content:""; } /* corrige regla inválida */
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f5;
+            color: #fff;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 40px;
+            background-color: #bbb5b5;
+        }
+
+        .logo img {
+            height: 120px;
+        }
+
+        .main-nav {
+            display: flex;
+            align-items: center;
+        }
+        
+        .right-section {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .right-logo {
+            height: 100px;
+        }
+
+        .nav-item {
+            position: relative;
+            margin: 0 10px;
+        }
+
+        .nav-link {
+            color: #5C0432;
+            text-decoration: none;
+            font-size: 18px; /* Adjusted font size to match the image */
+            padding: 10px 15px; /* Add padding for better spacing */
+            display: block; /* Makes the entire area clickable */
+        }
+
+        .nav-link:hover {
+            color: #831F46;
+        }
+
+        /* Submenu styling */
+        .submenu {
+            display: none; /* Hidden by default */
+            position: absolute;
+            top: 100%; /* Position below the parent nav item */
+            left: 0;
+            background-color: #2e1212; /* Slightly lighter dark background for contrast */
+            min-width: 150px; /* Minimum width for the submenu */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Optional: adds a shadow for depth */
+            z-index: 1000; /* Ensure it appears above other elements */
+        }
+
+        .submenu a {
+            color: #ffffff;
+            text-decoration: none;
+            padding: 10px 15px;
+            display: block; /* Makes the entire area clickable */
+            font-size: 16px;
+        }
+
+        .submenu a:hover {
+            background-color: #a33660; /* Hover effect for submenu items */
+            color: #ffffff;
+        }
+
+        /* Show submenu on hover */
+        .nav-item:hover .submenu {
+            display: block;
+        }
+        .dropdown {
+            position: relative;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            left: 100%; /* o right: 0; si quieres que se abra hacia el otro lado */
+            top: 0;
+            background-color: #2e1212; 
+            min-width: 200px;
+            z-index: 1;
+            flex-direction: column;
+            box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: flex;
+        }
+        
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 15px; /* Espacio entre los botones */
+        }
+        .register-btn {
+            background-color: #922453;
+            color: #ffffff;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 25px; 
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .register-btn:hover { 
+            background: var(--guinda-2, #5C0432); 
+            color: #fff; 
+        }
+
+        /* Style for the "Mi Cuenta" button */
+        .account-btn {
+            background-color: #922453;
+            color: #ffffff;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 25px; 
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .account-btn::before { content: ""; }
+
+        .account-btn:hover {
+            background-color: #a33660;
+        }
+        /* style for main hero section */
+        /* ===== Paleta y utilidades (usa tus var() si ya existen) ===== */
+        :root{
+        --guinda: #5c0937;
+        --guinda-2: #8a174f;
+        --ink: #1b1b1b;
+        --muted: #6b6b6b;
+        --bg-card: rgba(255,255,255,.06);
+        --stroke: rgba(255,255,255,.22);
+        --white: #fff;
+        }
+
+        /* ===== Hero minimalista ===== */
+        .main-background-section{
+        position:relative; width:100%;
+        min-height: 56vh;
+        background:
+            linear-gradient(180deg, rgba(5,25,35,.35), rgba(169, 174, 177, 0.55)),
+            url("{% static 'images/libraries.jpg' %}") center/cover no-repeat;
+        }
+
+        .explore-section{
+        max-width: 1080px; margin: 0 auto; padding: 48px 20px 72px;
+        position:relative; z-index:1;
+        }
+
+        /* Caja translúcida del buscador */
+        .search-hero{
+        margin: 0 auto; max-width: 920px;
+        background: rgba(255,255,255,.12);
+        backdrop-filter: blur(4px);
+        border: 1px solid var(--stroke);
+        border-radius: 16px;
+        padding: 24px;
+        text-align:center;
+        box-shadow: 0 10px 30px rgba(0,0,0,.2);
+        }
+
+        .search-title{
+        margin: 0 0 10px;
+        font-size: clamp(24px, 3vw, 32px);
+        font-weight: 700;
+        color: var(--white);
+        }
+
+        /* Tabs tipo âpillâ */
+        .search-tabs{
+        display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin: 10px 0 14px;
+        }
+        .tab{
+        appearance:none; border:1px solid var(--stroke);
+        background: transparent; color: #f3f3f3;
+        padding: 8px 14px; border-radius: 999px; cursor:pointer;
+        font-weight: 600; transition: .2s ease;
+        }
+        .tab:hover{ border-color: var(--white); }
+        .tab.is-active{ background: var(--guinda-2); border-color: var(--guinda-2); color: #fff; }
+
+        /* Input grande + CTA */
+        .search-row{
+        display:flex; gap:10px; justify-content:center; align-items:center; flex-wrap:wrap;
+        }
+        .search-input{
+        width: min(720px, 92vw); height: 54px;
+        border-radius: 12px; border:1px solid #e6e6e6; background:#fff; color:#222;
+        padding: 0 16px; font-size: 16px;
+        box-shadow: 0 6px 16px rgba(0,0,0,.08);
+        }
+        .search-input:focus{ outline: 2px solid var(--guinda-2); outline-offset: 2px; }
+
+        .search-cta{
+        height: 54px; padding: 0 22px; border: none; border-radius: 12px;
+        background: var(--guinda); color:#fff; font-weight: 800; letter-spacing:.3px;
+        cursor: pointer; transition: transform .05s ease, box-shadow .2s ease, background .2s;
+        box-shadow: 0 8px 18px rgba(92,9,55,.35);
+        }
+        .search-cta:hover{ background: var(--guinda-2); }
+        .search-cta:active{ transform: translateY(1px); }
+
+        .search-hint{
+        margin-top: 10px; color: #f1f1f1; opacity:.85; font-size: 14px;
+        }
+
+        /* ===== Cards discretas (más grandes y legibles) ===== */
+        .quick-actions{
+        margin-top: 34px;
+        display: grid;
+        gap: 16px;
+        grid-template-columns: repeat(auto-fit, minmax(180px,1fr));
+        }
+
+        .qa{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        min-height: 120px;
+        padding: 20px 16px;
+
+        background: rgba(30,30,30,.6); /* fondo más sólido */
+        border-radius: 14px;
+        border: 1px solid rgba(255,255,255,.15);
+
+        color: #fff;
+        text-align: center;
+        font-weight: 600;
+        text-decoration: none;
+
+        /* Se agrega transform al transition para animar el ícono con transform */
+        transition: background .25s ease, transform .08s ease, box-shadow .25s ease;
+        box-shadow: 0 6px 18px rgba(0,0,0,.25);
+        }
+
+        .qa:hover{
+        background: rgba(92,9,55,.85); /* guinda sólido al hover */
+        transform: translateY(-2px);
+        box-shadow: 0 10px 22px rgba(0,0,0,.35);
+        }
+
+        .qa:active{ transform: translateY(0); }
+
+        /* --- MODIFICACIÍN CLAVE: Tamaño base más grande e inclusión de transición --- */
+        .qa-ic{
+        /* Aumentamos el tamaño base, por ejemplo, de 38px a 50px */
+        width: 50px; 
+        height: 50px;
+        display: block;
+        filter: brightness(120%) contrast(110%);
+        /* Agregamos una transición para que el cambio de tamaño sea suave */
+        transition: transform .25s ease;
+        }
+
+        /* --- NUEVA REGLA: Aumentar el tamaño del ícono al pasar el cursor sobre la tarjeta (.qa) --- */
+        .qa:hover .qa-ic{
+        /* Usamos scale() para hacerlo más grande, por ejemplo, un 20% más (1.2) */
+        transform: scale(1.2);
+        }
+        /* ----------------------------------------------------------------------------------------- */
+
+        .qa span{
+        font-size: 15px;
+        line-height: 1.3;
+        }
+
+
+        /* Ajustes finos de altura en móviles */
+        @media (max-width: 480px){
+        .main-background-section{ min-height: 48vh; }
+        .search-hero{ padding: 18px; }
+        }
+
+
+        .explore-btn {
+            background-color: #922453;
+            color: #fff;
+        }
+
+        .explore-btn:hover {
+            background-color: #691238;
+        }
+
+
+
+        /* Contenido del hero */
+        .explore-section{
+        max-width: 1100px;
+        margin: 0 auto;
+        /* aire arriba + espacio abajo para que la franja blanca âmuerdaâ el hero */
+        padding: 24px 24px 120px;
+        position: relative;
+        z-index: 1;
+        /* si quieres centrar verticalmente el buscador, descomenta las 2 de abajo:
+        min-height: calc(100% - 120px);
+        display:flex; align-items:center;
+        */
+        }
+
+        .search-block{
+        max-width: 980px; margin: 0 auto;
+        text-align:center;
+        background: rgba(255,255,255,.12);
+        backdrop-filter: blur(2px);
+        border-radius: 12px;
+        padding: 16px;
+        }
+        .search-block h2{ color: var(--guinda); }
+
+        /* filtros + buscador */
+        .search-filters button{
+        padding:8px 14px; border-radius:20px;
+        border:1px solid var(--guinda-2);
+        background:transparent; color:var(--guinda-2); cursor:pointer;
+        }
+        .search-filters button.active,
+        .search-filters button:hover{
+        background: var(--guinda-2);
+        color:#fff;
+        }
+
+        .search-bar{ display:flex; gap:10px; justify-content:center; flex-wrap:wrap; }
+        .search-bar input{
+        width: 620px; max-width: 90vw; height: 42px;
+        border-radius:8px; border:1px solid var(--gris);
+        padding:0 12px; color:#222;
+        background:#fff;
+        }
+        .search-btn{
+        height:42px; padding:0 18px; border:none; border-radius:8px;
+        background: #c0bbbb; color:#3a0d0d; font-weight:700; cursor:pointer;
+        }
+
+
+        /* Intro (título + botones) */
+        .intro{
+        max-width: 1100px;
+        margin: 0 auto;
+        display: grid;
+        gap: 10px;
+        }
+        .intro h1{
+        color:#2a1321;
+        font-size: clamp(28px, 4vw, 44px);
+        }
+        .intro p{ color:#5a4b4b; }
+        .main-buttons{ display:flex; gap:14px; }
+
+
+
+        /* Intro (título + botones) */
+        .intro{
+        max-width:1100px; margin:0 auto; display:grid; gap:10px;
+        }
+        .intro h1{ color: var(--guinda); font-size: clamp(28px,4vw,46px); }
+        .intro p{ color: var(--slate); }
+        .main-buttons{ display:flex; gap:12px; flex-wrap:wrap; }
+        .explore-btn{ background:#831F46; color:#fff; border:none; padding:12px 20px; border-radius:8px; }
+
+
+        /* Cards strip */
+        .cards-strip{
+        padding: 22px 24px 36px;
+        position: relative;
+        z-index: 3;                        /* queda por ENCIMA del borde curvo, sin que el título lo tape */
+        }
+
+        .options-section{
+        display:flex; justify-content:center; gap:18px; flex-wrap:wrap;
+        max-width:1100px; margin:0 auto;
+        }
+
+
+        /* Search Section */
+        .search-section {
+            background-color: #ffffff;
+            color: #8f6c6c;
+            padding: 20px 30px;
+            margin: 0 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .search-section h2 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .search-filters {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .search-filters button {
+            padding: 8px 16px;
+            border: 1px solid #fdfdfd;
+            border-radius: 20px;
+            background-color: #f5f5f5;
+            color: #333;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.8s, color 0.3s;
+        }
+
+        .search-filters button.active {
+            background-color: #ff6f61;
+            color: #fff;
+            border-color: #ff6f61;
+        }
+
+        .search-filters button:hover {
+            background-color: #e0e0e0;
+        }
+
+        .search-bar {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding: 10px 40px 10px 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .search-bar .search-icon {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 24px;
+            height: 24px;
+            background-color: #ff6f61;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 14px;
+        }
+
+        .popular-searches {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .popular-searches span {
+            color: #ff6f61;
+            cursor: pointer;
+        }
+
+        .popular-searches span:hover {
+            text-decoration: underline;
+        }
+
+        /* ========= Franja (overlap) ========= */
+        .band{ width:100%; background:#f3f1f2; position:relative; z-index:2;
+            box-shadow: 0 -8px 22px rgba(0,0,0,.06); }
+        .band--overlap{ margin-top:-88px; border-radius:16px 16px 0 0; padding:28px 20px 24px; }
+
+        .intro--hero{
+            max-width: 1100px; margin:0 auto;
+            background: rgba(255,255,255,.75);
+            border:1px solid rgba(0,0,0,.06);
+            border-radius:16px; padding:28px 24px;
+            box-shadow: 0 8px 24px rgba(0,0,0,.08);
+            /* í ½í± AGREGAR ESTO para centrar h1 y p */
+            text-align: center;
+        }
+        .intro--hero h1{ margin:0 0 8px; color: var(--guinda); font-size: clamp(26px,3.6vw,40px); }
+        .intro--hero p{ margin:0 0 16px; color:#42363f; }
+
+        .intro-actions{
+            display:flex; gap:12px; flex-wrap:wrap;
+            /* í ½í± AGREGAR ESTO para centrar los elementos flex */
+            justify-content: center;
+        }
+        .btn-primary{
+        background: var(--guinda); color:#fff; border:none; border-radius:10px;
+        padding:10px 18px; font-weight:800; cursor:pointer;
+        box-shadow: 0 8px 18px rgba(92,9,55,.25);
+        }
+        .btn-primary:hover{ background: var(--guinda-2); }
+        .btn-ghost{
+        display:inline-block; padding:10px 16px; border-radius:10px;
+        border:1px solid #c8bec4; color:#4b3a43; text-decoration:none; font-weight:700;
+        }
+        .btn-ghost:hover{ border-color:#a6949e; }
+
+        /* ========= Novedades ========= */
+        .litnews{ padding:32px 20px 56px; background:#fff; }
+        .litnews__header{
+        max-width:1100px; margin:0 auto 18px;
+        display:flex; align-items:baseline; justify-content:space-between;
+        }
+        .litnews__header h2{ margin:0; color:#2a1321; font-size: clamp(20px,2.2vw,26px); }
+        .viewall{ color: var(--guinda-2); text-decoration:none; font-weight:700; }
+        .viewall:hover{ text-decoration:underline; }
+
+        .litnews__grid{
+        max-width:1100px; margin:0 auto;
+        display:grid; gap:18px;
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+        }
+
+        /* Tarjeta de libro */
+        .bookcard{
+        display:flex; flex-direction:column; background:#1f0f18; border-radius:14px;
+        border:1px solid rgba(255,255,255,.06);
+        overflow:hidden; box-shadow: 0 6px 18px rgba(0,0,0,.12);
+        transition: transform .08s ease, box-shadow .2s ease;
+        }
+        .bookcard:hover{ transform: translateY(-2px); box-shadow:0 10px 22px rgba(0,0,0,.18); }
+
+        .bookcard__media{ position:relative; background:#130a10; aspect-ratio: 3/4; }
+        .bookcard__media img{ width:100%; height:100%; object-fit:cover; display:block; }
+        .bookcard__placeholder{
+        width:100%; height:100%; display:grid; place-items:center; color:#cbb3be; font-size:14px;
+        background: linear-gradient(135deg, #2a1623, #321828);
+        }
+
+        .badge{
+        position:absolute; top:10px; left:10px;
+        padding:4px 8px; border-radius:999px; font-size:12px; font-weight:700; color:#fff;
+        background: #777;
+        }
+        .badge--ok{ background:#2fb171; }
+        .badge--hold{ background:#ff6f61; }
+        .badge--no{ background:#dc3545; }
+
+        .bookcard__body{ padding:12px 12px 0; }
+        .bookcard__title{
+        color:#fff; font-size:15px; margin:0 0 6px; line-height:1.25;
+        display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;
+        }
+        .bookcard__author{ color:#d9c6ce; margin:0 0 10px; font-size:13px; }
+
+        .bookcard__footer{ padding:0 12px 12px; margin-top:auto; }
+        .btn-reserve{
+        display:block; width:100%; text-align:center; text-decoration:none;
+        background: var(--guinda-2); color:#fff; padding:10px 12px; border-radius:10px; font-weight:800;
+        }
+        .btn-reserve:hover{ background: #a41d5a; }
+        .btn-reserve.is-disabled{ background:#6c757d; pointer-events:none; }
+
+        /* empty state */
+        .litnews__empty{ max-width:1100px; margin:12px auto 0; color:#6a5a62; }
+
+
+        /* Events Section */
+        .events-section {
+            padding: 40px;
+            background:#fffefe
+        }
+
+        .events-section::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(245, 245, 245, 0.85);
+            z-index: -1;
+        }
+        /* Events Header */
+        .events-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+        }
+
+        .events-header h2 {
+            font-size: 24px;
+            color: #2a1321;
+        }
+
+        .events-header a {
+            color: #ff6f61;
+            text-decoration: none;
+            font-size: 16px;
+        }
+
+        .events-header a:hover {
+            text-decoration: underline;
+        }
+        .event-container {
+            display: flex;
+            gap: 40px; 
+            padding: 40px;
+            flex-wrap: wrap;
+            min-height: 200px;
+        }
+        /* Event Card */
+        .event-card {
+            background-color: #ffffff; /* White background for the card */
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            width: 350px;
+            overflow: hidden;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add shadow for depth */
+            transition: transform 0.2s;
+        }
+
+        .event-card:hover {
+            transform: scale(1.05); /* Slight zoom on hover */
+        }
+
+        .event-card img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+        }
+
+        .event-card h3 {
+            font-size: 16px;
+            margin: 10px 0;
+            color: #333; /* Darker color for the title */
+        }
+
+        .event-card p {
+            font-size: 14px;
+            color: #666; /* Slightly lighter gray for date and location */
+            margin: 10px 0;
+        }
+
+        .event-card button {
+            background-color: #2a1321;
+            color: white;
+            border: none;
+            padding: 10px;
+            width: 100%;
+            border-radius: 5px; /* Rounded corners for the button */
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s;
+        }
+
+        .event-card button:hover {
+            background-color: #e63973; /* Slightly darker pink on hover */
+        }
+        /* Footer */
+        footer {
+            background-color: #661836;
+            padding: 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            border-top: 1px solid #3a1c2e;
+        }
+
+        .footer-column {
+            width: 22%;
+        }
+
+        .footer-column img {
+            height: 80px;
+            margin-bottom: 10px;
+        }
+
+        .footer-column h3 {
+            font-size: 16px;
+            color: #fff;
+            margin-bottom: 15px;
+        }
+
+        .footer-column p, .footer-column a {
+            font-size: 14px;
+            color: #ffffff;
+            line-height: 1.6;
+            text-decoration: none;
+        }
+
+        .footer-column a:hover {
+            color: #f1e3e2;
+            text-decoration: underline;
+        }
+
+        .footer-column ul {
+            list-style: none;
+        }
+
+        .footer-column ul li {
+            margin-bottom: 10px;
+        }
+
+        .footer-column .social-icons {
+            display: flex;
+            gap: 20px;
+            margin-top: 10px;
+        }
+
+        .footer-column .social-icons a {
+            font-size: 35px;
+            color: #304c72;
+        }
+
+        .footer-column .social-icons a:hover {
+            color: #702542;
+        }
+        /* ===== Footer logos â forzamos layout y tamaño uniforme ===== */
+        .footer-bottom .footer-logos{
+        display: grid;
+        grid-auto-flow: column;            /* una fila, varias columnas */
+        grid-auto-columns: 250px;          /* cada columna mide 180px */
+        justify-content: center;           /* centrado horizontal */
+        align-items: center;               /* centrado vertical */
+        gap: 24px;
+        margin-bottom: 10px;
+        }
+
+        .footer-bottom .footer-badge{
+        width: 200px;
+        height: 50px;
+        display: grid;
+        place-items: center;               /* centra el contenido dentro */
+        /* outline: 1px dashed rgba(255,255,255,.15);  // útil para depurar */
+        }
+
+        .footer-bottom .footer-badge img{
+        height: 100%;                      /* TODOS a la misma altura visual */
+        width: auto;                       /* respeta proporción */
+        max-width: 100%;                   /* no se sale de la caja */
+        display: block;
+        }
+
+
+        /* Opcional: ajusta tipografías y colores a tu paleta */
+        .footer-bottom{
+        text-align:center;
+        padding: 20px 16px;
+        background-color: #bbb5b5;
+        border-top: 1px solid #421c34;
+        color: #fcf1f6;
+        }
+
+                /* 1. Estilo para el fondo completo del footer (similar al fondo de estantería de la primera imagen) */
+        .footer-bottom{
+            text-align:center;
+            padding: 40px 16px; /* Aumentamos el padding para espacio alrededor de la caja */
+            /* Usamos el color de fondo de la segunda imagen, o puedes usar una imagen de fondo 
+            si quieres replicar la estantería de la primera. */
+            background-color: #d6d3d3; /* Color de fondo gris claro/marrón claro de la imagen inferior */
+            border-top: none; /* Quitamos el borde superior que tenías */
+            color: #421c34; /* Color de texto oscuro para el Copyright, etc. */
+        }
+
+        /* 2. El nuevo contenedor con el estilo de caja redondeada */
+        .footer-content-box {
+            max-width: 1200px; /* Limita el ancho del contenido si es necesario */
+            margin: 0 auto; /* Centra la caja horizontalmente */
+            padding: 20px 16px;
+            
+            /* El estilo clave: Bordes y Fondo Oscuro */
+            background-color: #d8cdd1;
+            border-radius: 20px; /* Bordes redondeados */
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); /* Sombra sutil */
+
+            /* Colores del texto dentro de esta caja oscura */
+            color: #46102f
+        }
+
+        /* Ajustes a los elementos internos */
+        /* El color de los enlaces de privacidad ahora debe ser claro */
+        .footer-content-box .privacy-link {
+            color: #48576d; /* Tono más claro del color que usas */
+            font-weight: bold;
+        }
+        .footer-content-box .privacy-link:hover {
+            color: #525b68;
+            text-decoration: underline;
+        }
+        .privacy-link{
+        color: #831F46;      /* tu paleta */
+        }
+        .privacy-link:hover{
+        color: #BFBDBD;
+        text-decoration: underline;
+        }
+
+        /* Estilos para el botón y la ventana del chatbot */
+        .chatbot-button {
+            position: fixed;
+            bottom: 30px;
+            right: 20px;
+            background-color: #c2babe;
+            color: rgb(109, 9, 50);
+            padding: 12px 24px;
+            border-radius: 50px;
+            cursor: pointer;
+            border: none;
+            font-size: 14px;
+            font-weight: bold;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
+            z-index: 1001;
+            transition: background-color 0.3s ease;
+        }
+
+        .chatbot-button:hover {
+            background-color: #d6a7b4;
+        }
+
+        /* Estilos para la ventana del chatbot */
+        .chatbot-window {
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            width: 90%;
+            max-width: 400px; 
+            height: 650px; /* Altura reducida */
+            background-color: #2b0d15; /* Fondo oscuro similar al de la imagen */
+            border-radius: 20px; /* Bordes más redondeados */
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+            display: none;
+            z-index: 1000;
+            overflow: hidden; /* Para asegurar que el contenido no se desborde */
+        }
+
+        .chatbot-header {
+            background-color: #600017;
+            color: #ffffff;
+            padding: 8px 12px;
+            border-radius: 20px 20px 0 0; /* Bordes superiores redondeados */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chatbot-header h3 {
+            margin: 0;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .close-button {
+            background: none;
+            border: none;
+            color: #ffffff;
+            font-size: 18px;
+            cursor: pointer;
+            padding: 0 5px;
+        }
+
+        .close-button:hover {
+            color: #440505;
+        }
+
+        iframe {
+            width: 100%;
+            height: calc(100% - 36px); 
+            border: none;
+            border-radius: 0 0 20px 20px; /* Bordes inferiores redondeados */
+            display: block;
+            background-color: #2b0d15; /* Fondo del iframe igual al de la ventana */
+        }
+    </style>
+</head>
+<body>
+<!-- Header -->
+    <header>
+        <div class="logo">
+            <img src="{% static 'images/newbiblioteca.png' %}" alt="Logo">
+        </div>
+        <nav class="main-nav">
+
+            <div class="nav-item">
+                <a href="#" class="nav-link">Eventos</a>
+                <div class="submenu">
+                    <a href="{% url 'lista_biblioaprende' %}">Agenda Biblio Aprende</a>
+                    <a href="{% url 'agenda_cultural' %}">Agenda Cultural</a>
+                </div>
+            </div>
+            <div class="nav-item">
+                <a href="#" class="nav-link">Aprendizaje & Tecnologia</a>
+                <div class="submenu">
+                    <a href="{% url 'coleccion_digital' %}">Colección Digital DGB</a>
+                    <a href="https://wordwall.net/es-mx/community/la-biblioteca">Juega y aprende</a>
+                </div>
+            </div>
+            <div class="nav-item">
+                <a href="#" class="nav-link">Servicios</a>
+                    <div class="submenu">
+                        <div class="dropdown">
+                            <a href="#">Préstamos</a>
+                            <div class="dropdown-content">
+                                <a href="{% url 'prestamos' %}">Préstamo de libros en salas</a>
+                                <a href="{% url 'prestamo_domicilio' %}">Préstamo de libros a domicilio</a>
+                            </div>
+                        </div>
+                        <a href="{% url 'credencializacion' %}">Credencialización</a>
+                        <a href="{% url 'referencia' %}">Referencia</a>
+                        <a href="{% url 'servicio_digital' %}">Servicios Digitales</a>
+                        <a href="{% url 'servicio_cultural' %}">Servicios Culturales</a>
+                        <a href="{% url 'servicio_educativo' %}">Servicio educativo</a>
+                    </div>
+            </div>
+            <div class="nav-item">
+                <a href="#" class="nav-link">Nuestra Historia</a>
+                <div class="submenu">
+                </div>
+            </div>
+            <div class="nav-item">
+                <a href="#" class="nav-link">Sobre nosotros</a>
+                <div class="submenu">
+                    <a href="{% url 'nosotros' %}">Nosotros</a>
+                    <a href="{% url 'contacto' %}">Contacto</a>
+                </div>
+            </div>
+        </nav>
+        <div class="nav-actions">
+            <button class="register-btn" onclick="register()">Registrarse</button>
+            <a href="/usuarios/login/" class="account-btn">Mi Cuenta</a>
+        </div>
+    </header>
+
+    <!-- Botón para abrir el chatbot -->
+    <button class="chatbot-button" onclick="toggleChatbot()">Asistente Virtual</button>
+
+    <!-- Ventana para el chatbot -->
+    <div id="chatbotWindow" class="chatbot-window">
+        <div class="chatbot-header">
+            <h3>Chatbot - Bibliotecario Virtual</h3>
+            <button class="close-button" onclick="toggleChatbot()">Í</button>
+        </div>
+        <iframe id="chatbotIframe" src="/chatbot/"></iframe>
+    </div>
+
+
+    {# ---------- HERO + BUSCADOR PROTAGONISTA ---------- #}
+    <section class="main-background-section">
+        <div class="explore-section">
+            <div class="search-hero" role="search" aria-label="Buscador de la colección">
+            <h1 class="search-title">Busca en nuestra colección</h1>
+
+            <div class="search-tabs" role="tablist" aria-label="Filtros de búsqueda">
+                <button class="tab is-active" role="tab" aria-selected="true">Todo</button>
+                <button class="tab" role="tab" aria-selected="false">Libros</button>
+                <button class="tab" role="tab" aria-selected="false">Audiovisuales</button>
+                <button class="tab" role="tab" aria-selected="false">Revistas</button>
+            </div>
+
+            <div class="search-row">
+                <input
+                id="search-query"
+                class="search-input"
+                type="text"
+                placeholder="Título, autor, temaâ¦"
+                aria-label="Caja de búsqueda"
+                />
+                <button class="search-cta" onclick="searchBooks()" aria-label="Buscar en catálogo">
+                Buscar
+                </button>
+            </div>
+
+            <p class="search-hint">Ejemplos: âCortázarâ, âhistoria de Méxicoâ, âmachine learningâ</p>
+            </div>
+
+            {# ---------- ACCIONES RÍPIDAS (CARDS DISCRETAS) ---------- #}
+            <nav class="quick-actions" aria-label="Accesos rápidos">
+            <a class="qa" href="{% url 'credencial' %}">
+                <img src="{% static 'svg/card.svg' %}" alt="" class="qa-ic" />
+                <span>Obtén tu credencial</span>
+            </a>
+            <a class="qa" href="{% url 'coleccion_digital' %}">
+                <img src="{% static 'svg/digital.svg' %}" alt="" class="qa-ic" />
+                <span>Colección Digital</span>
+            </a>
+            <a class="qa" href="{% url 'salas' %}">
+                <img src="{% static 'svg/room.svg' %}" alt="" class="qa-ic" />
+                <span>Reserva una sala</span>
+            </a>
+            <a class="qa" href="{% url 'ubicaciones' %}">
+                <img src="{% static 'svg/location.svg' %}" alt="" class="qa-ic" />
+                <span>Ubicaciones</span>
+            </a>
+            <a class="qa" href="{% url 'visita' %}">
+                <img src="{% static 'svg/events.svg' %}" alt="" class="qa-ic" />
+                <span>Visita Guiada</span>
+            </a>
+            </nav>
+        </div>
+    </section>
+
+
+    {# ====== FRANJA EXPLORAR BIBLIOTECAS ====== #}
+    <section class="band band--overlap">
+    <div class="intro intro--hero">
+        <h1>Descubre un mundo de conocimiento</h1>
+        <p>Explora la red de Bibliotecas Públicas Municipales: colecciones, recursos digitales y eventos.</p>
+
+        <div class="intro-actions">
+        <button class="btn-primary" onclick="exploreBiblios()">Explorar Bibliotecas</button>
+        <a class="btn-ghost" href="{% url 'ubicaciones' %}">Ver ubicaciones</a>
+        </div>
+    </div>
+    </section>
+
+    {# ====== NOVEDADES LITERARIAS ====== #}
+    <section class="litnews">
+    <header class="litnews__header">
+        <h2>Novedades literarias</h2>
+        <a class="viewall" href="{% url 'public_books' %}">Ver todo</a>
+    </header>
+
+    <div class="litnews__grid">
+        {% for libro in ultimos_libros %}
+        <article class="bookcard">
+            <div class="bookcard__media">
+            {% if libro.portada %}
+                <img src="{{ libro.portada.url }}" alt="Portada: {{ libro.titulo }}" loading="lazy">
+            {% else %}
+                <div class="bookcard__placeholder">Sin portada</div>
+            {% endif %}
+            <span class="badge
+                {% if libro.estado == 'Disponible' %}badge--ok
+                {% elif libro.estado == 'Reservado' %}badge--hold
+                {% else %}badge--no{% endif %}">
+                {{ libro.estado }}
+            </span>
+            </div>
+
+            <div class="bookcard__body">
+            <h3 class="bookcard__title">{{ libro.titulo }}</h3>
+            <p class="bookcard__author">{{ libro.autor }}</p>
+            </div>
+
+            <div class="bookcard__footer">
+            <a
+                href="{% url 'reservar_libro' %}?libro_id={{ libro.id }}"
+                class="btn-reserve {% if libro.estado != 'Disponible' %}is-disabled{% endif %}"
+                aria-disabled="{% if libro.estado != 'Disponible' %}true{% else %}false{% endif %}">
+                {% if libro.estado == 'Disponible' %}Reservar{% else %}No disponible{% endif %}
+            </a>
+            </div>
+        </article>
+        {% empty %}
+        <p class="litnews__empty">No hay libros disponibles por ahora.</p>
+        {% endfor %}
+    </div>
+    </section>
+
+
+    {% load eventos_public %}
+
+    <section class="events-section">
+        <div class="events-header">
+            <h2>Próximos Eventos</h2>
+        </div>
+    
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-column">
+            <img src="{% static 'images/whitemuni.png' %}" alt="Ciudad Juárez Logo">
+            <p>Red de Bibliotecas Públicas Municipales de Ciudad Juárez, comprometidos con el fomento a la lectura y el acceso a la información.</p>
+            <div class="social-icons">
+                <a href="https://facebook.com" target="_blank" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                <a href="https://instagram.com" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+
+            </div>
+        </div>
+        <div class="footer-column">
+            <h3>Enlaces Rápidos</h3>
+            <ul>
+                <li><a href="#">Inicio</a></li>
+                <li><a href="#">Catálogo</a></li>
+                <li><a href="#">Servicios</a></li>
+                <li><a href="#">Eventos</a></li>
+                <li><a href="#">Bibliotecas</a></li>
+            </ul>
+        </div>
+        <div class="footer-column">
+            <h3>Servicios</h3>
+            <ul>
+                <li><a href="#">Préstamo de libros</a></li>
+                <li><a href="#">Recursos digitales</a></li>
+                <li><a href="#">Clubes de lectura</a></li>
+                <li><a href="#">Talleres culturales</a></li>
+                <li><a href="#">Sala de cómputo</a></li>
+            </ul>
+        </div>
+        <div class="footer-column">
+            <h3>Contacto</h3>
+            <p>Calle Ignacio Ramírez 351, 32030 Juárez, Chihuahua</p>
+            <p>(656) 123-4567</p>
+            <p><a href="mailto:bibliotecas@juarez.gob.mx">bibliotecas@juarez.gob.mx</a></p>
+        </div>
+        
+    </footer>
+
+    <div class="footer-bottom">
+        <div class="footer-content-box"> <div class="footer-logos">
+                <div class="footer-badge">
+                <img src="{% static 'images/jrzconectado.png' %}" alt="Juárez Conectado">
+                </div>
+                <div class="footer-badge">
+                <img src="{% static 'images/dgic.png' %}" alt="DGIC">
+                </div>
+                <div class="footer-badge">
+                <img src="{% static 'images/educacion.png' %}" alt="Educación">
+                </div>
+            </div>
+            <p><a href="/media/documentos/avisoprivacidadbpm.pdf" target="_blank" class="privacy-link">Aviso de privacidad</a></p>
+            <p>Â© 2024 Bibliotecas Públicas Municipales | Gobierno Municipal de Ciudad Juárez 2024-2027</p>
+        </div>
+    </div>
+
+    <script>
+    
+        // Function to explore libraries
+        function exploreBiblios() {
+            window.location.href = `/public_biblios`;
+        }
+    
+        // Function to register
+        function register() {
+            window.location.href = "{% url 'credencial' %}";
+        }
+    
+        // Function to search books
+        function searchBooks() {
+            const query = document.getElementById('search-query').value;
+            if (query.trim() === '') {
+                alert('Por favor, ingresa un término de búsqueda.');
+                return;
+            }
+            // Redirect to the search endpoint with the query parameter
+            window.location.href = `/libros/public_books/?query=${encodeURIComponent(query)}`;
+        }
+    
+        // Function to toggle the chatbot
+        function toggleChatbot() {
+            console.log("Toggling chatbot window...");
+            const chatbotWindow = document.getElementById('chatbotWindow');
+            const iframe = document.getElementById('chatbotIframe');
+            if (!chatbotWindow) {
+                console.error("No se encontró el elemento con ID 'chatbotWindow'");
+                return;
+            }
+            if (chatbotWindow.style.display === 'block') {
+                chatbotWindow.style.display = 'none';
+            } else {
+                chatbotWindow.style.display = 'block';
+                // Optional: reload the iframe when opening
+                iframe.src = "/chatbot/";
+            }
+        }
+    
+        // Functionality for filter buttons
+        document.querySelectorAll('.search-filters button').forEach(button => {
+            button.addEventListener('click', () => {
+                document.querySelectorAll('.search-filters button').forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+                alert(`Filtrando por: ${button.textContent}`);
+            });
+        });
+    
+        // Functionality for reserve buttons
+        document.querySelectorAll('.literary-news-item .reserve').forEach(button => {
+            button.addEventListener('click', () => {
+                alert(`Reservando: ${button.closest('.literary-news-item').querySelector('h3').textContent}`);
+            });
+        });
+    </script>
+    <!-- DEBUG: Alfredo - v7 - 2025-06-16 -->
+</body>
+</html>

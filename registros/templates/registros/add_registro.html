@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% load tailwind_filters %}
+{% load static %}
+
+{% block content %}
+
+<div class="min-h-screen flex items-center justify-center bg-cover bg-center" style="background-image: url('{% static 'images/biblioteca.png' %}');">
+    <div class="max-w-2xl w-full bg-white bg-opacity-90 p-10 rounded-lg shadow-lg">
+        <h1 class="text-3xl font-bold text-center text-gray-900 mb-10">
+            Registro de Ciudadano
+        </h1>
+
+        <form action="{% url 'add_registro' %}" method="post">
+            {% csrf_token %}
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {{ form|crispy }}
+            </div>
+
+            <button
+                    class="w-full mt-6 inline-block rounded-sm border border-red-600 bg-red-900 px-12 py-3 text-sm font-medium text-white hover:bg-transparent hover:text-red-600 focus:ring-3 focus:outline-none"
+                type="submit"
+            >
+                Guardar
+            </button>
+        </form>
+    </div>
+</div>
+
+{% endblock content %}

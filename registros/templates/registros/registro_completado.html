@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-12">
+    <div class="max-w-md mx-auto bg-white rounded-lg shadow-md p-6 text-center">
+        <svg class="mx-auto h-16 w-16 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+        </svg>
+        <h2 class="text-2xl font-bold mb-4 mt-4">¡Registro Completado!</h2>
+        <p class="mb-6 text-gray-600">Tu cuenta ha sido creada exitosamente. Ahora puedes acceder a los servicios de la biblioteca.</p>
+        
+        <div class="bg-gray-50 p-4 rounded-lg mb-6 text-left">
+            <h3 class="font-bold mb-2">Datos de tu cuenta:</h3>
+            <p><span class="font-medium">Usuario:</span> {{ usuario.username }}</p>
+            <p><span class="font-medium">Email:</span> {{ usuario.email }}</p>
+            <p class="mt-2 text-sm text-gray-500">Tu credencial estará lista en 24-48 horas. Puedes recogerla en la biblioteca seleccionada presentando una identificación.</p>
+        </div>
+        
+        <div class="flex justify-center">
+            <a href="{% url 'login' %}" class="px-6 py-2 bg-red-900 text-white rounded hover:bg-red-800">
+                Iniciar Sesión
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

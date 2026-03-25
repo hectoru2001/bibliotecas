@@ -1,0 +1,64 @@
+{% extends "base_admin.html" %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <h1 class="text-2xl font-bold mb-6">Confirmar datos (Muestra de 100 registros)</h1>
+    <div>
+        {{ error }}
+    </div>
+
+    <div class="bg-white shadow-md rounded-lg overflow-hidden">
+        {% if page_obj %}
+        <div class="overflow-x-auto">
+            <table class="min-w-full bg-white">
+                <thead class="bg-gray-100 border-b">
+                    <tr>
+                        {% for key in page_obj.0.keys %}
+                        <th class="text-left py-3 px-4 font-semibold text-gray-700">{{ key }}</th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for fila in page_obj %}
+                    <tr class="border-b hover:bg-gray-50">
+                        {% for valor in fila.values %}
+                        <td class="py-2 px-4 text-sm text-gray-700">{{ valor }}</td>
+                        {% endfor %}
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="flex items-center justify-between px-4 py-3 bg-gray-50 border-t">
+            <div class="text-sm text-gray-700">
+                Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}
+            </div>
+            <div class="flex gap-2">
+                {% if page_obj.has_previous %}
+                    <a href="?page=1" class="px-3 py-1 border rounded hover:bg-white">&laquo; Primero</a>
+                    <a href="?page={{ page_obj.previous_page_number }}" class="px-3 py-1 border rounded hover:bg-white">Anterior</a>
+                {% endif %}
+
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}" class="px-3 py-1 border rounded hover:bg-white">Siguiente</a>
+                    <a href="?page={{ page_obj.paginator.num_pages }}" class="px-3 py-1 border rounded hover:bg-white">Último &raquo;</a>
+                {% endif %}
+            </div>
+        </div>
+        {% else %}
+        <div class="p-6 text-gray-500">No hay datos para confirmar.</div>
+        {% endif %}
+    </div>
+
+    <div class="mt-6 flex gap-3">
+        <form method="POST" action="{% url 'procesar_final' %}">
+            {% csrf_token %}
+            <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">
+                Confirmar e Importar Todo
+            </button>
+        </form>
+        <a href="{% url 'carga_fichas' %}" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded">Volver</a>
+    </div>
+</div>
+{% endblock %}

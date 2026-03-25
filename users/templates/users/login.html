@@ -1,0 +1,267 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar Sesión</title>
+    <style>
+        :root {
+        /* Colores basados en tu diseño: guinda/vino */
+        --color-guinda: #831F46; 
+        --color-guinda-oscuro: #2e425e;
+        /* El fondo de los inputs ahora es semi-transparente para el efecto blur */
+        --color-fondo-form-blur: rgba(75, 20, 48, 0.85); 
+        --color-blanco: #ffffff;
+        --color-gris-claro: #f8f8f8;
+        --color-input-bg: var(--color-blanco); /* Inputs en blanco para alto contraste */
+        --color-label-text: var(--color-blanco); /* Etiquetas en blanco */
+        --color-input-border: #ccc;
+        --color-input-focus: #922453;
+    }
+
+    body {
+        font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+        /* Usando el fondo original del login */
+        background: linear-gradient(rgba(146, 36, 83, 0.3), rgba(146, 36, 83, 0.3)), url('{% static "images/batnew.png" %}') no-repeat center center/cover;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        margin: 0;
+    }
+
+    /* ---------------------------------- */
+    /* Contenedor Principal (Dos Columnas) */
+    /* AJUSTE CLAVE: Aumentamos el ancho total para dar espacio */
+    /* ---------------------------------- */
+    .split-container {
+        display: flex;
+        width: 90%;
+        /* ANCHO ÓPTIMO PARA SIMETRÍA Y TAMAÑO DE INPUTS */
+        max-width: 700px; 
+        /* ALTURA SIMILAR A LA IMAGEN ORIGINAL */
+        height: 480px; 
+        background: var(--color-blanco);
+        border-radius: 0.5rem;
+        overflow: hidden;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        margin: 2rem 0; 
+    }
+
+    /* Panel Izquierdo */
+    .left-panel {
+        /* AJUSTE CLAVE: Hacemos los paneles de tamaño similar */
+        flex: 1; 
+        background-color: var(--color-blanco);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 1.5rem;
+        text-align: center;
+    }
+
+    .main-logo {
+        width: 100px; 
+        margin-bottom: 0.5rem;
+    }
+
+    .text-group {
+        display: flex;
+        flex-direction: column;
+        margin-top: 0.5rem;
+        color: var(--color-guinda);
+    }
+
+    .text-heroica {
+        font-size: 0.8rem; 
+        font-weight: 300;
+    }
+
+    .text-city {
+        font-size: 1.8rem; 
+        font-weight: 900;
+        line-height: 1.1;
+        margin-bottom: 0.5rem;
+    }
+
+    .text-government {
+        font-size: 0.7rem; 
+        color: #888;
+    }
+
+    /* Panel Derecho (Background y centrado) */
+    .right-panel {
+        /* AJUSTE CLAVE: Hacemos los paneles de tamaño similar */
+        flex: 1; 
+        background: linear-gradient(135deg, var(--color-guinda), var(--color-guinda-oscuro));
+        color: var(--color-blanco);
+        display: flex;
+        flex-direction: column;
+        align-items: center; 
+        justify-content: center; 
+        padding: 0; 
+        position: relative; 
+    }
+
+    /* Contenedor del Formulario */
+    .form-content {
+        /* Aseguramos que el contenido ocupe el 80% del panel guinda */
+        width: 80%; 
+        max-width: none; 
+        background-color: transparent; 
+        /* PADDING AJUSTADO PARA QUE NO SE VEA Apretado */
+        padding: 1.8rem 1rem; 
+        border-radius: 0; 
+        box-shadow: none; 
+        display: flex;
+        flex-direction: column;
+        align-items: center; 
+        text-align: center;
+        backdrop-filter: none; 
+        border: none;
+        height: 100%; 
+        box-sizing: border-box;
+        justify-content: center;
+    }
+    
+    /* --- Estilos para el logo superior --- */
+    .login-header {
+        margin-bottom: 1.5rem;
+        text-align: center;
+    }
+
+    .login-logo {
+        /* TAMAÑO DEL LOGO AJUSTADO */
+        width: 100px; 
+        height: auto;
+    }
+    /* ------------------------------------------- */
+
+    /* Campo de Formulario */
+    .form-field {
+        margin-bottom: 1rem; 
+        text-align: left;
+        width: 100%; 
+    }
+
+    /* Label */
+    .form-field label {
+        color: var(--color-blanco);
+        font-size: 0.95rem; /* Un poco más grande para mejor lectura */
+        font-weight: 500;
+        margin-bottom: 0.25rem;
+        display: block; 
+    }
+
+    /* Input: fondo blanco para alto contraste */
+    .form-field input {
+        width: 100%;
+        /* PADDING ÓPTIMO */
+        padding: 0.5rem 0.75rem;
+        font-size: 0.95rem;
+        border: none; 
+        border-radius: 0.25rem;
+        outline: none;
+        transition: box-shadow 0.2s;
+        background-color: var(--color-input-bg);
+        color: #333; 
+        box-sizing: border-box; 
+    }
+
+    /* Botón de Iniciar Sesión */
+    .submit-button {
+        width: 100%;
+        /* PADDING ÓPTIMO */
+        padding: 0.65rem;
+        margin-top: 1rem; 
+        font-size: 1rem; /* Buen tamaño para el botón */
+        border: none;
+        background-color: var(--color-blanco);
+        color: var(--color-guinda);
+        font-weight: 700;
+        border-radius: 0.25rem;
+        cursor: pointer;
+        transition: background-color 0.2s;
+    }
+
+    /* Enlace de Registro */
+    .register-link {
+        text-align: center;
+        margin-top: 0.6rem; 
+        font-size: 0.85rem;
+    }
+
+    /* Logos del Footer */
+    .site-footer-logos {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 3rem;
+        margin-top: 1rem;
+        padding: 1rem;
+    }
+
+    .footer-logo {
+        height: 60px;
+        width: auto;
+    }
+    </style>
+</head>
+
+<body>
+
+    <div class="split-container">
+        
+        <div class="left-panel">
+            <img src="{% static 'images/Juarez2024-2027-01.png' %}" alt="Juárez 2024-2027" class="main-logo">
+            <div class="text-group">
+                <span class="text-heroica">HERÓICA</span>
+                <span class="text-city">CIUDAD JUÁREZ</span>
+                <span class="text-government">Gobierno Municipal 2024-2027</span>
+            </div>
+        </div>
+
+        <div class="right-panel">
+            
+            <div class="form-content"> 
+                
+                <div class="login-header">
+                    <img src="{% static 'images/biblioaprende.png' %}" alt="Logo BiblioAprende" class="login-logo">
+                </div>
+                <form method="POST" style="width: 100%;">
+                    {% csrf_token %}
+                    
+                    <div class="form-field">
+                        <label for="{{ form.username.id_for_label }}">Correo electrónico</label>
+                        {{ form.username }} 
+                        </div>
+
+                    <div class="form-field">
+                        <label for="{{ form.password.id_for_label }}">Contraseña</label>
+                        <div class="logo-input-container">
+                            {{ form.password }}
+                        </div>
+                        </div>
+                    
+                    <button type="submit" class="submit-button">
+                        Iniciar Sesión
+                    </button>
+                </form>
+
+                <p class="register-link">
+                    ¿No tienes una cuenta? <a href="{% url 'credencial' %}">Regístrate</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="site-footer-logos">
+        <img src="{% static 'images/jrzconectado.png' %}" alt="Logo Juárez Conectado" class="footer-logo">
+        <img src="{% static 'images/dgic.png' %}" alt="Logo DGIC" class="footer-logo">
+    </div>
+
+</body>
+</html>

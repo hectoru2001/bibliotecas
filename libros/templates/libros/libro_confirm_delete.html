@@ -1,0 +1,52 @@
+{% extends "base_admin.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-10">
+    <div class="max-w-md mx-auto bg-white rounded-lg shadow-lg overflow-hidden">
+        <div class="px-6 py-4 bg-red-500 text-white">
+            <div class="flex items-center">
+                <svg class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+                <h2 class="text-xl font-bold">Confirmar Eliminación</h2>
+            </div>
+        </div>
+        
+        <div class="p-6">
+            <p class="text-gray-700 mb-6">
+                ¿Estás seguro de que deseas eliminar el libro <strong>"{{ libro.titulo }}"</strong> de <em>{{ libro.autor }}</em>?
+            </p>
+            
+            <div class="bg-gray-50 p-4 rounded-md mb-6">
+                <h3 class="font-semibold mb-2">Información del libro:</h3>
+                <ul class="text-sm">
+                    <li><span class="text-gray-600">ISBN:</span> {{ libro.isbn|default:"No disponible" }}</li>
+                    <li><span class="text-gray-600">Editorial:</span> {{ libro.editorial|default:"No disponible" }}</li>
+                    <li><span class="text-gray-600">Biblioteca:</span> {{ libro.biblioteca.nombre }}</li>
+                </ul>
+            </div>
+            
+            <div class="text-red-600 mb-6">
+                <svg class="inline-block w-5 h-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+                <span class="font-medium">Esta acción no se puede deshacer.</span>
+            </div>
+            
+            <div class="flex justify-end space-x-3">
+                <a href="{% url 'detail_libro' libro.id %}" class="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300">
+                    Cancelar
+                </a>
+                
+                <form method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700">
+                        Eliminar
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,287 @@
+{% extends "base_admin.html" %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <!-- Mensajes de alerta -->
+    {% if messages %}
+    <div class="mb-6">
+        {% for message in messages %}
+        <div class="p-4 mb-4 {% if message.tags == 'error' %}bg-red-100 text-red-700 border-red-400{% elif message.tags == 'success' %}bg-green-100 text-green-700 border-green-400{% else %}bg-blue-100 text-blue-700 border-blue-400{% endif %} border-l-4 rounded">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    
+    <!-- Sección de pre-registros pendientes -->
+    <!-- ESTA SECCIÓN MUESTRA LOS IDs DISPONIBLES Y EL ENLACE PARA CARGAR LOS DATOS -->
+    <div class="max-w-3xl mx-auto mb-8 bg-white rounded-lg shadow-md overflow-hidden">
+        <div class="bg-gradient-to-r from-red-800 to-red-900 px-6 py-4">
+            <h2 class="text-xl font-bold text-white">Pre-registros pendientes (Clic en 'Usar datos')</h2>
+        </div>
+        <div class="p-6">
+            <!-- Campo de búsqueda -->
+            <div class="mb-4">
+                <input type="text" id="search-pre-registros" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500" placeholder="Buscar por nombre o correo...">
+            </div>
+            <div id="pre-registros-table">
+                {% if pre_registros %}
+                <table class="w-full text-left">
+                    <thead>
+                        <tr class="bg-gray-100">
+                            <th class="px-4 py-2">ID</th>
+                            <th class="px-4 py-2">Nombre</th>
+                            <th class="px-4 py-2">CURP</th>
+                            <th class="px-4 py-2">Acción</th>
+                            <!-- Columna Domicilio eliminada para simplificar la vista -->
+                        </tr>
+                    </thead>
+                    <tbody id="pre-registros-body">
+                        {% for pr in pre_registros %}
+                        <tr class="border-b">
+                            <td class="px-4 py-2">{{ pr.id }}</td>
+                            <td class="px-4 py-2">{{ pr.nombres }} {{ pr.apellido_paterno }} {{ pr.apellido_materno }}</td>
+                            <td class="px-4 py-2">{{ pr.curp }}</td>
+                            <td class="px-4 py-2">
+                                <!-- Este enlace es clave: apunta a tu vista de prellenado -->
+                                <a href="/registros/paso1/prellenar/{{ pr.id }}/" class="text-red-600 font-medium hover:text-red-800 transition duration-150">Usar datos</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <p class="text-gray-600">No hay pre-registros pendientes.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="max-w-3xl mx-auto bg-white rounded-lg shadow-md overflow-hidden">
+        <div class="bg-gradient-to-r from-red-800 to-red-900 px-6 py-4">
+            <h1 class="text-xl font-bold text-white">Registro - Paso 1 de 3: Datos del Visitante</h1>
+        </div>
+        
+        <!-- Indicador de progreso -->
+        <div class="px-6 pt-4">
+            <div class="w-full bg-gray-200 rounded-full h-2.5 mb-1">
+                <div class="bg-red-900 h-2.5 rounded-full" style="width: 33%"></div>
+            </div>
+            <div class="flex justify-between text-xs text-gray-500">
+                <span class="font-bold text-red-900">Paso 1</span>
+                <span>Paso 2</span>
+                <span>Paso 3</span>
+            </div>
+        </div>
+        
+        <form method="post" 
+            {% if pre_registro_id %}action="{% url 'registro_paso1_prellenar' pre_registro_id %}"{% endif %}
+            class="p-6">
+            {% csrf_token %}
+            <!-- Mensajes de Django -->
+            {% if messages %}
+            <div class="mb-4">
+                {% for message in messages %}
+                <div class="p-4 mb-2 rounded-md {% if message.tags == 'error' %}bg-red-100 border border-red-400 text-red-700{% elif message.tags == 'success' %}bg-green-100 border border-green-400 text-green-700{% else %}bg-blue-100 border border-blue-400 text-blue-700{% endif %}">
+                    {{ message }}
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            {% if pre_registro_data %}
+            <input type="hidden" name="pre_registro_id" value="{{ pre_registro_data.id }}">
+            <div class="mb-4 p-4 bg-green-100 border border-green-400 rounded">
+                <p class="text-green-800 font-semibold">Datos prellenados desde pre-registro ID: {{ pre_registro_data.id }}. Por favor, verifique y complete la contraseña.</p>
+                <p class="text-green-700 text-sm mt-1">
+                Por favor, verifique los datos y complete los campos faltantes (contraseña, edad, etc.).
+                </p>
+            </div>
+            {% endif %}
+
+            <!-- Datos personales -->
+            <div class="mb-8">
+                <h2 class="text-lg font-semibold text-gray-800 mb-4 pb-2 border-b">Datos personales</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                        <label for="nombres" class="block text-sm font-medium text-gray-700 mb-1">Nombres*</label>
+                        <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500" 
+                               id="nombres" name="nombres" required 
+                               value="{{ pre_registro_data.nombres|default:'' }}">
+                    </div>
+                    <div>
+                        <label for="apellido_paterno" class="block text-sm font-medium text-gray-700 mb-1">Apellido Paterno*</label>
+                        <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500" 
+                               id="apellido_paterno" name="apellido_paterno" required 
+                               value="{{ pre_registro_data.apellido_paterno|default:'' }}">
+                    </div>
+                    <div>
+                        <label for="apellido_materno" class="block text-sm font-medium text-gray-700 mb-1">Apellido Materno*</label>
+                        <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500" 
+                               id="apellido_materno" name="apellido_materno" required 
+                               value="{{ pre_registro_data.apellido_materno|default:'' }}">
+                    </div>
+                    <div>
+                        <label for="edad" class="block text-sm font-medium text-gray-700 mb-1">Edad*</label>
+                        <input type="number" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500" 
+                               id="edad" name="edad" required 
+                               value="{{ pre_registro_data.edad|default:'' }}">
+                    </div>
+                    <!-- <div>
+                        <label for="curp" class="block text-sm font-medium text-gray-700 mb-1">CURP*</label>
+                        <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500" 
+                               id="curp" name="curp" required 
+                               value="{{ pre_registro_data.curp|default:'' }}">
+                    </div> -->
+                    <!-- CURP -->
+                    <div>
+                        <label for="curp" class="block text-sm font-medium text-gray-700 mb-1">CURP*</label>
+                        <input type="text" id="curp" name="curp" required maxlength="18"
+                                class="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-red-500 {% if form.curp.errors %}border-red-500{% else %}border-gray-300{% endif %}"
+                                value="{% if form.curp.value %}{{ form.curp.value }}{% elif pre_registro_data %}{{ pre_registro_data.curp }}{% endif %}">
+                        {% if form.curp.errors %}<p class="mt-1 text-sm text-red-600">{{ form.curp.errors.0 }}</p>{% endif %}
+                    </div>
+                    <div>
+                        <label for="telefono" class="block text-sm font-medium text-gray-700 mb-1">Teléfono*</label>
+                        <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500" 
+                               id="telefono" name="telefono" required 
+                               value="{{ pre_registro_data.telefono|default:'' }}">
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Datos de acceso -->
+            <div class="mb-8">
+                <h2 class="text-lg font-semibold text-gray-800 mb-4 pb-2 border-b">Datos de acceso</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="col-span-2 md:col-span-1">
+                        <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Correo electrónico*</label>
+                        <input type="email" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500" 
+                               id="email" name="email" required 
+                               value="{{ pre_registro_data.email|default:'' }}">
+                    </div>
+                    <div class="col-span-2 md:col-span-1">
+                        <label for="username" class="block text-sm font-medium text-gray-700 mb-1">Nombre de usuario*</label>
+                        <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500" 
+                               id="username" name="username" required 
+                               value="{{ pre_registro_data.username|default:'' }}">
+                    </div>
+                    <div class="col-span-2 md:col-span-1">
+                        <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Contraseña*</label>
+                        <input type="password" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500" id="password" name="password" required>
+                    </div>
+                    <div class="col-span-2 md:col-span-1">
+                        <label for="confirm_password" class="block text-sm font-medium text-gray-700 mb-1">Confirmar contraseña*</label>
+                        <input type="password" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500" id="confirm_password" name="confirm_password" required>
+                    </div>
+                </div>
+            </div>
+            
+            
+            <!-- Información profesional -->
+            <div class="mb-8">
+                <h2 class="text-lg font-semibold text-gray-800 mb-4 pb-2 border-b">Información profesional</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label for="ocupacion" class="block text-sm font-medium text-gray-700 mb-1">Ocupación*</label>
+                        <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500" 
+                               id="ocupacion" name="ocupacion" required 
+                               value="{{ pre_registro_data.ocupacion|default:'' }}">
+                    </div>
+                    <div>
+                        <label for="escuela_trabajo" class="block text-sm font-medium text-gray-700 mb-1">Escuela o trabajo*</label>
+                        <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500" 
+                               id="escuela_trabajo" name="escuela_trabajo" required 
+                               value="{{ pre_registro_data.escuela_trabajo|default:'' }}">
+                    </div>
+                    <div>
+                        <label for="telefono_escuela_trabajo" class="block text-sm font-medium text-gray-700 mb-1">Teléfono de la escuela o trabajo*</label>
+                        <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:focus:border-red-500" 
+                               id="telefono_escuela_trabajo" name="telefono_escuela_trabajo" required 
+                               value="{{ pre_registro_data.telefono_escuela_trabajo|default:'' }}">
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-6 gap-4">
+                        <div class="col-span-6 md:col-span-4">
+                            <label for="domicilio" class="block text-sm font-medium text-gray-700 mb-1">Domicilio*</label>
+                            <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:focus:border-red-500" 
+                                   id="domicilio" name="domicilio" required 
+                                   value="{{ pre_registro_data.domicilio|default:'' }}">
+                        </div>
+                        <div class="col-span-6 md:col-span-2">
+                            <label for="codigo_postal" class="block text-sm font-medium text-gray-700 mb-1">Código Postal*</label>
+                            <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:focus:border-red-500" 
+                                   id="codigo_postal" name="codigo_postal" required 
+                                   value="{{ pre_registro_data.codigo_postal|default:'' }}">
+                        </div>
+                    </div>
+                    <div>
+                        <label for="role" class="block text-sm font-medium text-gray-700 mb-1">Rol*</label>
+                        <select class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500" 
+                                id="role" name="role" required>
+                            <option value="visitor" {% if pre_registro_data.role == 'visitor' %}selected{% endif %}>Visitante</option>
+                            <!-- Agrega aquí otras opciones de rol según necesites -->
+                        </select>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Biblioteca -->
+            <div class="mb-8">
+                <h2 class="text-lg font-semibold text-gray-800 mb-4 pb-2 border-b">Biblioteca</h2>
+                <div>
+                    <label for="{{ form.biblioteca.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">
+                        {{ form.biblioteca.label }}{% if form.biblioteca.field.required %}*{% endif %}
+                    </label>
+                    <!-- Asumiendo que 'form.biblioteca' ya se renderiza con el valor correcto si viene de un post fallido -->
+                    {{ form.biblioteca }}
+                    {% if form.biblioteca.errors %}
+                    <p class="text-red-600 text-xs mt-1">{{ form.biblioteca.errors.0 }}</p>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <!-- Botones de acción -->
+            <div class="flex justify-end border-t pt-6">
+                <button type="submit" class="px-5 py-2 bg-red-900 text-white rounded-md hover:bg-red-800 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2">
+                    Siguiente 
+                    <svg class="inline-block w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                    </svg>
+                </button>
+            </div>
+        </form>
+        <!-- Mantenemos el script de búsqueda AJAX para la tabla, pero quitamos el bloque de carga por ID de JS -->
+        <script>
+            document.getElementById('search-pre-registros').addEventListener('input', function() {
+                const query = this.value;
+                // NOTA: La URL '/registro/buscar-pre-registros/' debe ser un endpoint de API en tu servidor
+                fetch(`/registro/buscar-pre-registros/?q=${query}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        const tbody = document.getElementById('pre-registros-body');
+                        tbody.innerHTML = '';
+                        if (data.pre_registros.length > 0) {
+                            data.pre_registros.forEach(pr => {
+                                // Se asume que 'pr' tiene 'id', 'nombres', 'apellido_paterno', 'apellido_materno', 'email'
+                                const fullName = pr.nombres + ' ' + (pr.apellido_paterno || '') + ' ' + (pr.apellido_materno || '');
+                                const row = `
+                                    <tr class="border-b">
+                                        <td class="px-4 py-2">${pr.id}</td>
+                                        <td class="px-4 py-2">${fullName}</td>
+                                        <td class="px-4 py-2">${pr.email}</td>
+                                        <td class="px-4 py-2">
+                                            <a href="/registro/paso1/prellenar/${pr.id}/" class="text-red-600 font-medium hover:text-red-800 transition duration-150">Usar datos</a>
+                                        </td>
+                                    </tr>
+                                `;
+                                tbody.innerHTML += row;
+                            });
+                        } else {
+                            tbody.innerHTML = '<tr><td colspan="4" class="px-4 py-2 text-gray-600">No se encontraron pre-registros.</td></tr>';
+                        }
+                    });
+            });
+        </script>
+    </div>
+</div>
+{% endblock %}

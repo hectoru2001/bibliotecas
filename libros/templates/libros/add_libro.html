@@ -1,0 +1,210 @@
+{% extends "base_admin.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <!-- Encabezado con título y botón de volver -->
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-2xl font-bold">Agregar Nuevo Libro</h1>
+        <a href="{% url 'list_libro' %}" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded flex items-center">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+            </svg>
+            Volver
+        </a>
+    </div>
+
+    <div class="bg-white shadow-md rounded-lg overflow-hidden">
+        <div class="p-6">
+            <form action="{% url 'add_libro' %}" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <!-- Campo oculto para almacenar el número de ficha -->
+                <input type="hidden" id="numadqui" name="numadqui" value="">
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Columna izquierda: Datos básicos del libro -->
+                    <div class="space-y-4">
+                        <h2 class="text-lg font-semibold">Información Básica</h2>
+
+                        <!-- Campo de búsqueda para fichas -->
+                        <div>
+                            <label for="search_ficha" class="block text-sm font-medium text-gray-700">Buscar Ficha</label>
+                            <input type="text" id="search_ficha" name="search_ficha" placeholder="Buscar por título, ficha o autor..." class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-red-500 focus:border-red-500">
+                            <button type="button" id="search_ficha_btn" class="mt-2 bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded">Buscar</button>
+                        </div>
+
+                        <div>
+                            <label for="titulo" class="block text-sm font-medium text-gray-700">Título del Libro *</label>
+                            <input type="text" id="titulo" name="titulo" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-red-500 focus:border-red-500">
+                        </div>
+                        
+                        <div>
+                            <label for="autor" class="block text-sm font-medium text-gray-700">Autor *</label>
+                            <input type="text" id="autor" name="autor" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-red-500 focus:border-red-500">
+                        </div>
+                        
+                        <div>
+                            <label for="isbn" class="block text-sm font-medium text-gray-700">ISBN</label>
+                            <input type="text" id="isbn" name="isbn" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-red-500 focus:border-red-500">
+                            <p class="mt-1 text-xs text-gray-500">Formato estándar de 10 o 13 dígitos</p>
+                        </div>
+
+                        <div>
+                            <label for="editorial" class="block text-sm font-medium text-gray-700">Editorial</label>
+                            <input type="text" id="editorial" name="editorial" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-red-500 focus:border-red-500">
+                        </div>
+                        
+                        <div>
+                            <label for="año_publicacion" class="block text-sm font-medium text-gray-700">Año de Publicación</label>
+                            <input type="text" id="año_publicacion" name="año_publicacion" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-red-500 focus:border-red-500">
+                        </div>
+                    </div>
+                    
+                    <!-- Columna derecha: Clasificación y Ubicación -->
+                    <div class="space-y-4">
+                        <h2 class="text-lg font-semibold">Clasificación y Ubicación</h2>
+                        
+                        <div>
+                            <label for="categoria" class="block text-sm font-medium text-gray-700">Categoría *</label>
+                            <select id="categoria" name="categoria" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-red-500 focus:border-red-500">
+                                {% for choice in form.categoria.field.choices %}
+                                    <option value="{{ choice.0 }}" {% if form.categoria.value == choice.0 %}selected{% endif %}>
+                                        {{ choice.1 }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                            {{ form.categoria.errors }}
+                        </div>
+                        
+                        <div>
+                            <label for="estado" class="block text-sm font-medium text-gray-700">Estado *</label>
+                            <select id="estado" name="estado" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-red-500 focus:border-red-500">
+                                {% for choice in form.estado.field.choices %}
+                                    <option value="{{ choice.0 }}" {% if form.estado.value == choice.0 %}selected{% endif %}>
+                                        {{ choice.1 }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                            {{ form.estado.errors }}
+                        </div>    
+                        <div>
+                            <label for="{{ form.biblioteca.id_for_label }}" class="block text-sm font-medium text-gray-700">Biblioteca *</label>
+                            {{ form.biblioteca }}
+                            {{ form.biblioteca.errors }}
+                        </div>
+                            <label for="descripcion" class="block text-sm font-medium text-gray-700">Descripción</label>
+                            <textarea id="descripcion" name="descripcion" rows="4" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-red-500 focus:border-red-500"></textarea>
+                        </div>
+                        
+                        <div>
+                            <label for="portada" class="block text-sm font-medium text-gray-700">Portada</label>
+                            <input type="file" id="portada" name="portada" class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-red-50 file:text-red-700 hover:file:bg-red-100">
+                            <p class="mt-1 text-xs text-gray-500">Formatos: JPG, PNG. Máx: 2MB</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mt-6 pt-4 border-t flex justify-end space-x-3">
+                    <a href="{% url 'list_libro' %}" class="bg-gray-500 hover:bg-gray-600 text-white py-2 px-4 rounded">
+                        Cancelar
+                    </a>
+                    <button type="submit" class="bg-green-700 hover:bg-green-800 text-white py-2 px-6 rounded">
+                        Guardar Libro
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para mostrar resultados de búsqueda -->
+<div id="fichaModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center hidden">
+    <div class="bg-white rounded-lg shadow-lg p-6 w-full max-w-lg">
+        <div class="flex justify-between items-center mb-4">
+            <h2 class="text-lg font-semibold">Resultados de Búsqueda</h2>
+            <button id="closeModal" class="text-gray-500 hover:text-gray-700">×</button>
+        </div>
+        <div id="fichaResults" class="max-h-64 overflow-y-auto">
+            <!-- Los resultados se llenarán dinámicamente con JavaScript -->
+        </div>
+    </div>
+</div>
+
+{% block extra_js %}
+<script>
+    // Mostrar/Ocultar el modal
+    const modal = document.getElementById('fichaModal');
+    const closeModalBtn = document.getElementById('closeModal');
+    const searchBtn = document.getElementById('search_ficha_btn');
+    const searchInput = document.getElementById('search_ficha');
+    const resultsDiv = document.getElementById('fichaResults');
+
+    searchBtn.addEventListener('click', () => {
+        const query = searchInput.value.trim();
+        if (query) {
+            fetch(`/libros/search_ficha/?q=${query}`, {
+                method: 'GET',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                },
+            })
+            .then(response => response.json())
+            .then(data => {
+                resultsDiv.innerHTML = '';
+                if (data.fichas.length > 0) {
+                    data.fichas.forEach(ficha => {
+                        const div = document.createElement('div');
+                        div.className = 'p-2 border-b';
+                        div.innerHTML = `
+                            <p><strong>Ficha:</strong> ${ficha.ficha_no}</p>
+                            <p><strong>Título:</strong> ${ficha.titulo}</p>
+                            <p><strong>Autor:</strong> ${ficha.autor}</p>
+                            <p><strong>ISBN:</strong> ${ficha.isbn}</p>
+                            <button class="bg-green-500 hover:bg-green-600 text-white py-1 px-2 rounded mt-2 select-ficha"
+                                    data-ficha-no="${ficha.ficha_no}"
+                                    data-titulo="${ficha.titulo}"
+                                    data-autor="${ficha.autor}"
+                                    data-isbn="${ficha.isbn}">
+                                Agregar
+                            </button>
+                        `;
+                        resultsDiv.appendChild(div);
+                    });
+                    modal.classList.remove('hidden');
+                } else {
+                    resultsDiv.innerHTML = '<p class="text-gray-500">No se encontraron fichas.</p>';
+                    modal.classList.remove('hidden');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                resultsDiv.innerHTML = '<p class="text-red-500">Error al buscar fichas.</p>';
+                modal.classList.remove('hidden');
+            });
+        }
+    });
+
+    closeModalBtn.addEventListener('click', () => {
+        modal.classList.add('hidden');
+    });
+
+    // Llenar los campos del formulario al seleccionar una ficha
+    document.addEventListener('click', (e) => {
+        if (e.target.classList.contains('select-ficha')) {
+            const fichaNo = e.target.getAttribute('data-ficha-no');
+            const titulo = e.target.getAttribute('data-titulo');
+            const autor = e.target.getAttribute('data-autor');
+            const isbn = e.target.getAttribute('data-isbn');
+
+            document.getElementById('numadqui').value = fichaNo || '';
+            document.getElementById('titulo').value = titulo || '';
+            document.getElementById('autor').value = autor || '';
+            document.getElementById('isbn').value = isbn || '';
+
+            modal.classList.add('hidden');
+        }
+    });
+</script>
+{% endblock extra_js %}
+
+{% endblock content %}

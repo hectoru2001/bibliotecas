@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consulta sala de lectura - Bibliotecas Públicas Municipales</title>
+    <style>
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0, 0, 0, 0.4);
+    }
+
+    .modal-content {
+        background-color: #fefefe;
+        margin: 5% auto;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 80%;
+        max-width: 600px;
+        border-radius: 10px;
+    }
+    h1 {
+        font-size: 24px;
+        font-weight: bold;
+        margin-bottom: 20px;
+        color: #ffffff;
+    }
+
+    h2 {
+        font-size: 30px;
+        font-weight: bold;
+        margin-bottom: 15px;
+        color: #8d0042;
+    }
+
+    h3 {
+        font-size: 16px;
+        font-weight: bold;
+        margin-top: 20px;
+        margin-bottom: 10px;
+        color: #000000;
+    }
+
+    h4 {
+        font-size: 16px;
+        font-weight: bold;
+        margin-top: 15px;
+        margin-bottom: 8px;
+        color: #700142;
+    }
+    .section {
+        display: none;
+        background-color: rgb(189, 184, 184);
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+    }
+
+    .section.active {
+        display: block;
+    }
+    /* Container for grouping fields horizontally */
+    .field-group {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        margin-bottom: 15px;
+    }
+    /* Individual field container */
+    .field {
+        flex: 1;
+        min-width: 200px; /* Minimum width to prevent fields from shrinking too much */
+    }
+    /* Estilo moderno para inputs */
+    input[type="text"],
+    input[type="email"],
+    input[type="number"],
+    select {
+        width: 100%;
+        padding: 10px 12px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        font-size: 14px;
+        transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        background-color: #f9f9f9;
+        box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
+    }
+
+    input[type="text"]:focus,
+    input[type="email"]:focus,
+    input[type="number"]:focus,
+    select:focus {
+        border-color: #8d0042;
+        box-shadow: 0 0 0 3px rgba(141, 0, 66, 0.2);
+        outline: none;
+        background-color: #fff;
+    }
+
+    /* Etiquetas más modernas */
+    label {
+        font-weight: 600;
+        color: #444;
+        margin-bottom: 6px;
+        display: block;
+        font-size: 13px;
+    }
+
+    /* Botón moderno */
+    button.button {
+        background: linear-gradient(to right, #a0004f, #700033);
+        border: none;
+        padding: 12px 20px;
+        font-size: 14px;
+        font-weight: bold;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: background 0.3s ease;
+    }
+
+    button.button:hover {
+        background: linear-gradient(to right, #700033, #a0004f);
+    }
+
+    .close {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+    }
+
+    .close:hover,
+    .close:focus {
+        color: black;
+        text-decoration: none;
+        cursor: pointer;
+    }
+    .alert {
+        padding: 10px;
+        margin: 10px 0;
+        border-radius: 5px;
+    }
+
+    .alert.success {
+        background-color: #d4edda;
+        color: #155724;
+    }
+
+    .alert.error {
+        background-color: #f8d7da;
+        color: #721c24;
+    }
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .field-group {
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .field {
+            min-width: 100%;
+        }
+
+        .navigation {
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        button {
+            width: 100%;
+        }
+    }
+    </style>
+</head>
+<body>
+        <!-- templates/visita/visita_registro_modal.html -->
+        <div id="visitaModal" class="modal">
+            <div class="modal-content">
+                <span class="close" aria-label="Cerrar modal">×</span>
+                <h2>Consulta disponibilidad</h2>
+                {% if form.errors %}
+                    <div class="alert error">
+                        <ul>
+                            {% for field in form %}
+                                {% for error in field.errors %}
+                                    <li>{{ field.label }}: {{ error }}</li>
+                                {% endfor %}
+                            {% endfor %}
+                            {% for error in form.non_field_errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+                <form method="POST" action="{% url 'reservar_sala' %}">
+                    {% csrf_token %}
+                    <div id="section1" class="section active">
+                        <h3>Bibliotecas</h3>
+                        <div class="field-group">
+                            <div class="field">
+                                <label for="{{ form.biblioteca.id_for_label }}">Biblioteca*</label>
+                                {{ form.biblioteca }}
+                            </div>
+                        <h3>La fecha para reservar sala de lectura es a partir de 7 dias habiles</h3>
+                        <label for="{{ form.fecha_reserva.id_for_label }}">Fecha de la Reserva*</label>
+                        {{ form.fecha_reserva }}
+
+                        </div>
+                        <h3>Información del Responsable</h3>
+                        <div class="field">
+                            <label for="{{ form.nombre_resp.id_for_label }}">Nombre del Responsable*</label>
+                            {{ form.nombre_resp }}
+                        </div>
+                        <div class="field">
+                            <label for="{{ form.apellido_paterno.id_for_label }}">Apellido Paterno*</label>
+                            {{ form.apellido_paterno }}
+                        </div>
+                        <div class="field">
+                            <label for="{{ form.apellido_materno.id_for_label }}">Apellido Materno*</label>
+                            {{ form.apellido_materno }}
+                        </div>
+                        <h3>Información del proyecto</h3>
+                        <div class="field">
+                            <label for="{{ form.nombre_institucion.id_for_label }}">institucion:*</label>
+                            {{ form.nombre_institucion }}
+                        </div>
+                        <div class="field">
+                            <label for="{{ form.nombre_evento.id_for_label }}">Nombre del evento</label>
+                            {{ form.nombre_evento }}
+                        </div>
+                        <div class="field">
+                            <label for="{{ form.tipo_evento.id_for_label }}">Tipo de evento</label>
+                            {{ form.tipo_evento }}
+                        </div>
+                        <div class="field">
+                            <label for="{{ form.resena_proyecto.id_for_label }}">Reseña breve del proyecto</label>
+                            {{ form.resena_proyecto }}
+                        </div>
+                        <div class="field">
+                            <label for="{{ form.telefono.id_for_label }}">Telefono</label>
+                            {{ form.telefono }}
+                        </div>
+                        <div class="field">
+                            <label for="{{ form.edad_rango.id_for_label }}">Rango de Edadde los participantes*</label>
+                            {{ form.edad_rango }}
+                        </div>
+                        
+                    </div>
+                    <button type="submit" class="button">Consultar</button>
+                </form>
+            </div>
+        </div>
+</body>
+</html>

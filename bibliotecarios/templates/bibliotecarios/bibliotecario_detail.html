@@ -1,0 +1,92 @@
+{% extends "base_admin.html" %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-2xl font-bold">Detalle del Bibliotecario</h1>
+        <div class="space-x-2">
+            <a href="{% url 'update_bibliotecario' bibliotecario.id %}" class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded">
+                <svg class="inline w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path>
+                </svg>
+                Editar
+            </a>
+            <a href="{% url 'list_bibliotecario' %}" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded">
+                <svg class="inline w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                </svg>
+                Volver
+            </a>
+        </div>
+    </div>
+
+    <div class="bg-white shadow-md rounded-lg overflow-hidden">
+        <div class="px-6 py-4 bg-gray-50 border-b">
+            <h2 class="text-xl font-semibold">{{ bibliotecario.nombre }} {{ bibliotecario.apellido }}</h2>
+            <p class="text-sm text-gray-500">{{ bibliotecario.role }} - {{ bibliotecario.biblioteca.nombre }}</p>
+        </div>
+        
+        <div class="p-6">
+            <div class="grid md:grid-cols-2 gap-8">
+                <!-- Columna izquierda: Información -->
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Información Personal</h3>
+                    <dl class="space-y-3">
+                        <div class="grid grid-cols-3">
+                            <dt class="font-medium text-gray-600">Email:</dt>
+                            <dd class="col-span-2">{{ bibliotecario.email }}</dd>
+                        </div>
+                        
+                        <div class="grid grid-cols-3">
+                            <dt class="font-medium text-gray-600">Teléfono:</dt>
+                            <dd class="col-span-2">{{ bibliotecario.telefono }}</dd>
+                        </div>
+                        
+                        <div class="grid grid-cols-3">
+                            <dt class="font-medium text-gray-600">Fecha Alta:</dt>
+                            <dd class="col-span-2">{{ bibliotecario.fecha_creacion|date:"d/m/Y" }}</dd>
+                        </div>
+
+                        <div class="grid grid-cols-3">
+                            <dt class="font-medium text-gray-600">Dirección:</dt>
+                            <dd class="col-span-2">{{ bibliotecario.biblioteca.direccion }}</dd>
+                        </div>
+                    </dl>
+
+                <!-- Columna derecha: Información laboral -->
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Información Laboral</h3>
+                    <dl class="space-y-3">
+                        <div class="grid grid-cols-3">
+                            <dt class="font-medium text-gray-600">Rol:</dt>
+                            <dd class="col-span-2">{{ bibliotecario.role }}</dd>
+                        </div>
+                        
+                        <div class="grid grid-cols-3">
+                            <dt class="font-medium text-gray-600">Biblioteca:</dt>
+                            <dd class="col-span-2">
+                                <a href="{% url 'detail_biblioteca' bibliotecario.biblioteca.id %}" class="text-blue-600 hover:underline">
+                                    {{ bibliotecario.biblioteca.nombre }}
+                                </a>
+                            </dd>
+                        </div>
+                    </dl>
+
+                    <h3 class="text-lg font-semibold mt-6 mb-4">Información de Sistema</h3>
+                    <dl class="space-y-3">
+                        <div class="grid grid-cols-3">
+                            <dt class="font-medium text-gray-600">Fecha de registro:</dt>
+                            <dd class="col-span-2">{{ bibliotecario.fecha_creacion|date:"d/m/Y H:i" }}</dd>
+                        </div>
+                        
+                        <div class="grid grid-cols-3">
+                            <dt class="font-medium text-gray-600">Última actualización:</dt>
+                            <dd class="col-span-2">{{ bibliotecario.fecha_actualizacion|date:"d/m/Y H:i" }}</dd>
+                        </div>
+                    </dl>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

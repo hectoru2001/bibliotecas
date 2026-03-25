@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bitácora Mensual</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #2a1321;
+            color: #ffffff;
+            padding: 20px;
+        }
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 40px;
+            background-color: #2a1321;
+        }
+
+        .logo img {
+            height: 100px;
+        }
+
+        .main-nav {
+            display: flex;
+            align-items: center;
+        }
+
+        /* Style for the "Mi Cuenta" button */
+        .account-btn {
+            background-color: #922453;
+            color: #ffffff;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 25px; /* Rounded corners */
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            gap: 5px; /* Space between icon and text */
+        }
+
+        .account-btn::before {
+            content: "";
+        }
+
+        .account-btn:hover {
+            background-color: #e65a50; /* Slightly darker on hover */
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .calendar-form {
+            background: #ffffff;
+            color: #333;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .calendar-form select, .calendar-form button {
+            padding: 10px;
+            margin: 5px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+        .calendar-form button {
+            background-color: #e3342f;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        .calendar-form button:hover {
+            background-color: #c53030;
+        }
+        .results {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        .card {
+            background: #ffffff;
+            color: #333;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .chart-container {
+            background: #ffffff;
+            color: #333;
+            padding: 15px;
+            border-radius: 8px;
+            height: 400px;
+        }
+        .section-title {
+            color: #ffffff;
+            font-size: 24px;
+            margin: 20px 0 10px;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <img src="{% static 'images/Juarez2024-2027-03.png' %}" alt="">
+        </div>
+        <nav class="main-nav">
+            <h1>Bitácora Mensual</h1>
+        </nav>
+        <a href="/" class="account-btn">Atras</a>
+    </header>
+    <div class="container">
+        <form method="POST" class="calendar-form">
+            {% csrf_token %}
+            <select name="month">
+                {% for m in months %}
+                    <option value="{{ m }}" {% if m == selected_month %}selected{% endif %}>
+                        {{ m|title }} - {{ calendar.month_name.m|title }}
+                    </option>
+                {% endfor %}
+            </select>
+            <select name="year">
+                {% for y in years %}
+                    <option value="{{ y }}" {% if y == selected_year %}selected{% endif %}>
+                        {{ y }}
+                    </option>
+                {% endfor %}
+            </select>
+            <button type="submit">Consultar</button>
+
+
+        </form>
+        {% if stats %}
+            <div class="results">
+                <div class="card">
+                    <h3>Total Registros</h3>
+                    <p>{{ stats|length }}</p>
+                </div>
+            </div>
+
+            <!-- Age Range: Adultos mayores de 60 -->
+            <div class="section-title">Adultos mayores de 60 de edad</div>
+            <div class="results">
+                <div class="chart-container">
+                    <canvas id="adultsOver60GenderChart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <canvas id="adultsOver60EducationChart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <canvas id="adultsOver60OccupationChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Age Range: Adultos entre 30 y 59  -->
+            <div class="section-title">Adultos entre 30 y 59 de edad</div>
+            <div class="results">
+                <div class="chart-container">
+                    <canvas id="adults30To59GenderChart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <canvas id="adults30To59EducationChart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <canvas id="adults30To59OccupationChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Age Range: Adultos jóvenes entre 18 y 29  -->
+            <div class="section-title">Adultos jóvenes entre 18 y 29 de edad</div>
+            <div class="results">
+                <div class="chart-container">
+                    <canvas id="youngAdults18To29GenderChart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <canvas id="youngAdults18To29EducationChart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <canvas id="youngAdults18To29OccupationChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Age Range: Adolescentes entre 13 y 17  -->
+            <div class="section-title">Adolescentes entre 13 y 17 de edad</div>
+            <div class="results">
+                <div class="chart-container">
+                    <canvas id="adolescents13To17GenderChart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <canvas id="adolescents13To17EducationChart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <canvas id="adolescents13To17OccupationChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Age Range: Ninos entre 0 y 12  -->
+            <div class="section-title">entre 0 y 12 de edad</div>
+            <div class="results">
+                <div class="chart-container">
+                    <canvas id="kids0To12GenderChart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <canvas id="kids0To12EducationChart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <canvas id="kids0To12OccupationChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Materials Used -->
+            <div class="section-title">Materiales Utilizados</div>
+            <div class="results">
+                <div class="chart-container">
+                    <canvas id="materialsChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Credentials Issued -->
+            <div class="section-title">Credenciales Expedidas</div>
+            <div class="results">
+                <div class="chart-container">
+                    <canvas id="credentialsChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Reading Promotion -->
+            <div class="section-title">Actividades de Fomento a la Lectura</div>
+            <div class="results">
+                <div class="chart-container">
+                    <canvas id="readingPromotionChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Guided Visits -->
+            <div class="section-title">Visitas Guiadas</div>
+            <div class="results">
+                <div class="chart-container">
+                    <canvas id="guidedVisitsChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Digital Services -->
+            <div class="section-title">Módulo de Servicios Digitales</div>
+            <div class="results">
+                <div class="chart-container">
+                    <canvas id="digitalServicesChart"></canvas>
+                </div>
+            </div>
+
+            <script>
+                // Chart.js configuration for all charts
+                const chartOptions = {
+                    scales: { y: { beginAtZero: true } },
+                    plugins: { legend: { labels: { color: '#333' } } }
+                };
+
+                // Adults over 60 years - Gender
+                new Chart(document.getElementById('adultsOver60GenderChart').getContext('2d'), {
+                    type: 'pie',
+                    data: {
+                        labels: ['Hombres', 'Mujeres'],
+                        datasets: [{
+                            label: 'Género',
+                            data: [
+                                {{ aggregates.adults_over_60_males_sum|default:'0' }},
+                                {{ aggregates.adults_over_60_females_sum|default:'0' }}
+                            ],
+                            backgroundColor: ['#FF6384', '#36A2EB']
+                        }]
+                    },
+                    options: { ...chartOptions, plugins: { ...chartOptions.plugins, title: { display: true, text: 'Género', color: '#333' } } }
+                });
+
+                // Adults over 60 years - Education
+                new Chart(document.getElementById('adultsOver60EducationChart').getContext('2d'), {
+                    type: 'bar',
+                    data: {
+                        labels: ['Preescolar', 'Primaria', 'Secundaria', 'Preparatoria', 'Licenciatura', 'Posgrado'],
+                        datasets: [{
+                            label: 'Nivel Académico',
+                            data: [
+                                {{ aggregates.adults_over_60_preschool_sum|default:'0' }},
+                                {{ aggregates.adults_over_60_primary_sum|default:'0' }},
+                                {{ aggregates.adults_over_60_secondary_sum|default:'0' }},
+                                {{ aggregates.adults_over_60_preparatory_sum|default:'0' }},
+                                {{ aggregates.adults_over_60_undergraduate_sum|default:'0' }},
+                                {{ aggregates.adults_over_60_postgraduate_sum|default:'0' }}
+                            ],
+                            backgroundColor: 'rgba(227, 52, 47, 0.6)',
+                            borderColor: 'rgba(227, 52, 47, 1)',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: { ...chartOptions, plugins: { ...chartOptions.plugins, title: { display: true, text: 'Nivel Académico', color: '#333' } } }
+                });
+
+                // Adults over 60 years - Occupation
+                new Chart(document.getElementById('adultsOver60OccupationChart').getContext('2d'), {
+                    type: 'bar',
+                    data: {
+                        labels: ['Hogar', 'Empleado/Trabajador', 'Desempleados'],
+                        datasets: [{
+                            label: 'Ocupación',
+                            data: [
+                                {{ aggregates.adults_over_60_household_sum|default:'0' }},
+                                {{ aggregates.adults_over_60_employed_or_worker_sum|default:'0' }},
+                                {{ aggregates.adults_over_60_unemployed_sum|default:'0' }}
+                            ],
+                            backgroundColor: 'rgba(227, 52, 47, 0.6)',
+                            borderColor: 'rgba(227, 52, 47, 1)',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: { ...chartOptions, plugins: { ...chartOptions.plugins, title: { display: true, text: 'Ocupación', color: '#333' } } }
+                });
+
+                // Adults 30 to 59 years - Gender
+                new Chart(document.getElementById('adults30To59GenderChart').getContext('2d'), {
+                    type: 'pie',
+                    data: {
+                        labels: ['Hombres', 'Mujeres'],
+                        datasets: [{
+                            label: 'Género',
+                            data: [
+                                {{ aggregates.adults_30_to_59_males_sum|default:'0' }},
+                                {{ aggregates.adults_30_to_59_females_sum|default:'0' }}
+                            ],
+                            backgroundColor: ['#FF6384', '#36A2EB']
+                        }]
+                    },
+                    options: { ...chartOptions, plugins: { ...chartOptions.plugins, title: { display: true, text: 'Género', color: '#333' } } }
+                });
+
+                // Adults 30 to 59 years - Education
+                new Chart(document.getElementById('adults30To59EducationChart').getContext('2d'), {
+                    type: 'bar',
+                    data: {
+                        labels: ['Preescolar', 'Primaria', 'Secundaria', 'Preparatoria', 'Licenciatura', 'Posgrado'],
+                        datasets: [{
+                            label: 'Nivel Académico',
+                            data: [
+                                {{ aggregates.adults_30_to_59_preschool_sum|default:'0' }},
+                                {{ aggregates.adults_30_to_59_primary_sum|default:'0' }},
+                                {{ aggregates.adults_30_to_59_secondary_sum|default:'0' }},
+                                {{ aggregates.adults_30_to_59_preparatory_sum|default:'0' }},
+                                {{ aggregates.adults_30_to_59_undergraduate_sum|default:'0' }},
+                                {{ aggregates.adults_30_to_59_postgraduate_sum|default:'0' }}
+                            ],
+                            backgroundColor: 'rgba(227, 52, 47, 0.6)',
+                            borderColor: 'rgba(227, 52, 47, 1)',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: { ...chartOptions, plugins: { ...chartOptions.plugins, title: { display: true, text: 'Nivel Académico', color: '#333' } } }
+                });
+
+                // Adults 30 to 59 years - Occupation
+                new Chart(document.getElementById('adults30To59OccupationChart').getContext('2d'), {
+                    type: 'bar',
+                    data: {
+                        labels: ['Hogar', 'Empleado/Trabajador', 'Estudiantes', 'Desempleados'],
+                        datasets: [{
+                            label: 'Ocupación',
+                            data: [
+                                {{ aggregates.adults_30_to_59_household_sum|default:'0' }},
+                                {{ aggregates.adults_30_to_59_employed_or_worker_sum|default:'0' }},
+                                {{ aggregates.adults_30_to_59_students_sum|default:'0' }},
+                                {{ aggregates.adults_30_to_59_unemployed_sum|default:'0' }}
+                            ],
+                            backgroundColor: 'rgba(227, 52, 47, 0.6)',
+                            borderColor: 'rgba(227, 52, 47, 1)',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: { ...chartOptions, plugins: { ...chartOptions.plugins, title: { display: true, text: 'Ocupación', color: '#333' } } }
+                });
+
+                // Young Adults 18 to 29 years - Gender
+                new Chart(document.getElementById('youngAdults18To29GenderChart').getContext('2d'), {
+                    type: 'pie',
+                    data: {
+                        labels: ['Hombres', 'Mujeres'],
+                        datasets: [{
+                            label: 'Género',
+                            data: [
+                                {{ aggregates.young_adults_18_to_29_males_sum|default:'0' }},
+                                {{ aggregates.young_adults_18_to_29_females_sum|default:'0' }}
+                            ],
+                            backgroundColor: ['#FF6384', '#36A2EB']
+                        }]
+                    },
+                    options: { ...chartOptions, plugins: { ...chartOptions.plugins, title: { display: true, text: 'Género', color: '#333' } } }
+                });
+
+                // Young Adults 18 to 29 years - Education
+                new Chart(document.getElementById('youngAdults18To29EducationChart').getContext('2d'), {
+                    type: 'bar',
+                    data: {
+                        labels: ['Preescolar', 'Primaria', 'Secundaria', 'Preparatoria', 'Licenciatura', 'Posgrado'],
+                        datasets: [{
+                            label: 'Nivel Académico',
+                            data: [
+                                {{ aggregates.young_adults_18_to_29_preschool_sum|default:'0' }},
+                                {{ aggregates.young_adults_18_to_29_primary_sum|default:'0' }},
+                                {{ aggregates.young_adults_18_to_29_secondary_sum|default:'0' }},
+                                {{ aggregates.young_adults_18_to_29_preparatory_sum|default:'0' }},
+                                {{ aggregates.young_adults_18_to_29_undergraduate_sum|default:'0' }},
+                                {{ aggregates.young_adults_18_to_29_postgraduate_sum|default:'0' }}
+                            ],
+                            backgroundColor: 'rgba(227, 52, 47, 0.6)',
+                            borderColor: 'rgba(227, 52, 47, 1)',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: { ...chartOptions, plugins: { ...chartOptions.plugins, title: { display: true, text: 'Nivel Académico', color: '#333' } } }
+                });
+
+                // Young Adults 18 to 29 years - Occupation
+                new Chart(document.getElementById('youngAdults18To29OccupationChart').getContext('2d'), {
+                    type: 'bar',
+                    data: {
+                        labels: ['Hogar', 'Empleado/Trabajador', 'Estudiantes', 'Desempleados'],
+                        datasets: [{
+                            label: 'Ocupación',
+                            data: [
+                                {{ aggregates.young_adults_18_to_29_household_sum|default:'0' }},
+                                {{ aggregates.young_adults_18_to_29_employed_or_worker_sum|default:'0' }},
+                                {{ aggregates.young_adults_18_to_29_students_sum|default:'0' }},
+                                {{ aggregates.young_adults_18_to_29_unemployed_sum|default:'0' }}
+                            ],
+                            backgroundColor: 'rgba(227, 52, 47, 0.6)',
+                            borderColor: 'rgba(227, 52, 47, 1)',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: { ...chartOptions, plugins: { ...chartOptions.plugins, title: { display: true, text: 'Ocupación', color: '#333' } } }
+                });
+
+                // Adolescents 13 to 17 years - Gender
+                new Chart(document.getElementById('adolescents13To17GenderChart').getContext('2d'), {
+                    type: 'pie',
+                    data: {
+                        labels: ['Hombres', 'Mujeres'],
+                        datasets: [{
+                            label: 'Género',
+                            data: [
+                                {{ aggregates.adolescents_13_to_17_males_sum|default:'0' }},
+                                {{ aggregates.adolescents_13_to_17_females_sum|default:'0' }}
+                            ],
+                            backgroundColor: ['#FF6384', '#36A2EB']
+                        }]
+                    },
+                    options: { ...chartOptions, plugins: { ...chartOptions.plugins, title: { display: true, text: 'Género', color: '#333' } } }
+                });
+
+                // Adolescents 13 to 17 years - Education
+                new Chart(document.getElementById('adolescents13To17EducationChart').getContext('2d'), {
+                    type: 'bar',
+                    data: {
+                        labels: ['Preescolar', 'Primaria', 'Secundaria', 'Preparatoria'],
+                        datasets: [{
+                            label: 'Nivel Académico',
+                            data: [
+                                {{ aggregates.adolescents_13_to_17_preschool_sum|default:'0' }},
+                                {{ aggregates.adolescents_13_to_17_primary_sum|default:'0' }},
+                                {{ aggregates.adolescents_13_to_17_secondary_sum|default:'0' }},
+                                {{ aggregates.adolescents_13_to_17_preparatory_sum|default:'0' }}
+                            ],
+                            backgroundColor: 'rgba(227, 52, 47, 0.6)',
+                            borderColor: 'rgba(227, 52, 47, 1)',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: { ...chartOptions, plugins: { ...chartOptions.plugins, title: { display: true, text: 'Nivel Académico', color: '#333' } } }
+                });
+
+                // Adolescents 13 to 17 years - Occupation
+                new Chart(document.getElementById('adolescents13To17OccupationChart').getContext('2d'), {
+                    type: 'bar',
+                    data: {
+                        labels: ['Hogar', 'Empleado/Trabajador', 'Estudiantes', 'Desempleados'],
+                        datasets: [{
+                            label: 'Ocupación',
+                            data: [
+                                {{ aggregates.adolescents_13_to_17_household_sum|default:'0' }},
+                                {{ aggregates.adolescents_13_to_17_employed_or_worker_sum|default:'0' }},
+                                {{ aggregates.adolescents_13_to_17_students_sum|default:'0' }},
+                                {{ aggregates.adolescents_13_to_17_unemployed_sum|default:'0' }}
+                            ],
+                            backgroundColor: 'rgba(227, 52, 47, 0.6)',
+                            borderColor: 'rgba(227, 52, 47, 1)',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: { ...chartOptions, plugins: { ...chartOptions.plugins, title: { display: true, text: 'Ocupación', color: '#333' } } }
+                });
+
+                // Kids 0 to 12 years - Gender
+                new Chart(document.getElementById('kids0To12GenderChart').getContext('2d'), {
+                    type: 'pie',
+                    data: {
+                        labels: ['Hombres', 'Mujeres'],
+                        datasets: [{
+                            label: 'Género',
+                            data: [
+                                {{ aggregates.kids_0_to_12_males_sum|default:'0' }},
+                                {{ aggregates.kids_0_to_12_females_sum|default:'0' }}
+                            ],
+                            backgroundColor: ['#FF6384', '#36A2EB']
+                        }]
+                    },
+                    options: { ...chartOptions, plugins: { ...chartOptions.plugins, title: { display: true, text: 'Género', color: '#333' } } }
+                });
+
+                // Kids 0 to 12 years - Education
+                new Chart(document.getElementById('kids0To12EducationChart').getContext('2d'), {
+                    type: 'bar',
+                    data: {
+                        labels: ['Preescolar', 'Primaria'],
+                        datasets: [{
+                            label: 'Nivel Académico',
+                            data: [
+                                {{ aggregates.kids_0_to_12_preschool_sum|default:'0' }},
+                                {{ aggregates.kids_0_to_12_primary_sum|default:'0' }}
+                            ],
+                            backgroundColor: 'rgba(227, 52, 47, 0.6)',
+                            borderColor: 'rgba(227, 52, 47, 1)',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: { ...chartOptions, plugins: { ...chartOptions.plugins, title: { display: true, text: 'Nivel Académico', color: '#333' } } }
+                });
+
+                // Kids 0 to 12 years - Occupation
+                new Chart(document.getElementById('kids0To12OccupationChart').getContext('2d'), {
+                    type: 'bar',
+                    data: {
+                        labels: ['Hogar', 'Estudiantes'],
+                        datasets: [{
+                            label: 'Ocupación',
+                            data: [
+                                {{ aggregates.kids_0_to_12_household_sum|default:'0' }},
+                                {{ aggregates.kids_0_to_12_students_sum|default:'0' }}
+                            ],
+                            backgroundColor: 'rgba(227, 52, 47, 0.6)',
+                            borderColor: 'rgba(227, 52, 47, 1)',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: { ...chartOptions, plugins: { ...chartOptions.plugins, title: { display: true, text: 'Ocupación', color: '#333' } } }
+                });
+
+                // Materials Used
+                new Chart(document.getElementById('materialsChart').getContext('2d'), {
+                    type: 'bar',
+                    data: {
+                        labels: ['General', 'Referencia', 'Ninos', 'Audiovisual', 'Publicaciones', 'Ludoteca', 'Braille', 'Especial', 'Estatal'],
+                        datasets: [{
+                            label: 'Materiales Utilizados',
+                            data: [
+                                {{ aggregates.general_collection_sum|default:'0' }},
+                                {{ aggregates.reference_collection_sum|default:'0' }},
+                                {{ aggregates.children_collection_sum|default:'0' }},
+                                {{ aggregates.audiovisual_sum|default:'0' }},
+                                {{ aggregates.publications_sum|default:'0' }},
+                                {{ aggregates.ludoteca_sum|default:'0' }},
+                                {{ aggregates.braille_sum|default:'0' }},
+                                {{ aggregates.special_collection_sum|default:'0' }},
+                                {{ aggregates.state_collection_sum|default:'0' }}
+                            ],
+                            backgroundColor: 'rgba(227, 52, 47, 0.6)',
+                            borderColor: 'rgba(227, 52, 47, 1)',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: { ...chartOptions, plugins: { ...chartOptions.plugins, title: { display: true, text: 'Materiales Utilizados', color: '#333' } } }
+                });
+
+                // Credentials Issued
+                new Chart(document.getElementById('credentialsChart').getContext('2d'), {
+                    type: 'bar',
+                    data: {
+                        labels: ['Préstamo Físico', 'Credenciales (Hombres)', 'Credenciales (Mujeres)'],
+                        datasets: [{
+                            label: 'Credenciales Expedidas',
+                            data: [
+                                {{ aggregates.physical_loan_sum|default:'0' }},
+                                {{ aggregates.credentials_issued_males_sum|default:'0' }},
+                                {{ aggregates.credentials_issued_females_sum|default:'0' }}
+                            ],
+                            backgroundColor: 'rgba(227, 52, 47, 0.6)',
+                            borderColor: 'rgba(227, 52, 47, 1)',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: { ...chartOptions, plugins: { ...chartOptions.plugins, title: { display: true, text: 'Credenciales Expedidas', color: '#333' } } }
+                });
+
+                // Reading Promotion
+                new Chart(document.getElementById('readingPromotionChart').getContext('2d'), {
+                    type: 'bar',
+                    data: {
+                        labels: [
+                            '> 60 Hombres', '> 60 Mujeres',
+                            '30-59 Hombres', '30-59 Mujeres',
+                            '18-29 Hombres', '18-29 Mujeres',
+                            '13-17 Hombres', '13-17 Mujeres',
+                            '0-12 Hombres', '0-12 Mujeres'
+                        ],
+                        datasets: [{
+                            label: 'Fomento a la Lectura',
+                            data: [
+                                {{ aggregates.reading_promotion_adults_over_60_males_sum|default:'0' }},
+                                {{ aggregates.reading_promotion_adults_over_60_females_sum|default:'0' }},
+                                {{ aggregates.reading_promotion_adults_30_to_59_males_sum|default:'0' }},
+                                {{ aggregates.reading_promotion_adults_30_to_59_females_sum|default:'0' }},
+                                {{ aggregates.reading_promotion_young_adults_18_to_29_males_sum|default:'0' }},
+                                {{ aggregates.reading_promotion_young_adults_18_to_29_females_sum|default:'0' }},
+                                {{ aggregates.reading_promotion_adolescents_13_to_17_males_sum|default:'0' }},
+                                {{ aggregates.reading_promotion_adolescents_13_to_17_females_sum|default:'0' }},
+                                {{ aggregates.reading_promotion_children_0_to_12_males_sum|default:'0' }},
+                                {{ aggregates.reading_promotion_children_0_to_12_females_sum|default:'0' }}
+                            ],
+                            backgroundColor: 'rgba(227, 52, 47, 0.6)',
+                            borderColor: 'rgba(227, 52, 47, 1)',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: { ...chartOptions, plugins: { ...chartOptions.plugins, title: { display: true, text: 'Fomento a la Lectura', color: '#333' } } }
+                });
+
+                // Guided Visits
+                new Chart(document.getElementById('guidedVisitsChart').getContext('2d'), {
+                    type: 'bar',
+                    data: {
+                        labels: [
+                            '> 60 Hombres', '> 60 Mujeres',
+                            '30-59 Hombres', '30-59 Mujeres',
+                            '18-29 Hombres', '18-29 Mujeres',
+                            '13-17 Hombres', '13-17 Mujeres',
+                            '0-12 Hombres', '0-12 Mujeres'
+                        ],
+                        datasets: [{
+                            label: 'Visitas Guiadas',
+                            data: [
+                                {{ aggregates.guided_visits_adults_over_60_males_sum|default:'0' }},
+                                {{ aggregates.guided_visits_adults_over_60_females_sum|default:'0' }},
+                                {{ aggregates.guided_visits_adults_30_to_59_males_sum|default:'0' }},
+                                {{ aggregates.guided_visits_adults_30_to_59_females_sum|default:'0' }},
+                                {{ aggregates.guided_visits_young_adults_18_to_29_males_sum|default:'0' }},
+                                {{ aggregates.guided_visits_young_adults_18_to_29_females_sum|default:'0' }},
+                                {{ aggregates.guided_visits_adolescents_13_to_17_males_sum|default:'0' }},
+                                {{ aggregates.guided_visits_adolescents_13_to_17_females_sum|default:'0' }},
+                                {{ aggregates.guided_visits_children_0_to_12_males_sum|default:'0' }},
+                                {{ aggregates.guided_visits_children_0_to_12_females_sum|default:'0' }}
+                            ],
+                            backgroundColor: 'rgba(227, 52, 47, 0.6)',
+                            borderColor: 'rgba(227, 52, 47, 1)',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: { ...chartOptions, plugins: { ...chartOptions.plugins, title: { display: true, text: 'Visitas Guiadas', color: '#333' } } }
+                });
+
+                // Digital Services
+                new Chart(document.getElementById('digitalServicesChart').getContext('2d'), {
+                    type: 'bar',
+                    data: {
+                        labels: [
+                            '> 60 Hombres', '> 60 Mujeres',
+                            '30-59 Hombres', '30-59 Mujeres',
+                            '18-29 Hombres', '18-29 Mujeres',
+                            '13-17 Hombres', '13-17 Mujeres',
+                            '0-12 Hombres', '0-12 Mujeres'
+                        ],
+                        datasets: [{
+                            label: 'Servicios Digitales',
+                            data: [
+                                {{ aggregates.digital_services_adults_over_60_males_sum|default:'0' }},
+                                {{ aggregates.digital_services_adults_over_60_females_sum|default:'0' }},
+                                {{ aggregates.digital_services_adults_30_to_59_males_sum|default:'0' }},
+                                {{ aggregates.digital_services_adults_30_to_59_females_sum|default:'0' }},
+                                {{ aggregates.digital_services_young_adults_18_to_29_males_sum|default:'0' }},
+                                {{ aggregates.digital_services_young_adults_18_to_29_females_sum|default:'0' }},
+                                {{ aggregates.digital_services_adolescents_13_to_17_males_sum|default:'0' }},
+                                {{ aggregates.digital_services_adolescents_13_to_17_females_sum|default:'0' }},
+                                {{ aggregates.digital_services_children_0_to_12_males_sum|default:'0' }},
+                                {{ aggregates.digital_services_children_0_to_12_females_sum|default:'0' }}
+                            ],
+                            backgroundColor: 'rgba(227, 52, 47, 0.6)',
+                            borderColor: 'rgba(227, 52, 47, 1)',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: { ...chartOptions, plugins: { ...chartOptions.plugins, title: { display: true, text: 'Servicios Digitales', color: '#333' } } }
+                });
+            </script>
+        {% endif %}
+        
+    </div>
+</body>
+</html>

@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <title>Pre-registro de Credencial - Bibliotecas Públicas Municipales</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            /* Imagen repetida como patrón de fondo */
+            background-image: url("{% static 'images/sdigital.jpeg' %}");
+            background-repeat: repeat;
+            background-size: auto; /* o puedes usar 'contain' */
+            background-position: top left;
+
+            /* Capa de color guinda semi-transparente encima */
+            position: relative;
+            min-height: 100vh;
+        }
+
+        body::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background-color: rgba(68, 25, 49, 0.6); /* Guinda con transparencia */
+            z-index: -1;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 40px;
+            background-color: #bbb5b5;
+        }
+
+        .logo img {
+            height: 120px;
+        }
+
+        .main-nav {
+            display: flex;
+            align-items: center;
+        }
+        
+        .right-section {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .right-logo {
+            height: 100px;
+        }
+
+        .nav-item {
+            position: relative;
+            margin: 0 10px;
+        }
+
+        .nav-link {
+            color: #5C0432;
+            text-decoration: none;
+            font-size: 18px; /* Adjusted font size to match the image */
+            padding: 10px 15px; /* Add padding for better spacing */
+            display: block; /* Makes the entire area clickable */
+        }
+
+        .nav-link:hover {
+            color: #831F46;
+        }
+
+        /* Submenu styling */
+        .submenu {
+            display: none; /* Hidden by default */
+            position: absolute;
+            top: 100%; /* Position below the parent nav item */
+            left: 0;
+            background-color: #2e1212; /* Slightly lighter dark background for contrast */
+            min-width: 150px; /* Minimum width for the submenu */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Optional: adds a shadow for depth */
+            z-index: 1000; /* Ensure it appears above other elements */
+        }
+
+        .submenu a {
+            color: #ffffff;
+            text-decoration: none;
+            padding: 10px 15px;
+            display: block; /* Makes the entire area clickable */
+            font-size: 16px;
+        }
+
+        .submenu a:hover {
+            background-color: #a33660; /* Hover effect for submenu items */
+            color: #ffffff;
+        }
+
+        /* Show submenu on hover */
+        .nav-item:hover .submenu {
+            display: block;
+        }
+        .dropdown {
+            position: relative;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            left: 100%; /* o right: 0; si quieres que se abra hacia el otro lado */
+            top: 0;
+            background-color: #2e1212; 
+            min-width: 200px;
+            z-index: 1;
+            flex-direction: column;
+            box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: flex;
+        }
+        
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 15px; /* Espacio entre los botones */
+        }
+        .register-btn {
+            /* Mantenemos tus estilos originales y aseguramos la alineación */
+            background: transparent;
+            color: var(--guinda-2, #5C0432); /* Agregué un color por defecto si la var no existe */
+            border: 2px solid var(--guinda-2, #5C0432);
+            padding: 10px 18px;
+            border-radius: 8px; /* Haz el borde más suave para que coincida con la imagen */
+            font-size: 16px; /* Para que coincida con Mi Cuenta */
+            text-decoration: none; /* Asegura que no tenga subrayado si no es un <a> */
+            cursor: pointer;
+        }
+        .register-btn:hover { 
+            background: var(--guinda-2, #5C0432); 
+            color: #fff; 
+        }
+
+        /* Style for the "Mi Cuenta" button */
+        .account-btn {
+            background-color: #922453;
+            color: #ffffff;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 25px; 
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .account-btn::before { content: ""; }
+
+        .account-btn:hover {
+            background-color: #a33660;
+        }
+
+        /* Style for the "Mi Cuenta" button */
+        .account-btn {
+            background-color: #922453;
+            color: #ffffff;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 25px; /* Rounded corners */
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            gap: 5px; /* Space between icon and text */
+        }
+
+        .account-btn::before {
+            content: "í ½í±¤"; /* Icon for the button (you can replace with an actual icon if needed) */
+        }
+
+        .account-btn:hover {
+            background-color: #976276; /* Slightly darker on hover */
+        }
+        .container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            color: #6b1c2f; /* Maroon color from the header */
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        p, li {
+            color: #333;
+            line-height: 1.6;
+            font-size: 16px;
+        }
+        ul {
+            list-style-type: disc;
+            margin-left: 20px;
+        }
+        .highlight {
+            background-color: #f78787; /* Light yellow background to match the theme */
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #2a1321;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            text-align: center;
+            margin-top: 20px;
+            transition: background-color 0.3s;
+        }
+        .button:hover {
+            background-color: #8b2c4f;
+        }
+        .section-title {
+            font-weight: bold;
+            margin-top: 15px;
+        }
+        /* Footer */
+        footer {
+            background-color: #831F46;
+            padding: 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            border-top: 1px solid #3a1c2e;
+        }
+
+        .footer-column {
+            width: 22%;
+        }
+
+        .footer-column img {
+            height: 80px;
+            margin-bottom: 10px;
+        }
+
+        .footer-column h3 {
+            font-size: 16px;
+            color: #fff;
+            margin-bottom: 15px;
+        }
+
+        .footer-column p, .footer-column a {
+            font-size: 14px;
+            color: #ffffff;
+            line-height: 1.6;
+            text-decoration: none;
+        }
+
+        .footer-column a:hover {
+            color: #f1e3e2;
+            text-decoration: underline;
+        }
+
+        .footer-column ul {
+            list-style: none;
+        }
+
+        .footer-column ul li {
+            margin-bottom: 10px;
+        }
+
+        .footer-column .social-icons {
+            display: flex;
+            gap: 20px;
+            margin-top: 10px;
+        }
+
+        .footer-column .social-icons a {
+            font-size: 35px;
+            color: #304c72;
+        }
+
+        .footer-column .social-icons a:hover {
+            color: #702542;
+        }
+        /* ===== Footer logos â forzamos layout y tamaño uniforme ===== */
+        .footer-bottom .footer-logos{
+        display: grid;
+        grid-auto-flow: column;            /* una fila, varias columnas */
+        grid-auto-columns: 250px;          /* cada columna mide 180px */
+        justify-content: center;           /* centrado horizontal */
+        align-items: center;               /* centrado vertical */
+        gap: 24px;
+        margin-bottom: 10px;
+        }
+
+        .footer-bottom .footer-badge{
+        width: 200px;
+        height: 50px;
+        display: grid;
+        place-items: center;               /* centra el contenido dentro */
+        /* outline: 1px dashed rgba(255,255,255,.15);  // útil para depurar */
+        }
+
+        .footer-bottom .footer-badge img{
+        height: 100%;                      /* TODOS a la misma altura visual */
+        width: auto;                       /* respeta proporción */
+        max-width: 100%;                   /* no se sale de la caja */
+        display: block;
+        }
+
+
+        /* Opcional: ajusta tipografías y colores a tu paleta */
+        .footer-bottom{
+        text-align:center;
+        padding: 20px 16px;
+        background-color: #bbb5b5;
+        border-top: 1px solid #421c34;
+        color: #fcf1f6;
+        }
+
+        /* 1. Estilo para el fondo completo del footer (similar al fondo de estantería de la primera imagen) */
+        .footer-bottom{
+            text-align:center;
+            padding: 40px 16px; /* Aumentamos el padding para espacio alrededor de la caja */
+            /* Usamos el color de fondo de la segunda imagen, o puedes usar una imagen de fondo 
+            si quieres replicar la estantería de la primera. */
+            background-color: #d6d3d3; /* Color de fondo gris claro/marrón claro de la imagen inferior */
+            border-top: none; /* Quitamos el borde superior que tenías */
+            color: #421c34; /* Color de texto oscuro para el Copyright, etc. */
+        }
+
+        /* 2. El nuevo contenedor con el estilo de caja redondeada */
+        .footer-content-box {
+            max-width: 1200px; /* Limita el ancho del contenido si es necesario */
+            margin: 0 auto; /* Centra la caja horizontalmente */
+            padding: 20px 16px;
+            
+            /* El estilo clave: Bordes y Fondo Oscuro */
+            background-color: #bbb5b5;
+            border-radius: 20px; /* Bordes redondeados */
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); /* Sombra sutil */
+
+            /* Colores del texto dentro de esta caja oscura */
+            color: #fcf1f6; 
+        }
+
+        /* Ajustes a los elementos internos */
+        /* El color de los enlaces de privacidad ahora debe ser claro */
+        .footer-content-box .privacy-link {
+            color: #d6a7b4; /* Tono más claro del color que usas */
+            font-weight: bold;
+        }
+        .footer-content-box .privacy-link:hover {
+            color: #fcf1f6;
+            text-decoration: underline;
+        }
+        .privacy-link{
+        color: #fadae6;      /* tu paleta */
+        }
+        .privacy-link:hover{
+        color: #BFBDBD;
+        text-decoration: underline;
+        }
+        
+    </style>
+</head>
+<body>
+<!-- Header -->
+    <header>
+        <div class="logo">
+        <a href="{% url 'public_index' %}">
+            <img src="{% static 'images/newbiblioteca.png' %}" alt="Logo">
+        </a>
+        </div>
+        <nav class="main-nav">
+
+            <div class="nav-item">
+                <a href="#" class="nav-link">Eventos</a>
+                <div class="submenu">
+                    <a href="{% url 'lista_biblioaprende' %}">Agenda Biblio Aprende</a>
+                    <a href="{% url 'agenda_cultural' %}">Agenda Cultural</a>
+                </div>
+            </div>
+            <div class="nav-item">
+                <a href="#" class="nav-link">Aprendizaje & Tecnologia</a>
+                <div class="submenu">
+                    <a href="{% url 'coleccion_digital' %}">Colección Digital DGB</a>
+                    <a href="https://wordwall.net/es-mx/community/la-biblioteca">Juega y aprende</a>
+                </div>
+            </div>
+            <div class="nav-item">
+                <a href="#" class="nav-link">Servicios</a>
+                    <div class="submenu">
+                        <div class="dropdown">
+                            <a href="#">Préstamos</a>
+                            <div class="dropdown-content">
+                                <a href="{% url 'prestamos' %}">Préstamo de libros en salas</a>
+                                <a href="{% url 'prestamo_domicilio' %}">Préstamo de libros a domicilio</a>
+                            </div>
+                        </div>
+                        <a href="{% url 'credencializacion' %}">Credencialización</a>
+                        <a href="{% url 'referencia' %}">Referencia</a>
+                        <a href="{% url 'servicio_digital' %}">Servicios Digitales</a>
+                        <a href="{% url 'servicio_cultural' %}">Servicios Culturales</a>
+                        <a href="{% url 'servicio_educativo' %}">Servicio educativo</a>
+                    </div>
+            </div>
+            <div class="nav-item">
+                <a href="#" class="nav-link">Nuestra Historia</a>
+                <div class="submenu">
+                </div>
+            </div>
+            <div class="nav-item">
+                <a href="#" class="nav-link">Sobre nosotros</a>
+                <div class="submenu">
+                    <a href="{% url 'nosotros' %}">Nosotros</a>
+                    <a href="{% url 'contacto' %}">Contacto</a>
+                </div>
+            </div>
+        </nav>
+        <div class="nav-actions">
+            <button class="register-btn" onclick="register()">Registrarse</button>
+            <a href="/usuarios/login/" class="account-btn">Mi Cuenta</a>
+        </div>
+    </header>
+    <div class="container">
+        <h2>Servicios digitales</h2>
+        <div class="highlight">
+        </div>
+
+        <p class="section-title">Servicios Digitales</p>
+        <p>
+        La biblioteca ofrece una amplia gama de <strong>servicios digitales</strong> diseñados para facilitar el acceso a la tecnología y fomentar el desarrollo de habilidades digitales entre los usuarios. Estos servicios están disponibles para toda la comunidad, siempre que se cumplan los requisitos establecidos y se respeten las políticas de uso.
+        </p>
+        <br>
+
+        <br>
+        <p>
+        <strong>Requisitos para acceder a los servicios:</strong><br>
+        Para hacer uso de los servicios digitales, es necesario presentar una <strong>credencial vigente de la biblioteca</strong>. Los usuarios que aún no cuenten con ella pueden tramitarla en el módulo de atención al público.
+        </p>
+        <br>
+
+        <p>
+        Para más información sobre horarios, disponibilidad de equipos o programación de talleres, consulta nuestro sitio web oficial o acude al módulo de servicios digitales en la biblioteca.
+        </p>
+
+    
+    </div>
+    <!-- Footer -->
+    <footer>
+        <div class="footer-column">
+            <img src="{% static 'images/whitemuni.png' %}" alt="Ciudad Juárez Logo">
+            <p>Red de Bibliotecas Públicas Municipales de Ciudad Juárez, comprometidos con el fomento a la lectura y el acceso a la información.</p>
+            <div class="social-icons">
+                <a href="https://facebook.com" target="_blank" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                <a href="https://instagram.com" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+
+            </div>
+        </div>
+        <div class="footer-column">
+            <h3>Enlaces Rápidos</h3>
+            <ul>
+                <li><a href="#">Inicio</a></li>
+                <li><a href="#">Catálogo</a></li>
+                <li><a href="#">Servicios</a></li>
+                <li><a href="#">Eventos</a></li>
+                <li><a href="#">Bibliotecas</a></li>
+            </ul>
+        </div>
+        <div class="footer-column">
+            <h3>Servicios</h3>
+            <ul>
+                <li><a href="#">Préstamo de libros</a></li>
+                <li><a href="#">Recursos digitales</a></li>
+                <li><a href="#">Clubes de lectura</a></li>
+                <li><a href="#">Talleres culturales</a></li>
+                <li><a href="#">Sala de cómputo</a></li>
+            </ul>
+        </div>
+        <div class="footer-column">
+            <h3>Contacto</h3>
+            <p>Calle Ignacio Ramírez 351, 32030 Juárez, Chihuahua</p>
+            <p>(656) 123-4567</p>
+            <p><a href="mailto:bibliotecas@juarez.gob.mx">bibliotecas@juarez.gob.mx</a></p>
+        </div>
+        
+    </footer>
+
+    <div class="footer-bottom">
+        <div class="footer-content-box"> <div class="footer-logos">
+                <div class="footer-badge">
+                <img src="{% static 'images/jrzconectado.png' %}" alt="Juárez Conectado">
+                </div>
+                <div class="footer-badge">
+                <img src="{% static 'images/dgic.png' %}" alt="DGIC">
+                </div>
+                <div class="footer-badge">
+                <img src="{% static 'images/educacion.png' %}" alt="Educación">
+                </div>
+            </div>
+            <p><a href="/media/documentos/avisoprivacidadbpm.pdf" target="_blank" class="privacy-link">Aviso de privacidad</a></p>
+            <p>Â© 2024 Bibliotecas Públicas Municipales | Gobierno Municipal de Ciudad Juárez 2024-2027</p>
+        </div>
+    </div>
+</body>
+</html>

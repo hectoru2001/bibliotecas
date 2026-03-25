@@ -1,0 +1,181 @@
+{% extends "base_user.html" %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8 text-slate-100">
+    <div class="mb-8">
+        <h1 class="text-3xl font-semibold tracking-tight">Panel de usuario | Biblioteca Pública Municipal</h1>
+    </div>
+
+    {# === Tarjetas de información === #}
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+        <!-- Préstamos Activos -->
+        <div class="rounded-2xl bg-gradient-to-br from-gray-800/70 to-[#2b0f1b]/80 backdrop-blur-md shadow-lg ring-1 ring-white/10 p-6">
+            <div class="flex justify-between items-start">
+                <div>
+                    <h2 class="text-sm uppercase tracking-wide text-slate-200">Préstamos Activos</h2>
+                    <p class="text-4xl font-semibold mt-2">0</p>
+                </div>
+                <svg class="w-10 h-10 text-blue-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                </svg>
+            </div>
+            <a href="#" class="text-sm font-medium mt-4 inline-block text-blue-300 hover:text-blue-200">Ver mis préstamos →</a>
+        </div>
+
+        <!-- Historial -->
+        <div class="rounded-2xl bg-gradient-to-br from-gray-800/70 to-[#2b0f1b]/80 backdrop-blur-md shadow-lg ring-1 ring-white/10 p-6">
+            <div class="flex justify-between items-start">
+                <div>
+                    <h2 class="text-sm uppercase tracking-wide text-slate-200">Historial</h2>
+                    <p class="text-4xl font-semibold mt-2">0</p>
+                </div>
+                <svg class="w-10 h-10 text-emerald-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+            </div>
+            <a href="#" class="text-sm font-medium mt-4 inline-block text-emerald-300 hover:text-emerald-200">Ver historial →</a>
+        </div>
+
+        <!-- Multas -->
+        <div class="rounded-2xl bg-gradient-to-br from-gray-800/70 to-[#2b0f1b]/80 backdrop-blur-md shadow-lg ring-1 ring-white/10 p-6">
+            <div class="flex justify-between items-start">
+                <div>
+                    <h2 class="text-sm uppercase tracking-wide text-slate-200">Multas Pendientes</h2>
+                    <p class="text-4xl font-semibold mt-2">$0.00</p>
+                </div>
+                <svg class="w-10 h-10 text-amber-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+            </div>
+            <a href="#" class="text-sm font-medium mt-4 inline-block text-amber-300 hover:text-amber-200">Ver detalles →</a>
+        </div>
+    </div>
+
+    {# === Secciones principales === #}
+    <div class="grid md:grid-cols-3 gap-6">
+        <!-- Columna 1 -->
+        <div class="md:col-span-2 space-y-6">
+            <div class="rounded-2xl bg-gradient-to-br from-gray-800/70 to-[#2b0f1b]/80 backdrop-blur-md shadow-lg ring-1 ring-white/10 overflow-hidden">
+                <div class="px-6 py-4 bg-gradient-to-r from-white/5 to-transparent ring-1 ring-inset ring-white/10">
+                    <h2 class="text-lg font-semibold">Mis Libros Prestados</h2>
+                </div>
+                <div class="p-6">
+                    <div class="text-center py-8 text-slate-200">
+                        <svg class="w-16 h-16 mx-auto mb-4 text-slate-300/80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                        </svg>
+                        <p class="mb-2">No tienes libros prestados actualmente</p>
+                        <a href="#" class="font-medium text-indigo-300 hover:text-indigo-200">Explorar catálogo de libros</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recomendaciones -->
+            <div class="rounded-2xl bg-gradient-to-br from-gray-800/70 to-[#2b0f1b]/80 backdrop-blur-md shadow-lg ring-1 ring-white/10 overflow-hidden">
+                <div class="px-6 py-4 bg-gradient-to-r from-white/5 to-transparent ring-1 ring-inset ring-white/10">
+                    <h2 class="text-lg font-semibold">Recomendados para ti</h2>
+                </div>
+                <div class="p-6">
+                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                        <div class="text-center">
+                            <div class="aspect-[2/3] rounded-lg bg-white/10 ring-1 ring-inset ring-white/10 mb-2 flex items-center justify-center">
+                                <svg class="w-10 h-10 text-slate-300/90" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                                </svg>
+                            </div>
+                            <h3 class="text-sm font-medium">Cien años de soledad</h3>
+                            <p class="text-xs text-slate-200/80">Gabriel García Márquez</p>
+                        </div>
+                        <div class="text-center">
+                            <div class="aspect-[2/3] rounded-lg bg-white/10 ring-1 ring-inset ring-white/10 mb-2 flex items-center justify-center">
+                                <svg class="w-10 h-10 text-slate-300/90" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                                </svg>
+                            </div>
+                            <h3 class="text-sm font-medium">El Alquimista</h3>
+                            <p class="text-xs text-slate-200/80">Paulo Coelho</p>
+                        </div>
+                        <div class="text-center">
+                            <div class="aspect-[2/3] rounded-lg bg-white/10 ring-1 ring-inset ring-white/10 mb-2 flex items-center justify-center">
+                                <svg class="w-10 h-10 text-slate-300/90" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253"></path>
+                                </svg>
+                            </div>
+                            <h3 class="text-sm font-medium">Rayuela</h3>
+                            <p class="text-xs text-slate-200/80">Julio Cortázar</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Columna 2 -->
+        <div class="space-y-6">
+            <!-- Perfil -->
+            <div class="rounded-2xl bg-gradient-to-br from-gray-800/70 to-[#2b0f1b]/80 backdrop-blur-md shadow-lg ring-1 ring-white/10 overflow-hidden">
+                <div class="px-6 py-4 bg-gradient-to-r from-white/5 to-transparent ring-1 ring-inset ring-white/10">
+                    <h2 class="text-lg font-semibold">Mi Perfil</h2>
+                </div>
+                <div class="p-6">
+                    <div class="flex items-center mb-4">
+                        <div class="w-14 h-14 rounded-full bg-indigo-500/90 flex items-center justify-center text-white text-xl font-bold mr-4">
+                            {{ user.username|slice:":1"|upper }}
+                        </div>
+                        <div>
+                            <h3 class="text-base font-medium">{{ user.get_full_name|default:user.username }}</h3>
+                            <p class="text-sm text-slate-200/80">{{ user.email }}</p>
+                            <p class="text-sm text-indigo-300"> {{ user.no_credencial }}</p>
+                        </div>
+                    </div>
+                    <div class="pt-4 mt-4 border-t border-white/10">
+                        <ul class="space-y-3">
+                            <li>
+                                <span class="text-sm text-slate-200/80">Credencial:</span>
+                                <p class="text-sm text-indigo-300"> {{ user.no_credencial }}</p>
+                            </li>
+                            <li>
+                                <span class="text-sm text-slate-200/80">Vigencia:</span>
+                                <span class="font-medium">31/12/2025</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bibliotecas cercanas -->
+            <div class="rounded-2xl bg-gradient-to-br from-gray-800/70 to-[#2b0f1b]/80 backdrop-blur-md shadow-lg ring-1 ring-white/10 overflow-hidden">
+                <div class="px-6 py-4 bg-gradient-to-r from-white/5 to-transparent ring-1 ring-inset ring-white/10">
+                    <h2 class="text-lg font-semibold">Bibliotecas cercanas</h2>
+                </div>
+                <div class="p-6">
+                    <ul class="space-y-4">
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-slate-200/80 mt-0.5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                            </svg>
+                            <div>
+                                <h3 class="font-medium">Biblioteca Central</h3>
+                                <p class="text-sm text-slate-200/80">Av. 16 de septiembre 1818, Centro</p>
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-slate-200/80 mt-0.5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                            </svg>
+                            <div>
+                                <h3 class="font-medium">Biblioteca PRONAF</h3>
+                                <p class="text-sm text-slate-200/80">Av. López Mateos 924, PRONAF</p>
+                            </div>
+                        </li>
+                    </ul>
+                    <div class="mt-4">
+                        <a href="{% url 'list_biblioteca' %}" class="text-sm text-indigo-300 hover:text-indigo-200">Ver todas las bibliotecas</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

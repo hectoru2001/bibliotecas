@@ -1,0 +1,80 @@
+<div class="overflow-x-auto">
+    <table class="min-w-full bg-white shadow-md rounded">
+        <thead class="bg-gray-200 text-gray-700">
+            <tr>
+                <th class="py-3 px-4 text-left">Nombre</th>
+                <th class="py-3 px-4 text-left">Director</th>
+                <th class="py-3 px-4 text-left">Teléfono</th>
+                <th class="py-3 px-4 text-left">Email</th>
+                <th class="py-3 px-4 text-center">Acciones</th>
+            </tr>
+        </thead>
+        <tbody class="text-gray-600">
+            {% for biblioteca in object_list %}
+            <tr class="border-b hover:bg-gray-50">
+                <td class="py-3 px-4">{{ biblioteca.nombre }}</td>
+                <td class="py-3 px-4">{{ biblioteca.director }}</td>
+                <td class="py-3 px-4">{{ biblioteca.telefono }}</td>
+                <td class="py-3 px-4">{{ biblioteca.email }}</td>
+                <td class="py-3 px-4 text-center">
+                    <div class="flex justify-center space-x-2">
+                        <!-- Botones CRUD con URLs correctas -->
+                        <a href="{% url 'detail_biblioteca' biblioteca.id %}" class="bg-blue-500 hover:bg-blue-600 text-white py-1 px-2 rounded" title="Ver detalles">
+                            <svg class="inline w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                            </svg>
+                        </a>
+                        <a href="{% url 'update_biblioteca' biblioteca.id %}" class="bg-yellow-500 hover:bg-yellow-600 text-white py-1 px-2 rounded" title="Editar">
+                            <svg class="inline w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path>
+                            </svg>
+                        </a>
+                        <form method="post" action="{% url 'delete_biblioteca' biblioteca.id %}" class="inline delete-form">
+                            {% csrf_token %}
+                            <button type="button" class="bg-red-500 hover:bg-red-600 text-white py-1 px-2 rounded delete-btn" data-id="{{ biblioteca.id }}" title="Eliminar">
+                                <svg class="inline w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                </svg>
+                            </button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5" class="py-4 px-4 text-center">No hay bibliotecas registradas</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<!-- Botón para agregar nueva biblioteca -->
+<div class="mt-4">
+    <a href="{% url 'add_biblioteca' %}" class="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded inline-flex items-center">
+        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+        </svg>
+        Agregar Biblioteca
+    </a>
+</div>
+
+<!-- JavaScript para confirmación de eliminación -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const deleteBtns = document.querySelectorAll('.delete-btn');
+        
+        deleteBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                const bibliotecaId = this.getAttribute('data-id');
+                const confirmDelete = confirm('¿Estás seguro de que deseas eliminar esta biblioteca?');
+                
+                if (confirmDelete) {
+                    // Enviar el formulario
+                    this.closest('form').submit();
+                }
+            });
+        });
+    });
+</script>

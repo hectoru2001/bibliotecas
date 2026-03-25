@@ -1,0 +1,93 @@
+{% extends "base_admin.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <!-- Encabezado con título y botón de volver -->
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-2xl font-bold">Agregar Nuevo Bibliotecario</h1>
+        <a href="{% url 'list_bibliotecario' %}" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded flex items-center">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+            </svg>
+            Volver
+        </a>
+    </div>
+
+    <div class="bg-white shadow-md rounded-lg overflow-hidden">
+        <div class="p-6">
+            <form action="{% url 'add_bibliotecario' %}" method="post">
+                {% csrf_token %}
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Columna izquierda: Datos personales -->
+                    <div class="space-y-4">
+                        <h2 class="text-lg font-semibold">Información Personal</h2>
+                        
+                        <div>
+                            <label for="nombre" class="block text-sm font-medium text-gray-700">Nombre *</label>
+                            <input type="text" id="nombre" name="nombre" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-red-500 focus:border-red-500">
+                        </div>
+                        
+                        <div>
+                            <label for="apellido" class="block text-sm font-medium text-gray-700">Apellido *</label>
+                            <input type="text" id="apellido" name="apellido" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-red-500 focus:border-red-500">
+                        </div>
+                        
+                        <div>
+                            <label for="email" class="block text-sm font-medium text-gray-700">Correo electrónico *</label>
+                            <input type="email" id="email" name="email" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-red-500 focus:border-red-500">
+                        </div>
+                        
+                        <div>
+                            <label for="telefono" class="block text-sm font-medium text-gray-700">Teléfono</label>
+                            <input type="text" id="telefono" name="telefono" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-red-500 focus:border-red-500">
+                        </div>
+                        
+                        <div>
+                            <label for="direccion" class="block text-sm font-medium text-gray-700">Dirección</label>
+                            <input type="text" id="direccion" name="direccion" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-red-500 focus:border-red-500">
+                        </div>
+                    </div>
+                    
+                    <!-- Columna derecha: Datos laborales -->
+                    <div class="space-y-4">
+                        <h2 class="text-lg font-semibold">Información Laboral</h2>
+                        
+                        <div>
+                            <label for="biblioteca" class="block text-sm font-medium text-gray-700">Biblioteca *</label>
+                            <select id="biblioteca" name="biblioteca" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-red-500 focus:border-red-500">
+                                <option value="">Seleccionar biblioteca</option>
+                                {% for biblioteca in bibliotecas %}
+                                    <option value="{{ biblioteca.id }}">{{ biblioteca.nombre }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label for="role" class="block text-sm font-medium text-gray-700">Rol *</label>
+                            <select id="role" name="role" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-red-500 focus:border-red-500">
+                                <option value="librarian" selected>Bibliotecario</option>
+                                <option value="admin">Administrador</option>
+                            </select>
+                        </div>
+                        
+                        <div class="flex items-center">
+                            <input type="checkbox" id="active" name="active" checked class="h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300 rounded">
+                            <label for="active" class="ml-2 block text-sm text-gray-700">Activo</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mt-6 pt-4 border-t flex justify-end space-x-3">
+                    <a href="{% url 'list_bibliotecario' %}" class="bg-gray-500 hover:bg-gray-600 text-white py-2 px-4 rounded">
+                        Cancelar
+                    </a>
+                    <button type="submit" class="bg-red-700 hover:bg-red-800 text-white py-2 px-6 rounded">
+                        Guardar Bibliotecario
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock content %}

@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Bibliotecas Públicas Municipales de Juárez</title>
+    {% load static %}    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <style>
+        /* Estilos para el menú lateral fijo */
+        .sidebar-menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 250px;
+            background-color: #8B2635; /* Color guinda */
+            color: white;
+            overflow-y: auto;
+            z-index: 1000;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column; /* Permite que el footer se quede al fondo */
+        }
+        /* Contenido principal con margen para el sidebar */
+        .main-content {
+            margin-left: 250px;
+            padding: 20px;
+        }
+        
+        /* Estilos para links del menú */
+        .menu-link {
+            display: block;
+            padding: 12px 20px;
+            color: white;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+        
+        .menu-link:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        /* Estilos para submenús */
+        .submenu {
+            padding-left: 20px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+        
+        .submenu.active {
+            max-height: 200px; /* Ajustar según cantidad de elementos */
+        }
+        
+        .menu-header {
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 10px;
+        }
+
+        /* Elemento que empuja el contenido hacia abajo para dejar espacio al footer */
+        .flex-grow {
+            flex-grow: 1;
+        }
+
+        /* Estilos para el footer del usuario */
+        .user-footer {
+            padding: 15px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            background-color: rgba(0, 0, 0, 0.1);
+        }
+
+        /* Estilos para iconos y flechas */
+        .has-submenu {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .chevron {
+            transition: transform 0.3s;
+        }
+        
+        .active .chevron {
+            transform: rotate(180deg);
+        }
+    </style>
+</head>
+<body>
+        {% if user.is_authenticated and user.is_staff_by_role or user.is_superuser %}
+        <!-- Menú lateral guinda fijo - Solo visible para staff y superusuarios -->
+        <div class="sidebar-menu">
+            <!-- Contenido del menú como estaba antes - MODIFICADO PARA SER UN ENLACE -->
+            <div class="menu-header">
+                <a href="{% url 'admin_dashboard' %}" class="text-white hover:text-gray-200">
+                    <h2 class="text-lg font-bold">Panel Administrativo</h2>
+                </a>
+            </div>
+            
+            <!-- Estructura del menú con submenús -->
+            <nav class="flex-grow">
+                <!-- Dashboard Principal -->
+                <a href="{% url 'admin_dashboard' %}" class="menu-link">
+                    <svg class="w-5 h-5 mr-3 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"></path>
+                    </svg>
+                    Dashboard Principal
+                </a>
+            
+                <!-- Bibliotecas -->
+                <div class="menu-item">
+                    <a href="#" class="menu-link has-submenu">
+                        <div>
+                            <svg class="w-5 h-5 mr-3 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z"></path>
+                            </svg>
+                            Bibliotecas
+                        </div>
+                        <svg class="w-4 h-4 chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </a>
+                    <div class="submenu" id="submenu-bibliotecas">
+                        <a href="{% url 'list_biblioteca' %}" class="menu-link">
+                            <svg class="w-5 h-5 mr-3 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                            </svg>
+                            Ver Bibliotecas
+                        </a>
+                        <a href="{% url 'add_biblioteca' %}" class="menu-link">
+                            <svg class="w-5 h-5 mr-3 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            Agregar Biblioteca
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Bibliotecarios -->
+                <div class="menu-item">
+                    <a href="#" class="menu-link has-submenu">
+                        <div>
+                            <svg class="w-5 h-5 mr-3 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                            </svg>
+                            Bibliotecarios
+                        </div>
+                        <svg class="w-4 h-4 chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </a>
+                    <div class="submenu" id="submenu-bibliotecarios">
+                        <a href="{% url 'list_bibliotecario' %}" class="menu-link">
+                            <svg class="w-5 h-5 mr-3 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                            </svg>
+                            Ver Bibliotecarios
+                        </a>
+                        <a href="{% url 'add_bibliotecario' %}" class="menu-link">
+                            <svg class="w-5 h-5 mr-3 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path>
+                            </svg>
+                            Agregar Bibliotecario
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Gestión de Libro -->
+                <div class="menu-item">
+                    <a href="#" class="menu-link has-submenu">
+                        <div>
+                            <svg class="w-5 h-5 mr-3 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                            </svg>
+                            Libros
+                        </div>
+                        <svg class="w-4 h-4 chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </a>
+                    <div class="submenu" id="submenu-libros">
+                        <a href="{% url 'list_libro' %}" class="menu-link">
+                            <svg class="w-5 h-5 mr-3 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path>
+                            </svg>
+                            Catálogo de Libros
+                        </a>
+                        <a href="{% url 'add_libro' %}" class="menu-link">
+                            <svg class="w-5 h-5 mr-3 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            Agregar Libro
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Usuarios -->
+                <div class="menu-item">
+                    <a href="#" class="menu-link has-submenu {% if 'admin_user' in request.resolver_match.url_name %}active{% endif %}">
+                        <div>
+                            <svg class="w-5 h-5 mr-3 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 0 1 8.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0 1 11.964-3.07M12 6.375a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0Zm8.25 2.25a2.625 2.625 0 1 1-5.25 0 2.625 2.625 0 0 1 5.25 0Z"></path>
+                            </svg>
+                            Usuarios
+                        </div>
+                        <svg class="w-4 h-4 chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </a>
+                    <div class="submenu {% if 'user_list' in request.resolver_match.url_name %}active{% endif %}" id="submenu-usuarios">
+                        <a href="{% url 'user_list' %}" class="menu-link {% if request.resolver_match.url_name == 'user_list' %}bg-red-700{% endif %}">
+                            <svg class="w-5 h-5 mr-3 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                            </svg>
+                            Ver Usuarios
+                        </a>
+                        <a href="{% url 'registro_paso1' %}" class="menu-link {% if request.resolver_match.url_name == 'admin_user_create' %}bg-red-700{% endif %}">
+                            <svg class="w-5 h-5 mr-3 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path>
+                            </svg>
+                            Agregar Usuario
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Estadísticas (solo para superusuarios) -->
+                {% if user.is_superuser %}
+                <a href="#" class="menu-link">
+                    <svg class="w-5 h-5 mr-3 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                    </svg>
+                    Estadísticas
+                </a>
+                {% endif %}
+            </nav>
+                    
+            <!-- Información del usuario y botón de logout al final -->
+            <div class="mt-auto">
+                <!-- Información del usuario -->
+                <div class="user-footer">
+                    <div class="flex items-center space-x-2">
+                        <div class="w-8 h-8 rounded-full bg-red-800 flex items-center justify-center">
+                            {{ user.username|slice:":1"|upper }}
+                        </div>
+                        <div>
+                            <div class="font-medium">{{ user.get_full_name|default:user.username }}</div>
+                            <div class="text-sm text-gray-300 mt-1">
+                                {{ user.role|default:"" }}
+                                {% if user.is_superuser %}
+                                <span class="bg-yellow-500 text-black px-1 rounded text-xs ml-1">Superadmin</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Botón de logout -->
+                <form action="{% url 'logout' %}" method="post" class="px-4 pb-4">
+                    {% csrf_token %}
+                    <button type="submit" class="w-full bg-red-700 hover:bg-red-800 text-white py-2 px-4 rounded flex items-center justify-center">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                        </svg>
+                        Cerrar sesión
+                    </button>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Contenido principal -->
+        <div class="main-content">
+            {% block content %}{% endblock content %}
+        </div>
+        
+        <script>
+            // JavaScript para hacer que los submenús sean desplegables
+            document.addEventListener('DOMContentLoaded', function() {
+                const menuItems = document.querySelectorAll('.menu-item > a');
+                
+                menuItems.forEach(item => {
+                    item.addEventListener('click', function(e) {
+                        // Solo prevenir default si tiene submenú
+                        const submenu = this.nextElementSibling;
+                        if (submenu && submenu.classList.contains('submenu')) {
+                            e.preventDefault();
+                            this.classList.toggle('active');
+                            submenu.classList.toggle('active');
+                        }
+                    });
+                });
+                
+                // Abrir automáticamente el submenú activo
+                const activeMenus = document.querySelectorAll('.submenu.active');
+                activeMenus.forEach(submenu => {
+                    const parentLink = submenu.previousElementSibling;
+                    if (parentLink) {
+                        parentLink.classList.add('active');
+                    }
+                });
+            });
+        </script>
+    {% else %}
+        <!-- Redirección para usuarios no autorizados -->
+        <script>
+            window.location.href = "{% url 'login' %}?next={{ request.path }}";
+        </script>
+        <div class="flex items-center justify-center h-screen bg-red-50">
+            <div class="text-center p-8 bg-white rounded-lg shadow-md">
+                <h1 class="text-2xl font-bold text-red-800 mb-4">Acceso Restringido</h1>
+                <p class="mb-6">Necesitas iniciar sesión con una cuenta administrativa para acceder a esta sección.</p>
+                <a href="{% url 'login' %}?next={{ request.path }}" class="bg-red-700 hover:bg-red-800 text-white py-2 px-6 rounded">
+                    Iniciar sesión
+                </a>
+            </div>
+        </div>
+    {% endif %}
+</body>
+</html>

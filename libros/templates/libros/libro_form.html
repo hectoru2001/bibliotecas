@@ -1,0 +1,190 @@
+{% extends "base_admin.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <!-- Encabezado con título y botón de volver -->
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-2xl font-bold">{% if form.instance.pk %}Editar{% else %}Nuevo{% endif %} Libro</h1>
+        <a href="{% url 'list_libro' %}" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded flex items-center">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+            </svg>
+            Volver
+        </a>
+    </div>
+
+    <div class="bg-white shadow-md rounded-lg overflow-hidden">
+        <div class="p-6">
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Columna izquierda: Datos básicos del libro -->
+                    <div class="space-y-4">
+                        <h2 class="text-lg font-semibold">Información Básica</h2>
+                        
+                        <div>
+                            <label for="{{ form.titulo.id_for_label }}" class="block text-sm font-medium text-gray-700">Título *</label>
+                            <input type="text" name="{{ form.titulo.name }}" id="{{ form.titulo.id_for_label }}" value="{{ form.titulo.value|default:'' }}" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-green-500 focus:border-green-500">
+                            {% if form.titulo.errors %}
+                                <p class="text-red-600 text-sm mt-1">{{ form.titulo.errors.0 }}</p>
+                            {% endif %}
+                        </div>
+                        
+                        <div>
+                            <label for="{{ form.autor.id_for_label }}" class="block text-sm font-medium text-gray-700">Autor *</label>
+                            <input type="text" name="{{ form.autor.name }}" id="{{ form.autor.id_for_label }}" value="{{ form.autor.value|default:'' }}" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-green-500 focus:border-green-500">
+                            {% if form.autor.errors %}
+                                <p class="text-red-600 text-sm mt-1">{{ form.autor.errors.0 }}</p>
+                            {% endif %}
+                        </div>
+                        
+                        <div>
+                            <label for="{{ form.isbn.id_for_label }}" class="block text-sm font-medium text-gray-700">ISBN</label>
+                            <input type="text" name="{{ form.isbn.name }}" id="{{ form.isbn.id_for_label }}" value="{{ form.isbn.value|default:'' }}" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-green-500 focus:border-green-500">
+                            <p class="text-xs text-gray-500 mt-1">Formato estándar de 10 o 13 dígitos</p>
+                            {% if form.isbn.errors %}
+                                <p class="text-red-600 text-sm mt-1">{{ form.isbn.errors.0 }}</p>
+                            {% endif %}
+                        </div>
+                        
+                        <div>
+                            <label for="{{ form.numadqui.id_for_label }}" class="block text-sm font-medium text-gray-700">Número de Adquisición *</label>
+                            <input type="text" name="{{ form.numadqui.name }}" id="{{ form.numadqui.id_for_label }}" value="{{ form.numadqui.value|default:'' }}" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-green-500 focus:border-green-500">
+                            <p class="text-xs text-gray-500 mt-1">Número único en inventario</p>
+                            {% if form.numadqui.errors %}
+                                <p class="text-red-600 text-sm mt-1">{{ form.numadqui.errors.0 }}</p>
+                            {% endif %}
+                        </div>
+                        
+                        <div>
+                            <label for="{{ form.editorial.id_for_label }}" class="block text-sm font-medium text-gray-700">Editorial</label>
+                            <input type="text" name="{{ form.editorial.name }}" id="{{ form.editorial.id_for_label }}" value="{{ form.editorial.value|default:'' }}" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-green-500 focus:border-green-500">
+                            {% if form.editorial.errors %}
+                                <p class="text-red-600 text-sm mt-1">{{ form.editorial.errors.0 }}</p>
+                            {% endif %}
+                        </div>
+                        
+                        <div>
+                            <label for="{{ form.año_publicacion.id_for_label }}" class="block text-sm font-medium text-gray-700">Año de Publicación</label>
+                            <input type="number" name="{{ form.año_publicacion.name }}" id="{{ form.año_publicacion.id_for_label }}" value="{{ form.año_publicacion.value|default:'' }}" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-green-500 focus:border-green-500">
+                            {% if form.año_publicacion.errors %}
+                                <p class="text-red-600 text-sm mt-1">{{ form.año_publicacion.errors.0 }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <!-- Columna derecha: Clasificación y ubicación -->
+                    <div class="space-y-4">
+                        <h2 class="text-lg font-semibold">Clasificación y Ubicación</h2>
+                        
+                        <div>
+                            <label for="{{ form.categoria.id_for_label }}" class="block text-sm font-medium text-gray-700">Categoría *</label>
+                            <select name="{{ form.categoria.name }}" id="{{ form.categoria.id_for_label }}" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-green-500 focus:border-green-500">
+                                <option value="">Seleccionar categoría</option>
+                                {% for id, name in form.fields.categoria.choices %}
+                                    <option value="{{ id }}" {% if id == form.categoria.value|stringformat:"i" %}selected{% endif %}>{{ name }}</option>
+                                {% endfor %}
+                            </select>
+                            {% if form.categoria.errors %}
+                                <p class="text-red-600 text-sm mt-1">{{ form.categoria.errors.0 }}</p>
+                            {% endif %}
+                        </div>
+                        
+                        <div>
+                            <label for="{{ form.estado.id_for_label }}" class="block text-sm font-medium text-gray-700">Estado *</label>
+                            <select name="{{ form.estado.name }}" id="{{ form.estado.id_for_label }}" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-green-500 focus:border-green-500">
+                                {% for id, name in form.fields.estado.choices %}
+                                    <option value="{{ id }}" {% if id == form.estado.value %}selected{% endif %}>{{ name }}</option>
+                                {% endfor %}
+                            </select>
+                            {% if form.estado.errors %}
+                                <p class="text-red-600 text-sm mt-1">{{ form.estado.errors.0 }}</p>
+                            {% endif %}
+                        </div>
+                        
+                        <div>
+                            <label for="{{ form.biblioteca.id_for_label }}" class="block text-sm font-medium text-gray-700">Biblioteca *</label>
+                            <select name="{{ form.biblioteca.name }}" id="{{ form.biblioteca.id_for_label }}" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-green-500 focus:border-green-500">
+                                <option value="">Seleccionar biblioteca</option>
+                                {% for id, name in form.fields.biblioteca.choices %}
+                                    <option value="{{ id }}" {% if id == form.biblioteca.value|stringformat:"i" %}selected{% endif %}>{{ name }}</option>
+                                {% endfor %}
+                            </select>
+                            {% if form.biblioteca.errors %}
+                                <p class="text-red-600 text-sm mt-1">{{ form.biblioteca.errors.0 }}</p>
+                            {% endif %}
+                        </div>
+                        
+                        <div>
+                            <label for="{{ form.ubicacion.id_for_label }}" class="block text-sm font-medium text-gray-700">Ubicación en Biblioteca</label>
+                            <input type="text" name="{{ form.ubicacion.name }}" id="{{ form.ubicacion.id_for_label }}" value="{{ form.ubicacion.value|default:'' }}" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-green-500 focus:border-green-500">
+                            <p class="text-xs text-gray-500 mt-1">Ejemplo: Estantería A, Pasillo 3</p>
+                            {% if form.ubicacion.errors %}
+                                <p class="text-red-600 text-sm mt-1">{{ form.ubicacion.errors.0 }}</p>
+                            {% endif %}
+                        </div>
+                        
+                        <div>
+                            <label for="{{ form.descripcion.id_for_label }}" class="block text-sm font-medium text-gray-700">Descripción</label>
+                            <textarea name="{{ form.descripcion.name }}" id="{{ form.descripcion.id_for_label }}" rows="4" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-green-500 focus:border-green-500">{{ form.descripcion.value|default:'' }}</textarea>
+                            {% if form.descripcion.errors %}
+                                <p class="text-red-600 text-sm mt-1">{{ form.descripcion.errors.0 }}</p>
+                            {% endif %}
+                        </div>
+                        
+                        <div>
+                            <label for="{{ form.portada.id_for_label }}" class="block text-sm font-medium text-gray-700">Portada</label>
+                            {% if form.instance.pk and form.instance.portada %}
+                                <div class="flex items-center mb-2">
+                                    <img class="h-16 w-12 object-cover rounded mr-2" src="{{ form.instance.portada.url }}" alt="{{ form.instance.titulo }}">
+                                    <span class="text-xs text-gray-500">Portada actual</span>
+                                </div>
+                            {% endif %}
+                            <input type="file" name="{{ form.portada.name }}" id="{{ form.portada.id_for_label }}" class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-green-50 file:text-green-700 hover:file:bg-green-100">
+                            <p class="text-xs text-gray-500 mt-1">Formatos: JPG, PNG. Máx: 2MB{% if form.instance.pk %} - Dejar vacío para mantener la portada actual{% endif %}</p>
+                            {% if form.portada.errors %}
+                                <p class="text-red-600 text-sm mt-1">{{ form.portada.errors.0 }}</p>
+                            {% endif %}
+                        </div>
+                        
+                        {% if form.instance.pk %}
+                        <div>
+                            <p class="text-sm font-medium text-gray-700">Fecha de creación</p>
+                            <p class="text-sm text-gray-500">{{ form.instance.fecha_creacion|date:"d/m/Y H:i" }}</p>
+                        </div>
+                        
+                        <div>
+                            <p class="text-sm font-medium text-gray-700">Última actualización</p>
+                            <p class="text-sm text-gray-500">{{ form.instance.fecha_actualizacion|date:"d/m/Y H:i" }}</p>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <div class="mt-6 pt-4 border-t flex justify-between">
+                    {% if form.instance.pk %}
+                    <a href="{% url 'delete_libro' form.instance.pk %}" class="bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded flex items-center">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                        </svg>
+                        Eliminar Libro
+                    </a>
+                    {% else %}
+                    <div></div> <!-- Elemento vacío para mantener el layout cuando no hay eliminar -->
+                    {% endif %}
+                    
+                    <div class="space-x-3">
+                        <a href="{% url 'list_libro' %}" class="bg-gray-500 hover:bg-gray-600 text-white py-2 px-4 rounded">
+                            Cancelar
+                        </a>
+                        <button type="submit" class="bg-green-700 hover:bg-green-800 text-white py-2 px-6 rounded">
+                            {% if form.instance.pk %}Actualizar{% else %}Guardar{% endif %} Libro
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock content %}

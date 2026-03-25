@@ -1,0 +1,121 @@
+<!-- templates/registros/agregar_bibliotecario.html -->
+{% extends "base_admin.html" %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold mb-6 text-red-800">Agregar Bibliotecario</h1>
+
+    <!-- Mostrar mensajes de error o éxito -->
+    {% if messages %}
+    <div class="mb-4">
+        {% for message in messages %}
+        <div class="bg-{% if message.tags == 'error' %}red{% else %}green{% endif %}-100 border border-{% if message.tags == 'error' %}red{% else %}green{% endif %}-400 text-{% if message.tags == 'error' %}red{% else %}green{% endif %}-700 px-4 py-3 rounded relative" role="alert">
+            <span class="block sm:inline">{{ message }}</span>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Formulario -->
+    <form method="post" class="bg-white p-6 rounded-lg shadow-md">
+        {% csrf_token %}
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Datos de acceso -->
+            <div>
+                <h2 class="text-xl font-semibold mb-4">Datos de acceso</h2>
+                <div class="mb-4">
+                    <label for="{{ form.email.id_for_label }}" class="block text-gray-700 font-medium mb-2">Correo electrónico *</label>
+                    {{ form.email }}
+                </div>
+                <div class="mb-4">
+                    <label for="{{ form.username.id_for_label }}" class="block text-gray-700 font-medium mb-2">Nombre de usuario *</label>
+                    {{ form.username }}
+                </div>
+                <div class="mb-4">
+                    <label for="{{ form.password.id_for_label }}" class="block text-gray-700 font-medium mb-2">Contraseña *</label>
+                    {{ form.password }}
+                </div>
+                <div class="mb-4">
+                    <label for="{{ form.confirm_password.id_for_label }}" class="block text-gray-700 font-medium mb-2">Confirmar contraseña *</label>
+                    {{ form.confirm_password }}
+                </div>
+            </div>
+
+            <!-- Datos personales -->
+            <div>
+                <h2 class="text-xl font-semibold mb-4">Datos personales</h2>
+                <div class="mb-4">
+                    <label for="{{ form.nombres.id_for_label }}" class="block text-gray-700 font-medium mb-2">Nombres *</label>
+                    {{ form.nombres }}
+                </div>
+                <div class="mb-4">
+                    <label for="{{ form.apellido_paterno.id_for_label }}" class="block text-gray-700 font-medium mb-2">Apellido Paterno *</label>
+                    {{ form.apellido_paterno }}
+                </div>
+                <div class="mb-4">
+                    <label for="{{ form.apellido_materno.id_for_label }}" class="block text-gray-700 font-medium mb-2">Apellido Materno *</label>
+                    {{ form.apellido_materno }}
+                </div>
+                <div class="mb-4">
+                    <label for="{{ form.edad.id_for_label }}" class="block text-gray-700 font-medium mb-2">Edad *</label>
+                    {{ form.edad }}
+                </div>
+                <div class="mb-4">
+                    <label for="{{ form.telefono.id_for_label }}" class="block text-gray-700 font-medium mb-2">Teléfono *</label>
+                    {{ form.telefono }}
+                </div>
+            </div>
+
+            <!-- Dirección -->
+            <div>
+                <h2 class="text-xl font-semibold mb-4">Dirección</h2>
+                <div class="mb-4">
+                    <label for="{{ form.domicilio.id_for_label }}" class="block text-gray-700 font-medium mb-2">Domicilio *</label>
+                    {{ form.domicilio }}
+                </div>
+                <div class="mb-4">
+                    <label for="{{ form.codigo_postal.id_for_label }}" class="block text-gray-700 font-medium mb-2">Código Postal *</label>
+                    {{ form.codigo_postal }}
+                </div>
+            </div>
+
+            <!-- Información profesional -->
+            <div>
+                <h2 class="text-xl font-semibold mb-4">Información profesional</h2>
+                <div class="mb-4">
+                    <label for="{{ form.ocupacion.id_for_label }}" class="block text-gray-700 font-medium mb-2">Ocupación *</label>
+                    {{ form.ocupacion }}
+                </div>
+                <div class="mb-4">
+                    <label for="{{ form.escuela_trabajo.id_for_label }}" class="block text-gray-700 font-medium mb-2">Escuela o trabajo *</label>
+                    {{ form.escuela_trabajo }}
+                </div>
+                <div class="mb-4">
+                    <label for="{{ form.telefono_escuela_trabajo.id_for_label }}" class="block text-gray-700 font-medium mb-2">Teléfono de escuela o trabajo *</label>
+                    {{ form.telefono_escuela_trabajo }}
+                </div>
+            </div>
+
+            <!-- Biblioteca -->
+            <div>
+                <h2 class="text-xl font-semibold mb-4">Biblioteca</h2>
+                <div class="mb-4">
+                    <label for="{{ form.biblioteca.id_for_label }}" class="block text-gray-700 font-medium mb-2">Biblioteca *</label>
+                    {{ form.biblioteca }}
+                </div>
+            </div>
+        </div>
+
+        <!-- Campo oculto para el rol -->
+        {{ form.role }}
+
+        <!-- Botón de envío -->
+        <div class="mt-6">
+            <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md">
+                Registrar Bibliotecario
+            </button>
+            <a href="{% url 'user_list' %}" class="ml-4 text-gray-600 hover:text-gray-800">Cancelar</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,293 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block title %}Agenda Biblio Aprende{% endblock %}
+
+{% block content %}
+<style>
+        body{ background:#f5f5f5; color:#111; }            /* texto base legible */
+        .nav-link{ color: var(--guinda); }
+        .nav-link:hover{ color: var(--guinda-2); }
+        .account-btn{ background: var(--guinda-2); }
+        .account-btn:hover{ background: var(--guinda); }
+        .account-btn::before{ content:""; } /* corrige regla inválida */
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 40px;
+            background-color: #bbb5b5;
+        }
+
+        .logo img {
+            height: 120px;
+        }
+
+        .main-nav {
+            display: flex;
+            align-items: center;
+        }
+        
+        .right-section {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .right-logo {
+            height: 100px;
+        }
+
+        .nav-item {
+            position: relative;
+            margin: 0 10px;
+        }
+
+        .nav-link {
+            color: #5C0432;
+            text-decoration: none;
+            font-size: 18px; /* Adjusted font size to match the image */
+            padding: 10px 15px; /* Add padding for better spacing */
+            display: block; /* Makes the entire area clickable */
+        }
+
+        .nav-link:hover {
+            color: #831F46;
+        }
+
+        /* Submenu styling */
+        .submenu {
+            display: none; /* Hidden by default */
+            position: absolute;
+            top: 100%; /* Position below the parent nav item */
+            left: 0;
+            background-color: #2e1212; /* Slightly lighter dark background for contrast */
+            min-width: 150px; /* Minimum width for the submenu */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Optional: adds a shadow for depth */
+            z-index: 1000; /* Ensure it appears above other elements */
+        }
+
+        .submenu a {
+            color: #ffffff;
+            text-decoration: none;
+            padding: 10px 15px;
+            display: block; /* Makes the entire area clickable */
+            font-size: 16px;
+        }
+
+        .submenu a:hover {
+            background-color: #a33660; /* Hover effect for submenu items */
+            color: #ffffff;
+        }
+
+        /* Show submenu on hover */
+        .nav-item:hover .submenu {
+            display: block;
+        }
+        .dropdown {
+            position: relative;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            left: 100%; /* o right: 0; si quieres que se abra hacia el otro lado */
+            top: 0;
+            background-color: #2e1212; 
+            min-width: 200px;
+            z-index: 1;
+            flex-direction: column;
+            box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: flex;
+        }
+        
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 15px; /* Espacio entre los botones */
+        }
+        .register-btn {
+            /* Mantenemos tus estilos originales y aseguramos la alineación */
+            background: transparent;
+            color: var(--guinda-2, #5C0432); /* Agregué un color por defecto si la var no existe */
+            border: 2px solid var(--guinda-2, #5C0432);
+            padding: 10px 18px;
+            border-radius: 8px; /* Haz el borde más suave para que coincida con la imagen */
+            font-size: 16px; /* Para que coincida con Mi Cuenta */
+            text-decoration: none; /* Asegura que no tenga subrayado si no es un <a> */
+            cursor: pointer;
+        }
+        .register-btn:hover { 
+            background: var(--guinda-2, #5C0432); 
+            color: #fff; 
+        }
+
+        /* Style for the "Mi Cuenta" button */
+        .account-btn {
+            background-color: #922453;
+            color: #ffffff;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 25px; 
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .account-btn::before { content: ""; }
+
+        .account-btn:hover {
+            background-color: #a33660;
+        }
+        .eventos-container {
+            max-width: 1100px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+
+        .evento-card {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            overflow: hidden;
+            margin-bottom: 30px;
+            padding: 20px;
+            align-items: center;
+        }
+
+        .evento-imagen {
+            flex: 1 1 250px;
+            max-width: 300px;
+        }
+
+        .evento-imagen img {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+        }
+
+        .evento-info {
+            flex: 2 1 400px;
+        }
+
+        .evento-info h3 {
+            margin: 0 0 10px;
+            color: #333;
+        }
+
+        .evento-info p {
+            margin: 5px 0;
+            color: #555;
+        }
+
+        .evento-info .fecha-hora {
+            font-weight: bold;
+            color: #007bff;
+        }
+        
+        .fecha-hora {
+            font-style: italic;
+            color: #555;
+        }
+
+</style>
+
+    <header>
+        <div class="logo">
+            <img src="{% static 'images/newbiblioteca.png' %}" alt="Logo">
+        </div>
+        <nav class="main-nav">
+
+            <div class="nav-item">
+                <a href="#" class="nav-link">Eventos</a>
+                <div class="submenu">
+                    <a href="{% url 'agenda_cultural' %}">Agenda Cultural</a>
+                </div>
+            </div>
+            <div class="nav-item">
+                <a href="#" class="nav-link">Aprendizaje & Tecnologia</a>
+                <div class="submenu">
+                    <a href="{% url 'coleccion_digital' %}">Colección Digital DGB</a>
+                    <a href="https://wordwall.net/es-mx/community/la-biblioteca">Juega y aprende</a>
+                </div>
+            </div>
+            <div class="nav-item">
+                <a href="#" class="nav-link">Servicios</a>
+                    <div class="submenu">
+                        <div class="dropdown">
+                            <a href="#">Préstamos</a>
+                            <div class="dropdown-content">
+                                <a href="{% url 'prestamos' %}">Préstamo de libros en salas</a>
+                                <a href="{% url 'prestamo_domicilio' %}">Préstamo de libros a domicilio</a>
+                            </div>
+                        </div>
+                        <a href="{% url 'credencializacion' %}">Credencialización</a>
+                        <a href="{% url 'referencia' %}">Referencia</a>
+                        <a href="{% url 'servicio_digital' %}">Servicios Digitales</a>
+                        <a href="{% url 'servicio_cultural' %}">Servicios Culturales</a>
+                        <a href="{% url 'servicio_educativo' %}">Servicio educativo</a>
+                    </div>
+            </div>
+            <div class="nav-item">
+                <a href="#" class="nav-link">Nuestra Historia</a>
+                <div class="submenu">
+                </div>
+            </div>
+            <div class="nav-item">
+                <a href="#" class="nav-link">Sobre nosotros</a>
+                <div class="submenu">
+                    <a href="{% url 'nosotros' %}">Nosotros</a>
+                    <a href="{% url 'contacto' %}">Contacto</a>
+                </div>
+            </div>
+        </nav>
+        <div class="nav-actions">
+            <button class="register-btn" onclick="register()">Registrarse</button>
+            <a href="/usuarios/login/" class="account-btn">Mi Cuenta</a>
+        </div>
+    </header>
+    <div class="eventos-container">
+        <h2>Agenda Biblio Aprende</h2>
+
+        {% if eventos %}
+            {% for evento in eventos %}
+            <div class="evento-card">
+                {% if evento.imagen %}
+                <div class="evento-imagen">
+                    <img src="{{ evento.imagen.url }}" alt="{{ evento.nombre }}">
+                </div>
+                {% endif %}
+                <div class="evento-info">
+                    <h3>{{ evento.nombre }}</h3>
+                    <p>{{ evento.descripcion }}</p>
+                    <p class="fecha-hora">
+                        {{ evento.fecha }} —  {{ evento.hora }}<br>
+                        Finaliza: {{ evento.fecha_fin }} —  {{ evento.hora_fin }}
+                    </p>
+                    {% if evento.biblioteca %}
+                    <p><strong>Biblioteca:</strong> {{ evento.biblioteca.nombre }}</p>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <p>No hay eventos disponibles.</p>
+        {% endif %}
+    </div>
+{% endblock %}

@@ -1,0 +1,184 @@
+{% extends "base_admin.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <!-- Encabezado con tÃ­tulo y botÃ³n de volver -->
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-2xl font-bold">{% if form.instance.pk %}Editar{% else %}Nuevo{% endif %} Usuario</h1>
+        <a href="{% url 'admin_user_list' %}" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded flex items-center">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+            </svg>
+            Volver
+        </a>
+    </div>
+
+    <div class="bg-white shadow-md rounded-lg overflow-hidden">
+        <div class="p-6">
+            <form method="post">
+                {% csrf_token %}
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Columna izquierda: Datos personales -->
+                    <div class="space-y-4">
+                        <h2 class="text-lg font-semibold">InformaciÃ³n Personal</h2>
+                        
+                        <div>
+                            <label for="{{ form.nombres.id_for_label }}" class="block text-sm font-medium text-gray-700">Nombres *</label>
+                            <input type="text" name="{{ form.nombres.name }}" id="{{ form.nombres.id_for_label }}" value="{{ form.nombres.value|default:'' }}" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                            {% if form.nombres.errors %}
+                                <p class="text-red-600 text-sm mt-1">{{ form.nombres.errors.0 }}</p>
+                            {% endif %}
+                        </div>
+                        
+                        <div>
+                            <label for="{{ form.apellido_paterno.id_for_label }}" class="block text-sm font-medium text-gray-700">Apellido Paterno *</label>
+                            <input type="text" name="{{ form.apellido_paterno.name }}" id="{{ form.apellido_paterno.id_for_label }}" value="{{ form.apellido_paterno.value|default:'' }}" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                            {% if form.apellido_paterno.errors %}
+                                <p class="text-red-600 text-sm mt-1">{{ form.apellido_paterno.errors.0 }}</p>
+                            {% endif %}
+                        </div>
+                        
+                        <div>
+                            <label for="{{ form.apellido_materno.id_for_label }}" class="block text-sm font-medium text-gray-700">Apellido Materno</label>
+                            <input type="text" name="{{ form.apellido_materno.name }}" id="{{ form.apellido_materno.id_for_label }}" value="{{ form.apellido_materno.value|default:'' }}" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                            {% if form.apellido_materno.errors %}
+                                <p class="text-red-600 text-sm mt-1">{{ form.apellido_materno.errors.0 }}</p>
+                            {% endif %}
+                        </div>
+                        
+                        <div>
+                            <label for="{{ form.email.id_for_label }}" class="block text-sm font-medium text-gray-700">Correo electrÃ³nico *</label>
+                            <input type="email" name="{{ form.email.name }}" id="{{ form.email.id_for_label }}" value="{{ form.email.value|default:'' }}" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                            {% if form.email.errors %}
+                                <p class="text-red-600 text-sm mt-1">{{ form.email.errors.0 }}</p>
+                            {% endif %}
+                        </div>
+                        
+                        <div>
+                            <label for="{{ form.telefono.id_for_label }}" class="block text-sm font-medium text-gray-700">TelÃ©fono</label>
+                            <input type="text" name="{{ form.telefono.name }}" id="{{ form.telefono.id_for_label }}" value="{{ form.telefono.value|default:'' }}" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                            {% if form.telefono.errors %}
+                                <p class="text-red-600 text-sm mt-1">{{ form.telefono.errors.0 }}</p>
+                            {% endif %}
+                        </div>
+                        
+                        <div>
+                            <label for="{{ form.direccion.id_for_label }}" class="block text-sm font-medium text-gray-700">DirecciÃ³n</label>
+                            <input type="text" name="{{ form.direccion.name }}" id="{{ form.direccion.id_for_label }}" value="{{ form.direccion.value|default:'' }}" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                            {% if form.direccion.errors %}
+                                <p class="text-red-600 text-sm mt-1">{{ form.direccion.errors.0 }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <!-- Columna derecha: InformaciÃ³n de cuenta -->
+                    <div class="space-y-4">
+                        <h2 class="text-lg font-semibold">InformaciÃ³n de Cuenta</h2>
+                        
+                        <div>
+                            <label for="{{ form.username.id_for_label }}" class="block text-sm font-medium text-gray-700">Nombre de usuario *</label>
+                            <input type="text" name="{{ form.username.name }}" id="{{ form.username.id_for_label }}" value="{{ form.username.value|default:'' }}" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                            {% if form.username.errors %}
+                                <p class="text-red-600 text-sm mt-1">{{ form.username.errors.0 }}</p>
+                            {% endif %}
+                        </div>
+                        
+                        {% if not form.instance.pk %}
+                        <div>
+                            <label for="{{ form.password1.id_for_label }}" class="block text-sm font-medium text-gray-700">ContraseÃ±a *</label>
+                            <input type="password" name="{{ form.password1.name }}" id="{{ form.password1.id_for_label }}" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                            {% if form.password1.errors %}
+                                <p class="text-red-600 text-sm mt-1">{{ form.password1.errors.0 }}</p>
+                            {% endif %}
+                            <p class="text-xs text-gray-500 mt-1">La contraseÃ±a debe tener al menos 8 caracteres y no puede ser demasiado comÃºn.</p>
+                        </div>
+                        
+                        <div>
+                            <label for="{{ form.password2.id_for_label }}" class="block text-sm font-medium text-gray-700">Confirmar contraseÃ±a *</label>
+                            <input type="password" name="{{ form.password2.name }}" id="{{ form.password2.id_for_label }}" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                            {% if form.password2.errors %}
+                                <p class="text-red-600 text-sm mt-1">{{ form.password2.errors.0 }}</p>
+                            {% endif %}
+                        </div>
+                        {% endif %}
+                        
+                        <div>
+                            <label for="{{ form.role.id_for_label }}" class="block text-sm font-medium text-gray-700">Rol *</label>
+                            <select name="{{ form.role.name }}" id="{{ form.role.id_for_label }}" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                                {% for id, name in form.fields.role.choices %}
+                                    <option value="{{ id }}" {% if id == form.role.value %}selected{% endif %}>{{ name }}</option>
+                                {% endfor %}
+                            </select>
+                            {% if form.role.errors %}
+                                <p class="text-red-600 text-sm mt-1">{{ form.role.errors.0 }}</p>
+                            {% endif %}
+                        </div>
+                        
+                        <div>
+                            <label for="{{ form.biblioteca.id_for_label }}" class="block text-sm font-medium text-gray-700">Biblioteca asignada</label>
+                            <select name="{{ form.biblioteca.name }}" id="{{ form.biblioteca.id_for_label }}" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                                <option value="">Ninguna</option>
+                                {% for id, name in form.fields.biblioteca.choices %}
+                                    <option value="{{ id }}" {% if id == form.biblioteca.value|stringformat:"i" %}selected{% endif %}>{{ name }}</option>
+                                {% endfor %}
+                            </select>
+                            {% if form.biblioteca.errors %}
+                                <p class="text-red-600 text-sm mt-1">{{ form.biblioteca.errors.0 }}</p>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="flex items-center">
+                            <input type="checkbox" name="{{ form.is_active.name }}" id="{{ form.is_active.id_for_label }}" {% if form.is_active.value %}checked{% endif %} class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                            <label for="{{ form.is_active.id_for_label }}" class="ml-2 block text-sm text-gray-700">Usuario activo</label>
+                            {% if form.is_active.errors %}
+                                <p class="text-red-600 text-sm mt-1">{{ form.is_active.errors.0 }}</p>
+                            {% endif %}
+                        </div>
+                        
+                        {% if form.instance.pk %}
+                        <div>
+                            <p class="text-sm font-medium text-gray-700">Fecha de creaciÃ³n</p>
+                            <p class="text-sm text-gray-500">{{ form.instance.date_joined|date:"d/m/Y H:i" }}</p>
+                        </div>
+                        
+                        <div>
+                            <p class="text-sm font-medium text-gray-700">Ãltimo acceso</p>
+                            <p class="text-sm text-gray-500">{{ form.instance.last_login|date:"d/m/Y H:i"|default:"Nunca" }}</p>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <!-- Permisos adicionales para superusuarios -->
+                {% if perms.auth.change_permission %}
+                <div class="mt-6 pt-4 border-t border-gray-200">
+                    <h2 class="text-lg font-semibold mb-4">Permisos avanzados</h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="flex items-center">
+                            <input type="checkbox" name="{{ form.is_staff.name }}" id="{{ form.is_staff.id_for_label }}" {% if form.is_staff.value %}checked{% endif %} class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                            <label for="{{ form.is_staff.id_for_label }}" class="ml-2 block text-sm text-gray-700">Acceso al panel de administraciÃ³n</label>
+                        </div>
+                        
+                        <div class="flex items-center">
+                            <input type="checkbox" name="{{ form.is_superuser.name }}" id="{{ form.is_superuser.id_for_label }}" {% if form.is_superuser.value %}checked{% endif %} class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                            <label for="{{ form.is_superuser.id_for_label }}" class="ml-2 block text-sm text-gray-700">Permisos de superusuario</label>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+                
+                <div class="mt-6 pt-4 border-t flex justify-end space-x-3">
+                    <a href="{% url 'admin_user_list' %}" class="bg-gray-500 hover:bg-gray-600 text-white py-2 px-4 rounded">
+                        Cancelar
+                    </a>
+                    <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-6 rounded">
+                        {% if form.instance.pk %}Actualizar{% else %}Guardar{% endif %} Usuario
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

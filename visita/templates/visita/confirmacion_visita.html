@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirmación de visita guiada - Bibliotecas Públicas Municipales</title>
+    <style>
+        body {
+            background: #f7f7f7;
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        h2 { color: #6b1c2f; margin-bottom: 20px; }
+        p { color: #333; line-height: 1.6; font-size: 16px; margin-bottom: 15px; }
+
+        .highlight {
+            background-color: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+        .info-section { margin-bottom: 20px; text-align: left; }
+        .info-section h3 { color: #6b1c2f; font-size: 18px; margin-bottom: 10px; }
+        .info-section p { margin: 5px 0; }
+
+        .button {
+            display: inline-block;
+            padding: 10px 16px;
+            background-color: #6b1c2f;
+            color: #fff;
+            text-decoration: none;
+            border: 0;
+            border-radius: 6px;
+            transition: background-color 0.25s ease;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .button:hover { background-color: #8b2c4f; }
+
+        .actions {
+            text-align: center;
+            margin: 16px auto 8px;
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .privacy-link {
+            color: #ff6f61; text-decoration: none; font-size: 16px; transition: color 0.3s ease;
+        }
+        .privacy-link:hover { color: #e65a50; text-decoration: underline; }
+
+        .logo-container { position: relative; text-align: left; margin-bottom: 20px; }
+        .logo-container img { width: 120px; height: auto; }
+
+        .notice-text { font-size: 11px; margin-top: 20px; color:#333; }
+
+        /* El oficio imprimible */
+        .printable-form {
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+            width: 100%;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            border: 1px solid #000;
+            background: #fff;
+        }
+
+        table { width:100%; border-collapse: collapse; }
+        th, td { padding: 6px; border: 1px solid #000; font-size: 12px; text-align: left; }
+
+        @media (max-width: 768px) {
+            footer { flex-direction: column; text-align: center; }
+            .footer-column { margin-bottom: 20px; }
+            .social-icons { margin-top: 10px; }
+        }
+
+        /* Oculta todo salvo el oficio al imprimir */
+        @media print {
+            body * { visibility: hidden !important; }
+            .printable-form, .printable-form * { visibility: visible !important; }
+            .printable-form {
+                position: absolute; top: 0; left: 0; width: 100%;
+                padding: 0; margin: 0; border: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+{% if confirmado %}
+<script>
+  // Mantén la impresión automática si así lo quieres
+  window.onload = function () {
+    window.print();
+  };
+</script>
+
+<!-- Botones de acción (no se incluirán en la impresión por @media print) -->
+<div class="actions">
+  <button id="btnDescargar" class="button" type="button">Descargar oficio (PDF)</button>
+</div>
+
+<!-- OFICIO: este contenedor es el que se imprimirá y también el que convertiremos a PDF -->
+<div id="oficio" class="printable-form">
+    <div class="logo-container">
+        <img src="{% static 'images/Juarez2024-2027-01.png' %}" alt="Logo municipio">
+        
+    </div>
+
+    <p>Ciudad Juárez, Chih., a {{ visita.created_at|date:"d \\d\\e F \\d\\e Y" }}.</p>
+    <h2 style="text-align:center; margin-bottom:20px;">Solicitud de visita guiada</h2>
+
+    <p><strong>Profesor: Guillermo Enrique Alvidrez Olivas</strong><br>Director de Educación</p>
+
+    <h3 style="margin-top:20px;">Datos de la Biblioteca</h3>
+    <table style="margin-bottom:20px;">
+      <tr>
+        <th>Biblioteca</th>
+        <td>{{ visita.biblioteca.nombre }}</td>
+      </tr>
+      <tr>
+        <th>Dirección</th>
+        <td>{{ visita.biblioteca.direccion }}</td>
+      </tr>
+    </table>
+
+    <h3>Datos del Solicitante</h3>
+    <table>
+      <tr>
+        <th>Nombre de la institución</th>
+        <td>{{ visita.nombre_institucion }}</td>
+      </tr>
+      <tr>
+        <th>Nombre del director</th>
+        <td>{{ visita.nombre_director }}</td>
+      </tr>
+      <tr>
+        <th>Teléfono</th>
+        <td>{{ visita.telefono_resp }}</td>
+      </tr>
+      <tr>
+        <th>Propósito de la visita</th>
+        <td>{{ visita.proposito }}</td>
+      </tr>
+      <tr>
+        <th>Responsable</th>
+        <td>
+              {{ visita.nombre_resp }} 
+              {{ visita.apellido_paterno }} 
+              {{ visita.apellido_materno}}
+        </td>
+      </tr>
+      <tr>
+        <th>Rango de edad</th>
+        <td>{{ visita.edad_rango }}</td>
+      </tr>
+      <tr>
+        <th>Fecha y hora</th>
+        <td>
+        {{ visita.fecha_visita|date:"d \\d\\e F \\d\\e Y" }}
+        {% if visita.horario %} a las {{ visita.get_horario_display|default:visita.horario }}{% endif %}
+      </td>
+
+      </tr>
+    </table>
+
+    <div style="margin-top: 30px; text-align:center;">
+        <hr style="width: 60%;">
+        Nombre y firma del solicitante
+    </div>
+
+    <p class="notice-text">
+        Es necesario entregar impresa esta solicitud en la Dirección de Educación, ubicada en C. Ignacio Ramírez 351, Col. Partido Romero.
+        Horario de lunes a viernes de 8:00 a 15:00 horas. Recuerda recibir la confirmación de tu solicitud vía telefónica.
+    </p>
+</div>
+
+{% else %}
+<!-- Contenido alterno cuando no está confirmado -->
+<div class="container">
+  <h2>Tu solicitud aún no está confirmada</h2>
+  <p>Cuando se confirme, podrás imprimir y descargar el oficio.</p>
+</div>
+{% endif %}
+
+<!-- Librería para convertir HTML a PDF en el navegador -->
+<script src="https://cdn.jsdelivr.net/npm/html2pdf.js@0.10.1/dist/html2pdf.bundle.min.js"></script>
+<script>
+(function() {
+  const btn = document.getElementById('btnDescargar');
+  if (!btn) return;
+
+  btn.addEventListener('click', function () {
+    const oficio = document.getElementById('oficio');
+    if (!oficio) return;
+
+    // Clonamos el nodo para ajustar estilos sin tocar el original
+    const clone = oficio.cloneNode(true);
+    clone.style.margin = '0';
+    clone.style.boxShadow = 'none';
+    clone.style.border = '1px solid #000';
+    clone.style.width = '794px';      // ≈ A4 a ~96dpi
+    clone.style.minHeight = '1123px'; // ≈ A4 alto
+
+    // Contenedor temporal fuera de pantalla
+    const tmp = document.createElement('div');
+    tmp.style.position = 'fixed';
+    tmp.style.left = '-99999px';
+    tmp.appendChild(clone);
+    document.body.appendChild(tmp);
+
+    const nombreArchivo = `Solicitud_visita_{{ visita.id }}.pdf`;
+
+    html2pdf()
+      .from(clone)
+      .set({
+        margin:       [10, 10, 10, 10],
+        filename:     nombreArchivo,
+        image:        { type: 'jpeg', quality: 0.98 },
+        html2canvas:  { scale: 2, useCORS: true, logging: false },
+        jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      })
+      .save()
+      .finally(() => {
+        document.body.removeChild(tmp);
+      });
+  });
+})();
+</script>
+</body>
+</html>

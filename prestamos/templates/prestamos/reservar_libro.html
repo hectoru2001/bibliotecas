@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reservar un Libro</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+        }
+        .form-container {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #fff;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        .error {
+            color: red;
+        }
+        h2 {
+            color: #fff;
+            background-color: #6b5b95;
+            padding: 15px;
+            margin: 0;
+            text-align: center;
+            border-radius: 5px 5px 0 0;
+        }
+        button {
+            background-color: #c0392b;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #a93226;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h2>Confirmar Reserva</h2>
+        {% if form.errors %}
+            <div class="error">
+                <p>Error al procesar la reserva:</p>
+                <ul>
+                    {% for error in form.non_field_errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+        <form method="post">
+            {% csrf_token %}
+            {{ form.libro_id }}  <!-- Renderizamos el campo oculto libro_id -->
+            <button type="submit">Confirmar Reserva</button>
+        </form>
+    </div>
+</body>
+</html>

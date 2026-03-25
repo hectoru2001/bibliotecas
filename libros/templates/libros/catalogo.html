@@ -1,0 +1,127 @@
+{# En templates/libros/catalogo.html #}
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold mb-6">Catálogo de Libros</h1>
+    
+    <!-- Filtros -->
+    <div class="bg-white p-6 rounded-lg shadow-md mb-6">
+        <form method="get" class="flex flex-col md:flex-row gap-4">
+            <div class="flex-1">
+                <label for="biblioteca" class="block text-sm font-medium text-gray-700">Biblioteca</label>
+                <select name="biblioteca" id="biblioteca" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                    <option value="">Todas las bibliotecas</option>
+                    {% for biblioteca in bibliotecas %}
+                    <option value="{{ biblioteca.id }}" {% if biblioteca_actual == biblioteca.id|stringformat:"s" %}selected{% endif %}>
+                        {{ biblioteca.nombre }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <div class="flex-1">
+                <label for="busqueda" class="block text-sm font-medium text-gray-700">Buscar</label>
+                <input type="text" name="busqueda" id="busqueda" value="{{ busqueda }}" 
+                       class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                       placeholder="Título del libro...">
+            </div>
+            
+            <div class="self-end">
+                <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+                    Buscar
+                </button>
+            </div>
+        </form>
+    </div>
+    
+    <!-- Resultados -->
+    <div class="mb-6">
+        <h2 class="text-xl font-semibold mb-4">
+            {% if biblioteca_actual %}
+                Libros de {{ bibliotecas|dictsort:"id"|dictvalue:biblioteca_actual }}
+            {% else %}
+                Todos los Libros
+            {% endif %}
+            {% if busqueda %}
+                que contienen "{{ busqueda }}"
+            {% endif %}
+        </h2>
+    </div>
+    
+    <!-- Grid de libros -->
+    {% if libros %}
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        {% for libro in libros %}
+        <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
+            <div class="p-6">
+                <h3 class="text-lg font-bold mb-1">{{ libro.titulo }}</h3>
+                <p class="text-gray-600 mb-2">{{ libro.autor }}</p>
+                <div class="text-sm text-blue-600">{{ libro.biblioteca.nombre }}</div>
+                
+                <!-- Disponibilidad -->
+                {% if libro.disponible %}
+                <span class="inline-block mt-2 px-2 py-1 text-xs bg-green-100 text-green-800 rounded">
+                    Disponible
+                </span>
+                {% else %}
+                <span class="inline-block mt-2 px-2 py-1 text-xs bg-red-100 text-red-800 rounded">
+                    No disponible
+                </span>
+                {% endif %}
+                
+                <!-- Enlace a detalles -->
+                <div class="mt-4">
+                    <a href="{% url 'detalle_libro' libro.id %}" class="text-blue-600 hover:underline">
+                        Ver detalles
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    
+    <!-- Paginación -->
+    {% if is_paginated %}
+    <div class="mt-8 flex justify-center">
+        <div class="flex space-x-1">
+            {% if page_obj.has_previous %}
+            <a href="?{% if biblioteca_actual %}biblioteca={{ biblioteca_actual }}&{% endif %}{% if busqueda %}busqueda={{ busqueda }}&{% endif %}page={{ page_obj.previous_page_number }}" 
+               class="px-3 py-1 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300">
+                &laquo; Anterior
+            </a>
+            {% endif %}
+            
+            {% for i in page_obj.paginator.page_range %}
+                {% if page_obj.number == i %}
+                <span class="px-3 py-1 bg-blue-600 text-white rounded-md">{{ i }}</span>
+                {% else %}
+                <a href="?{% if biblioteca_actual %}biblioteca={{ biblioteca_actual }}&{% endif %}{% if busqueda %}busqueda={{ busqueda }}&{% endif %}page={{ i }}" 
+                   class="px-3 py-1 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300">
+                    {{ i }}
+                </a>
+                {% endif %}
+            {% endfor %}
+            
+            {% if page_obj.has_next %}
+            <a href="?{% if biblioteca_actual %}biblioteca={{ biblioteca_actual }}&{% endif %}{% if busqueda %}busqueda={{ busqueda }}&{% endif %}page={{ page_obj.next_page_number }}" 
+               class="px-3 py-1 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300">
+                Siguiente &raquo;
+            </a>
+            {% endif %}
+        </div>
+    </div>
+    {% endif %}
+    
+    {% else %}
+    <!-- Sin resultados -->
+    <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4">
+        <div class="flex">
+            <div>
+                <p class="text-yellow-700">No se encontraron libros con los criterios de búsqueda actuales.</p>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,162 @@
+<!-- filepath: c:\Users\USUARIO\Documents\BiblioWeb_projects_v05\projects\libros\templates\libros\update_libro.html -->
+{% extends "base_admin.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <!-- Encabezado con título y botón de volver -->
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-2xl font-bold">Editar Libro</h1>
+        <a href="{% url 'list_libro' %}" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded flex items-center">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+            </svg>
+            Volver
+        </a>
+    </div>
+
+    <div class="bg-white shadow-md rounded-lg overflow-hidden">
+        <div class="px-6 py-4 bg-gradient-to-r from-green-50 to-green-100 border-b border-green-200">
+            <div class="flex items-center">
+                {% if libro.portada %}
+                    <img class="h-16 w-12 object-cover rounded shadow-sm mr-4" src="{{ libro.portada.url }}" alt="{{ libro.titulo }}">
+                {% else %}
+                    <div class="h-16 w-12 bg-gray-200 rounded shadow-sm flex items-center justify-center mr-4">
+                        <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                        </svg>
+                    </div>
+                {% endif %}
+                <div>
+                    <h2 class="text-xl font-semibold text-gray-800">{{ libro.titulo }}</h2>
+                    <p class="text-sm text-gray-600">Autor: {{ libro.autor }}</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="p-6">
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Columna izquierda: Datos básicos del libro -->
+                    <div class="space-y-4">
+                        <h2 class="text-lg font-semibold">Información Básica</h2>
+                        
+                        <div>
+                            <label for="titulo" class="block text-sm font-medium text-gray-700">Título del Libro *</label>
+                            <input type="text" id="titulo" name="titulo" value="{{ libro.titulo }}" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-red-500 focus:border-red-500">
+                        </div>
+                        
+                        <div>
+                            <label for="autor" class="block text-sm font-medium text-gray-700">Autor *</label>
+                            <input type="text" id="autor" name="autor" value="{{ libro.autor }}" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-red-500 focus:border-red-500">
+                        </div>
+                        
+                        <div>
+                            <label for="isbn" class="block text-sm font-medium text-gray-700">ISBN</label>
+                            <input type="text" id="isbn" name="isbn" value="{{ libro.isbn }}" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-red-500 focus:border-red-500">
+                            <p class="mt-1 text-xs text-gray-500">Formato estándar de 10 o 13 dígitos</p>
+                        </div>
+                        
+                        <div>
+                            <label for="numadqui" class="block text-sm font-medium text-gray-700">Número de Adquisición *</label>
+                            <input type="text" id="numadqui" name="numadqui" value="{{ libro.numadqui }}" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-red-500 focus:border-red-500">
+                            <p class="mt-1 text-xs text-gray-500">Número único en inventario</p>
+                        </div>
+                        
+                        <div>
+                            <label for="editorial" class="block text-sm font-medium text-gray-700">Editorial</label>
+                            <input type="text" id="editorial" name="editorial" value="{{ libro.editorial|default:'' }}" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-red-500 focus:border-red-500">
+                        </div>
+                        
+                        <div>
+                            <label for="año_publicacion" class="block text-sm font-medium text-gray-700">Año de Publicación</label>
+                            <input type="number" id="año_publicacion" name="año_publicacion" value="{{ libro.año_publicacion|default:'' }}" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-red-500 focus:border-red-500">
+                        </div>
+                    </div>
+                    
+                    <!-- Columna derecha: Clasificación y ubicación -->
+                    <div class="space-y-4">
+                        <h2 class="text-lg font-semibold">Clasificación y Ubicación</h2>
+                        
+                        <div>
+                            <label for="categoria" class="block text-sm font-medium text-gray-700">Categoría *</label>
+                            <select id="categoria" name="categoria" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-red-500 focus:border-red-500">
+                                {% for choice in form.categoria.field.choices %}
+                                    <option value="{{ choice.0 }}" {% if libro.categoria_id == choice.0 %}selected{% endif %}>
+                                        {{ choice.1 }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label for="estado" class="block text-sm font-medium text-gray-700">Estado *</label>
+                            <select id="estado" name="estado" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-red-500 focus:border-red-500">
+                                {% for choice in form.estado.field.choices %}
+                                    <option value="{{ choice.0 }}" {% if libro.estado == choice.0 %}selected{% endif %}>
+                                        {{ choice.1 }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label for="biblioteca" class="block text-sm font-medium text-gray-700">Biblioteca *</label>
+                            <select id="biblioteca" name="biblioteca" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-red-500 focus:border-red-500">
+                                {% for choice in form.biblioteca.field.choices %}
+                                    <option value="{{ choice.0 }}" {% if libro.biblioteca_id == choice.0 %}selected{% endif %}>
+                                        {{ choice.1 }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label for="ubicacion" class="block text-sm font-medium text-gray-700">Ubicación en Biblioteca</label>
+                            <input type="text" id="ubicacion" name="ubicacion" value="{{ libro.ubicacion|default:'' }}" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-red-500 focus:border-red-500">
+                            <p class="mt-1 text-xs text-gray-500">Ejemplo: Estantería A, Pasillo 3</p>
+                        </div>
+                        
+                        <div>
+                            <label for="descripcion" class="block text-sm font-medium text-gray-700">Descripción</label>
+                            <textarea id="descripcion" name="descripcion" rows="4" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-red-500 focus:border-red-500">{{ libro.descripcion }}</textarea>
+                        </div>
+                        
+                        <div>
+                            <label for="portada" class="block text-sm font-medium text-gray-700">Portada</label>
+                            {% if libro.portada %}
+                                <div class="flex items-center mb-2">
+                                    <img class="h-16 w-12 object-cover rounded mr-2" src="{{ libro.portada.url }}" alt="{{ libro.titulo }}">
+                                    <span class="text-xs text-gray-500">Portada actual</span>
+                                </div>
+                            {% endif %}
+                            <input type="file" id="portada" name="portada" class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-red-50 file:text-red-700 hover:file:bg-red-100">
+                            <p class="mt-1 text-xs text-gray-500">Formatos: JPG, PNG. Máx: 2MB</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mt-6 pt-4 border-t flex justify-between">
+                    <a href="{% url 'delete_libro' libro.id %}" class="bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded flex items-center">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                        </svg>
+                        Eliminar Libro
+                    </a>
+                    
+                    <div class="space-x-3">
+                        <a href="{% url 'detail_libro' libro.id %}" class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded">
+                            Ver Detalles
+                        </a>
+                        
+                        <button type="submit" class="bg-green-700 hover:bg-green-800 text-white py-2 px-6 rounded">
+                            Actualizar Libro
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock content %}

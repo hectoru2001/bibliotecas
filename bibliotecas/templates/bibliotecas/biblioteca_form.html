@@ -1,0 +1,187 @@
+{% extends "base_admin.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <!-- Encabezado con título y botón de volver -->
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-2xl font-bold">{% if form.instance.pk %}Editar{% else %}Nueva{% endif %} Biblioteca</h1>
+        <a href="{% url 'list_biblioteca' %}" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded flex items-center">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+            </svg>
+            Volver
+        </a>
+    </div>
+
+    <div class="bg-white shadow-md rounded-lg overflow-hidden">
+        <div class="p-6">
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Columna izquierda: Información General -->
+                    <div class="space-y-4">
+                        <h2 class="text-lg font-semibold">Información General</h2>
+                        
+                        <div>
+                            <label for="{{ form.nombre.id_for_label }}" class="block text-sm font-medium text-gray-700">Nombre de la biblioteca *</label>
+                            <input type="text" name="{{ form.nombre.name }}" id="{{ form.nombre.id_for_label }}" value="{{ form.nombre.value|default:'' }}" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-red-500 focus:border-red-500">
+                            {% if form.nombre.errors %}
+                                <p class="text-red-600 text-sm mt-1">{{ form.nombre.errors.0 }}</p>
+                            {% endif %}
+                        </div>
+                        
+                        <div>
+                            <label for="{{ form.nombre_corto.id_for_label }}" class="block text-sm font-medium text-gray-700">Nombre corto</label>
+                            <input type="text" name="{{ form.nombre_corto.name }}" id="{{ form.nombre_corto.id_for_label }}" value="{{ form.nombre_corto.value|default:'' }}" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-red-500 focus:border-red-500">
+                            {% if form.nombre_corto.errors %}
+                                <p class="text-red-600 text-sm mt-1">{{ form.nombre_corto.errors.0 }}</p>
+                            {% endif %}
+                        </div>
+                        
+                        <div>
+                            <label for="{{ form.direccion.id_for_label }}" class="block text-sm font-medium text-gray-700">Dirección *</label>
+                            <input type="text" name="{{ form.direccion.name }}" id="{{ form.direccion.id_for_label }}" value="{{ form.direccion.value|default:'' }}" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-red-500 focus:border-red-500">
+                            {% if form.direccion.errors %}
+                                <p class="text-red-600 text-sm mt-1">{{ form.direccion.errors.0 }}</p>
+                            {% endif %}
+                        </div>
+                        
+                        <div>
+                            <label for="{{ form.ubicacion.id_for_label }}" class="block text-sm font-medium text-gray-700">Ubicación</label>
+                            <input type="text" name="{{ form.ubicacion.name }}" id="{{ form.ubicacion.id_for_label }}" value="{{ form.ubicacion.value|default:'' }}" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-red-500 focus:border-red-500">
+                            {% if form.ubicacion.errors %}
+                                <p class="text-red-600 text-sm mt-1">{{ form.ubicacion.errors.0 }}</p>
+                            {% endif %}
+                        </div>
+
+                        <!-- ⭐ NUEVOS CAMPOS DE HORARIO ⭐ -->
+                        <div class="pt-4 border-t">
+                            <h3 class="text-md font-semibold mb-3">Horarios de Operación</h3>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label for="{{ form.opening_time.id_for_label }}" class="block text-sm font-medium text-gray-700">
+                                        Hora de apertura *
+                                    </label>
+                                    <input
+                                        type="time"
+                                        name="{{ form.opening_time.name }}"
+                                        id="{{ form.opening_time.id_for_label }}"
+                                        value="{{ form.opening_time.value|default:'' }}"
+                                        required
+                                        step="60"
+                                        class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-red-500 focus:border-red-500"
+                                    >
+                                    {% if form.opening_time.errors %}
+                                        <p class="text-red-600 text-sm mt-1">{{ form.opening_time.errors.0 }}</p>
+                                    {% endif %}
+                                    <p class="text-xs text-gray-500 mt-1">Formato 24h (ej. 09:00)</p>
+                                </div>
+
+                                <div>
+                                    <label for="{{ form.closing_time.id_for_label }}" class="block text-sm font-medium text-gray-700">
+                                        Hora de cierre *
+                                    </label>
+                                    <input
+                                        type="time"
+                                        name="{{ form.closing_time.name }}"
+                                        id="{{ form.closing_time.id_for_label }}"
+                                        value="{{ form.closing_time.value|default:'' }}"
+                                        required
+                                        step="60"
+                                        class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-red-500 focus:border-red-500"
+                                    >
+                                    {% if form.closing_time.errors %}
+                                        <p class="text-red-600 text-sm mt-1">{{ form.closing_time.errors.0 }}</p>
+                                    {% endif %}
+                                    <p class="text-xs text-gray-500 mt-1">Formato 24h (ej. 18:00)</p>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    
+                    <!-- Columna derecha: Información de Contacto -->
+                    <div class="space-y-4">
+                        <h2 class="text-lg font-semibold">Información de Contacto</h2>
+                        
+                        <div>
+                            <label for="{{ form.director.id_for_label }}" class="block text-sm font-medium text-gray-700">Director</label>
+                            <input type="text" name="{{ form.director.name }}" id="{{ form.director.id_for_label }}" value="{{ form.director.value|default:'' }}" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-red-500 focus:border-red-500">
+                            {% if form.director.errors %}
+                                <p class="text-red-600 text-sm mt-1">{{ form.director.errors.0 }}</p>
+                            {% endif %}
+                        </div>
+                        
+                        <div>
+                            <label for="{{ form.telefono.id_for_label }}" class="block text-sm font-medium text-gray-700">Teléfono</label>
+                            <input type="text" name="{{ form.telefono.name }}" id="{{ form.telefono.id_for_label }}" value="{{ form.telefono.value|default:'' }}" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-red-500 focus:border-red-500">
+                            {% if form.telefono.errors %}
+                                <p class="text-red-600 text-sm mt-1">{{ form.telefono.errors.0 }}</p>
+                            {% endif %}
+                        </div>
+                        
+                        <div>
+                            <label for="{{ form.email.id_for_label }}" class="block text-sm font-medium text-gray-700">Correo electrónico</label>
+                            <input type="email" name="{{ form.email.name }}" id="{{ form.email.id_for_label }}" value="{{ form.email.value|default:'' }}" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-red-500 focus:border-red-500">
+                            {% if form.email.errors %}
+                                <p class="text-red-600 text-sm mt-1">{{ form.email.errors.0 }}</p>
+                            {% endif %}
+                        </div>
+                        
+                        <div>
+                            <label for="{{ form.reseña.id_for_label }}" class="block text-sm font-medium text-gray-700">Reseña</label>
+                            <textarea name="{{ form.reseña.name }}" id="{{ form.reseña.id_for_label }}" rows="4" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-red-500 focus:border-red-500">{{ form.reseña.value|default:'' }}</textarea>
+                            {% if form.reseña.errors %}
+                                <p class="text-red-600 text-sm mt-1">{{ form.reseña.errors.0 }}</p>
+                            {% endif %}
+                        </div>
+                        
+                        <div>
+                            <label for="{{ form.foto.id_for_label }}" class="block text-sm font-medium text-gray-700">Fotografía</label>
+                            {% if form.instance.foto %}
+                                <div class="mb-2">
+                                    <img src="{{ form.instance.foto.url }}" alt="Foto actual" class="h-24 w-auto object-cover rounded">
+                                    <p class="text-xs text-gray-500 mt-1">Foto actual</p>
+                                </div>
+                            {% endif %}
+                            <input type="file" name="{{ form.foto.name }}" id="{{ form.foto.id_for_label }}" class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-red-50 file:text-red-700 hover:file:bg-red-100">
+                            {% if form.foto.errors %}
+                                <p class="text-red-600 text-sm mt-1">{{ form.foto.errors.0 }}</p>
+                            {% endif %}
+                        </div>
+                        
+                        {% if form.instance.pk %}
+                        <div>
+                            <p class="text-sm font-medium text-gray-700">Fecha de creación</p>
+                            <p class="text-sm text-gray-500">{{ form.instance.created_at|date:"d/m/Y H:i" }}</p>
+                        </div>
+                        
+                        <div>
+                            <p class="text-sm font-medium text-gray-700">Última actualización</p>
+                            <p class="text-sm text-gray-500">{{ form.instance.updated_at|date:"d/m/Y H:i" }}</p>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Mostrar errores de validación general (como el de horarios) -->
+                {% if form.non_field_errors %}
+                    <div class="mt-4 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
+                        {{ form.non_field_errors }}
+                    </div>
+                {% endif %}
+                
+                <div class="mt-6 pt-4 border-t flex justify-end space-x-3">
+                    <a href="{% url 'list_biblioteca' %}" class="bg-gray-500 hover:bg-gray-600 text-white py-2 px-4 rounded">
+                        Cancelar
+                    </a>
+                    <button type="submit" class="bg-red-700 hover:bg-red-800 text-white py-2 px-6 rounded">
+                        {% if form.instance.pk %}Actualizar{% else %}Guardar{% endif %} Biblioteca
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock content %}

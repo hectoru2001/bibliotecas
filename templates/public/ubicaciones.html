@@ -1,0 +1,456 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="library-finder">
+<!-- Header -->
+    <header>
+        <div class="logo">
+            <img src="{% static 'images/muni.png' %}" alt="">
+        </div>
+        <nav class="main-nav">
+
+            <div class="nav-item">
+                <a href="#" class="nav-link">Eventos</a>
+                <div class="submenu">
+                    <a href="{% url 'lista_biblioaprende' %}">Agenda Biblio Aprende</a>
+                    <a href="{% url 'agenda_cultural' %}">Agenda Cultural</a>
+                </div>
+            </div>
+            <div class="nav-item">
+                <a href="#" class="nav-link">Aprendizaje & Tecnologia</a>
+                <div class="submenu">
+                    <a href="{% url 'coleccion_digital' %}">Colección Digital DGB</a>
+                    <a href="https://wordwall.net/es-mx/community/la-biblioteca">Juega y aprende</a>
+                </div>
+            </div>
+            <div class="nav-item">
+                <a href="#" class="nav-link">Servicios</a>
+                    <div class="submenu">
+                        <div class="dropdown">
+                            <a href="#">Préstamos</a>
+                            <div class="dropdown-content">
+                                <a href="{% url 'prestamos' %}">Préstamo de libros en salas</a>
+                                <a href="{% url 'prestamo_domicilio' %}">Préstamo de libros a domicilio</a>
+                            </div>
+                        </div>
+                        <a href="{% url 'credencializacion' %}">Credencialización</a>
+                        <a href="{% url 'referencia' %}">Referencia</a>
+                        <a href="{% url 'servicio_digital' %}">Servicios Digitales</a>
+                        <a href="{% url 'servicio_cultural' %}">Servicios Culturales</a>
+                        <a href="{% url 'servicio_educativo' %}">Servicio educativo</a>
+                    </div>
+            </div>
+            <div class="nav-item">
+                <a href="#" class="nav-link">Nuestra Historia</a>
+                <div class="submenu">
+                </div>
+            </div>
+            <div class="nav-item">
+                <a href="#" class="nav-link">Sobre nosotros</a>
+                <div class="submenu">
+                    <a href="{% url 'nosotros' %}">Nosotros</a>
+                    <a href="{% url 'contacto' %}">Contacto</a>
+                </div>
+            </div>
+        </nav>
+        <div class="right-section">
+            <!-- Nuevo logo derecho -->
+            <img src="{% static 'images/educacion.png' %}" alt="Nuevo Logo" class="right-logo">
+
+            <!-- Botón Mi Cuenta -->
+            
+        </div>
+        <a href="/usuarios/login/" class="account-btn">Mi Cuenta</a>
+    </header>
+
+    <!-- Main content -->
+    <div class="main-content">
+        <aside class="sidebar">
+            <div class="search-bar">
+                <input type="text" id="library-query" placeholder="Search libraries...">
+            </div>
+            <div class="library-list" id="library-list">
+            </div>
+        </aside>
+
+        <div class="map-container">
+            <div id="map" style="height: 100%; width: 100%;"></div>
+        </div>
+    </div>
+</div>
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<style>
+    /* General styles */
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: Arial, sans-serif;
+    }
+    body {
+        background-color: #f5f5f5;
+        color: #fff;
+    }
+    header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px 40px;
+        background-color: #DDDADB;
+    }
+
+    .logo img {
+        height: 80px;
+    }
+
+    .main-nav {
+        display: flex;
+        align-items: center;
+    }
+    .right-section {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .right-logo {
+        height: 80px; /* ajusta el tamaño del logo derecho */
+    }
+
+    .nav-item {
+        position: relative; /* Needed for positioning the submenu */
+        margin: 0 20px; /* Spacing between nav items, adjust as needed */
+    }
+
+    .nav-link {
+        color: #5C0432;
+        text-decoration: none;
+        font-size: 18px; /* Adjusted font size to match the image */
+        padding: 10px 15px; /* Add padding for better spacing */
+        display: block; /* Makes the entire area clickable */
+    }
+
+    .nav-link:hover {
+        color: #ff6f61; /* Hover color */
+    }
+
+    /* Submenu styling */
+    .submenu {
+        display: none; /* Hidden by default */
+        position: absolute;
+        top: 100%; /* Position below the parent nav item */
+        left: 0;
+        background-color: #2e1212; /* Slightly lighter dark background for contrast */
+        min-width: 150px; /* Minimum width for the submenu */
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Optional: adds a shadow for depth */
+        z-index: 1000; /* Ensure it appears above other elements */
+    }
+
+    .submenu a {
+        color: #ffffff;
+        text-decoration: none;
+        padding: 10px 15px;
+        display: block; /* Makes the entire area clickable */
+        font-size: 16px;
+    }
+
+    .submenu a:hover {
+        background-color: #ff6f61; /* Hover effect for submenu items */
+        color: #ffffff;
+    }
+    .dropdown {
+        position: relative;
+    }
+
+    .dropdown-content {
+        display: none;
+        position: absolute;
+        left: 100%; /* o right: 0; si quieres que se abra hacia el otro lado */
+        top: 0;
+        background-color: #2e1212; 
+        min-width: 200px;
+        z-index: 1;
+        flex-direction: column;
+        box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
+    }
+
+    .dropdown:hover .dropdown-content {
+        display: flex;
+    }
+
+    /* Show submenu on hover */
+    .nav-item:hover .submenu {
+        display: block;
+    }
+
+    /* Style for the "Mi Cuenta" button */
+    .account-btn {
+        background-color: #922453;
+        color: #ffffff;
+        text-decoration: none;
+        padding: 10px 20px;
+        border-radius: 25px; /* Rounded corners */
+        font-size: 16px;
+        display: flex;
+        align-items: center;
+        gap: 5px; /* Space between icon and text */
+    }
+
+    .account-btn:hover {
+        background-color: #e65a50; /* Slightly darker on hover */
+    }
+
+    .library-finder {
+        font-family: Arial, sans-serif;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+    }
+    /* Header styles */
+    .header {
+        background-color: #2b1218;
+        color: white;
+        padding: 10px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .logo-container {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .logo {
+        height: 100px;
+        width: auto;
+    }
+
+    .header h1 {
+        margin: 0;
+        font-size: 18px;
+    }
+
+    .header-links a {
+        color: white;
+        text-decoration: none;
+        margin-left: 20px;
+        font-size: 16px;
+    }
+
+    .header-links .login-btn {
+        background-color: white;
+        color: #c94c4c;
+        padding: 5px 15px;
+        border-radius: 20px;
+    }
+
+    /* Main content layout */
+    .main-content {
+        display: flex;
+        flex: 1;
+        overflow: hidden;
+    }
+
+    /* Sidebar styles */
+    .sidebar {
+        width: 300px;
+        background-color: #600017;
+        padding: 20px;
+        overflow-y: auto;
+    }
+
+    .search-bar {
+        margin-bottom: 20px;
+    }
+
+    .search-bar input {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 16px;
+    }
+
+    .library-list {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .library-item {
+        background-color: white;
+        padding: 15px;
+        border-radius: 5px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        cursor: pointer; /* Indica que la tarjeta es clickable */
+    }
+
+    .library-item:hover {
+        background-color: #f0f0f0; /* Efecto hover para mejor UX */
+    }
+
+    .library-item h3 {
+        margin: 0 0 10px;
+        font-size: 18px;
+        color: #333;
+    }
+
+    .library-item p {
+        margin: 5px 0;
+        font-size: 14px;
+        color: #666;
+    }
+
+    .library-item .capacity {
+        color: #888;
+        font-size: 12px;
+    }
+
+    /* Map container styles */
+    .map-container {
+        flex: 1;
+        position: relative;
+    }
+</style>
+
+<script>
+    // Inicializar el mapa
+    var map = L.map('map').setView([31.690566025115224, -106.42305071137352], 11);
+
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: 'Â© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+
+    // Variable para almacenar los marcadores
+    var markers = [];
+    var markerMap = {}; // Objeto para mapear nombres de bibliotecas a marcadores
+
+    // Cargar el archivo JSON
+    fetch("{% static 'json/bibliotecas.json' %}")
+        .then(response => response.json())
+        .then(bibliotecas => {
+            // Mostrar todas las bibliotecas inicialmente
+            showLibraries(bibliotecas);
+
+            // Mostrar lista de bibliotecas en el sidebar
+            displayLibraryList(bibliotecas);
+
+            // Guardar las bibliotecas para usarlas en el filtrado
+            window.allLibraries = bibliotecas;
+        })
+        .catch(error => console.error('Error al cargar el JSON:', error));
+
+    // Función para mostrar las bibliotecas en el mapa
+    function showLibraries(bibliotecas) {
+        // Limpiar marcadores existentes
+        markers.forEach(marker => map.removeLayer(marker));
+        markers = [];
+        markerMap = {};
+
+        var bounds = [];
+
+        bibliotecas.forEach(function(biblioteca) {
+            if (biblioteca.latitud !== 0 && biblioteca.longitud !== 0) {
+                var marker = L.marker([biblioteca.latitud, biblioteca.longitud], {
+                    icon: L.icon({
+                        iconUrl: '/static/images/book.png',
+                        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png',
+                        iconSize: [32, 32],
+                        iconAnchor: [16, 32],
+                        popupAnchor: [0, -32],
+                        shadowSize: [41, 41]
+                    })
+                }).addTo(map);
+
+                marker.bindPopup(`
+                    <b>${biblioteca.nombre}</b><br>
+                    <b>${biblioteca.direccion}</b><br>
+                    <b>Teléfono:</b> ${biblioteca.telefono}<br>
+
+                `);
+
+                // Asocia el marcador con el nombre de la biblioteca
+                markerMap[biblioteca.nombre] = marker;
+                markers.push(marker);
+                bounds.push([biblioteca.latitud, biblioteca.longitud]);
+            }
+        });
+
+
+        if (bounds.length > 0) {
+            map.fitBounds(bounds, { padding: [50, 50] });
+        } else {
+            map.setView([31.690566025115224, -106.42305071137352], 11);
+        }
+    }
+
+    
+    function displayLibraryList(bibliotecas) {
+        const libraryList = document.getElementById('library-list');
+        libraryList.innerHTML = ''; // Limpiar lista existente
+
+        bibliotecas.forEach(biblioteca => {
+            const libraryItem = document.createElement('div');
+            libraryItem.className = 'library-item';
+            libraryItem.innerHTML = `
+                <h3>${biblioteca.nombre}</h3>
+                <p>${biblioteca.direccion}</p>
+                <p>${biblioteca.telefono}</p>
+            `;
+
+            
+            libraryItem.addEventListener('click', function() {
+                var marker = markerMap[biblioteca.nombre];
+                if (marker) {
+                    // Centrar el mapa en el marcador
+                    map.setView([biblioteca.latitud, biblioteca.longitud], 15);
+                    // Abrir el popup del marcador
+                    marker.openPopup();
+                }
+            });
+
+            libraryList.appendChild(libraryItem);
+        });
+    }
+
+    // Función para filtrar bibliotecas
+    function filterLibraries() {
+        const query = document.getElementById('library-query').value.toLowerCase();
+        const filteredLibraries = window.allLibraries.filter(biblioteca => 
+            biblioteca.nombre.toLowerCase().includes(query) || 
+            biblioteca.direccion.toLowerCase().includes(query)
+        );
+
+        // Mostrar las bibliotecas filtradas en el mapa y en la lista
+        showLibraries(filteredLibraries);
+        displayLibraryList(filteredLibraries);
+
+
+        if (filteredLibraries.length > 0) {
+            const firstLibrary = filteredLibraries[0];
+            const marker = markerMap[firstLibrary.nombre];
+            if (marker) {
+                map.setView([firstLibrary.latitud, firstLibrary.longitud], 15);
+                marker.openPopup();
+            }
+        }
+    }
+
+
+    document.getElementById('library-query').addEventListener('input', filterLibraries);
+
+
+    document.getElementById('library-query').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            filterLibraries();
+        }
+    });
+</script>
+{% endblock %}

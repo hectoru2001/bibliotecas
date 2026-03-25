@@ -1,0 +1,38 @@
+{% extends "base_admin.html" %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <div class="max-w-2xl mx-auto">
+        <h1 class="text-3xl font-bold mb-6">Actualizar Bibliotecario</h1>
+        
+        <div class="bg-white p-6 rounded-lg shadow-md">
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                
+                <!-- Campos del formulario idénticos a add_bibliotecario.html -->
+                <!-- Nombre -->
+                <div class="mb-4">
+                    <label for="{{ form.nombre.id_for_label }}" class="block text-gray-700 font-medium mb-2">Nombre</label>
+                    {{ form.nombre }}
+                    {% if form.nombre.errors %}
+                    <p class="text-red-500 text-sm mt-1">{{ form.nombre.errors.0 }}</p>
+                    {% endif %}
+                </div>
+                
+                <!-- Resto de campos igual que en add_bibliotecario.html -->
+                <!-- ... -->
+                
+                <!-- Botones -->
+                <div class="flex justify-between mt-6">
+                    <a href="{% url 'list_bibliotecario' %}" class="bg-gray-500 hover:bg-gray-600 text-white py-2 px-4 rounded">
+                        Cancelar
+                    </a>
+                    <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded">
+                        Actualizar Bibliotecario
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
