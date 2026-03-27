@@ -21,6 +21,7 @@ CSRF_TRUSTED_ORIGINS = [
     'https://biblioaprende.juarez.gob.mx',
     'http://biblioaprende.juarez.gob.mx',  # Para pruebas
     'http://10.236.62.83',  # Para pruebas con IP
+    'http://10.236.62.83:8085',
 ]
 
 CSRF_COOKIE_SECURE = True  # Cambia a False si no usas HTTPS
