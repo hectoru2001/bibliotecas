@@ -1,0 +1,29 @@
+[
+  {
+    "id": 1,
+    "date": "15 de Junio, 2024",
+    "time": "17:00 - 19:00",
+    "title": "Club de lectura: Obras de Elena Garro",
+    "location": "Biblioteca Central",
+    "image": "/static/events/club-de-lectura.jpg",
+    "registrationLink": "https://example.com/register/1"
+  },
+  {
+    "id": 2,
+    "date": "20 de Junio, 2024",
+    "time": "16:00 - 18:00",
+    "title": "Taller de escritura creativa",
+    "location": "Biblioteca Norte",
+    "image": "/static/events/taller-escritura.jpg",
+    "registrationLink": "https://example.com/register/2"
+  },
+  {
+    "id": 3,
+    "date": "25 de Junio, 2024",
+    "time": "18:30 - 20:00",
+    "title": "Presentación de libro: Historia de Ciudad Juárez",
+    "location": "Auditorio Municipal",
+    "image": "/static/events/presentacion-libro.jpg",
+    "registrationLink": "https://example.com/register/3"
+  }
+]

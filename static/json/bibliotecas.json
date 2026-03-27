@@ -1,0 +1,264 @@
+[
+    {
+        "id": 1,
+        "nombre": "Biblioteca Benito Juarez",
+        "direccion": "C. Ayuntamiento # 534, Col. Antiguo Rastro Municipal",
+        "telefono": "6567370960",
+        "email": "benitojuarez@adminbiblio.com",
+        "reseña": "Una biblioteca histórica",
+        "latitud": 31.71104865254342,
+        "longitud": -106.47955124733396
+    },
+    {
+        "id": 2,
+        "nombre": "biblioteca Arturo Tolentino ",
+        "direccion": "C. Ignacio Ramírez # 351, Col. Partido Romero",
+        "telefono": "6567370960",
+        "email": "nortebenitojuarez@example.com",
+        "reseña": "Biblioteca moderna y acogedora",
+        "latitud": 31.735311618536155,
+        "longitud": -106.46042855898057
+    },
+    {
+        "id": 3,
+        "nombre": "biblioteca Emiliano Zapata",
+        "direccion": "C. Álvaro Obregón # 2400, Col. Emiliano Zapata",
+        "telefono": "6567370955",
+        "email": "zapata@adminbiblio.com",
+        "reseña": "Biblioteca moderna y acogedora",
+        "latitud": 31.725235095078634,
+        "longitud": -106.50371806947506
+    },
+    {
+        "id": 4,
+        "nombre": "Biblioteca Espiridion Provencio ",
+        "direccion": "C. Rémora y Delfín, col. Rancho Anapra",
+        "telefono": "6567370836",
+        "email": "espiridion@adminbiblio.com",
+        "reseña": "Biblioteca histórica y acogedora",
+        "latitud": 31.77596625112376,
+        "longitud": -106.5587392608262
+    },
+    {
+        "id": 5,
+        "nombre": "Felipe Ángeles  ",
+        "direccion": "C. Arroyo de las Víboras # 1318, Col. Felipe Ángeles",
+        "telefono": "6567370958",
+        "email": "espiridion@adminbiblio.com",
+        "reseña": "Biblioteca histórica y acogedora",
+        "latitud": 31.75707834996461, 
+        "longitud": -106.52099594599993
+    },
+    {
+        "id": 6,
+        "nombre": "Biblioteca Francisco I. Madero",
+        "direccion": "C. Soto y Gama # 4409 , Col. Francisco I. Madero",
+        "telefono": "6567370951",
+        "email": "espiridion@adminbiblio.com",
+        "reseña": "Biblioteca histórica y acogedora",
+        "latitud": 31.736869976729967, 
+        "longitud": -106.5093893099043
+    },
+    {
+        "id": 7,
+        "nombre": "Bbiblioteca Francisco Villarreal",
+        "direccion": "C. Puerto Cataña y Puerto Príncipe, Col. Tierra Nueva 2da. Etapa",
+        "telefono": "6567370969",
+        "email": "espiridion@adminbiblio.com",
+        "reseña": "Biblioteca histórica y acogedora",
+        "latitud": 31.612762730451784, 
+        "longitud": -106.34308346413985
+    },
+    {
+        "id": 8,
+        "nombre": "Biblioteca Ignacio Zaragoza ",
+        "direccion": "C. Puerto Cataña y Puerto Príncipe, Col. Tierra Nueva 2da. Etapa",
+        "telefono": "6567370969",
+        "email": "espiridion@adminbiblio.com",
+        "reseña": "Biblioteca histórica y acogedora",
+        "latitud": 31.73897477434942, 
+        "longitud": -106.47818753956415
+    },
+    {
+        "id": 9,
+        "nombre": "Biblioteca Manuel Talamás Camandari",
+        "direccion": "Blvd. Zaragoza y Oaxaca, col. Morelos II",
+        "telefono": "6567370949",
+        "email": "espiridion@adminbiblio.com",
+        "reseña": "Biblioteca histórica y acogedora",
+        "latitud": 31.64449267172207, 
+        "longitud": -106.37550902515571
+    },
+    {
+        "id": 10,
+        "nombre": "Biblioteca Profr. Manuel Robles Flores ",
+        "direccion": "C. Camilo de León y Antonio García, Poblado de San Agustín",
+        "telefono": "6567370952",
+        "email": "espiridion@adminbiblio.com",
+        "reseña": "Biblioteca histórica y acogedora",
+        "latitud": 31.514342399516643, 
+        "longitud": -106.25380750034067
+    },
+    {
+        "id": 11,
+        "nombre": "Biblioteca Samalayuca",
+        "direccion": "Poblado de Samalayuca",
+        "telefono": "6567370973",
+        "email": "espiridion@adminbiblio.com",
+        "reseña": "Biblioteca histórica y acogedora",
+        "latitud": 31.340892162646213, 
+        "longitud": -106.47903753992611
+    },
+    {
+        "id": 12,
+        "nombre": "Biblioteca San Isidro Rio Grande",
+        "direccion": "C. 16 de Septiembre #235, Poblado de San Isidro Río Grande",
+        "telefono": "6567370953",
+        "email": "espiridion@adminbiblio.com",
+        "reseña": "Biblioteca histórica y acogedora",
+        "latitud": 31.739030228348756, 
+        "longitud": -106.48174159097998
+    },
+    {
+        "id": 13,
+        "nombre": "Biblioteca San Juan Bosco",
+        "direccion": "C. Isla Terranova #5551, Col. 16 de Septiembre",
+        "telefono": "6567370950",
+        "email": "espiridion@adminbiblio.com",
+        "reseña": "Biblioteca histórica y acogedora",
+        "latitud": 31.72759195463825,
+        "longitud": -106.5289954608277
+    },
+    {
+        "id": 14,
+        "nombre": "Biblioteca Villas de Salvárcar",
+        "direccion": "C. Villa del Cedro, entre Villa Azul y Villa Roja, Fracc. Villas de Salvárcar",
+        "telefono": "6567370970",
+        "email": "espiridion@adminbiblio.com",
+        "reseña": "Biblioteca histórica y acogedora",
+        "latitud": 31.616073398210393,
+        "longitud": -106.38869255825298
+    },
+    {
+        "id": 15,
+        "nombre": "Biblioteca Bonanza",
+        "direccion": "C. Francisco Wong y C. Paseo del Real, Col. Bonanza",
+        "telefono": "",
+        "email": "espiridion@adminbiblio.com",
+        "reseña": "Biblioteca histórica y acogedora",
+        "latitud": 31.695907518438162, 
+        "longitud": -106.36690557432297
+    },
+    {
+        "id": 16,
+        "nombre": "Biblioteca Custodia de la República",
+        "direccion": "C. Ejido Galeana y Ejido Parritas, Col. Terreno Nacionales",
+        "telefono": "6567370959",
+        "email": "espiridion@adminbiblio.com",
+        "reseña": "Biblioteca histórica y acogedora",
+        "latitud": 31.62381597488954, 
+        "longitud": -106.374421785305
+    },
+    {
+        "id": 17,
+        "nombre": "Biblioteca Hombres de la Reforma",
+        "direccion": "C. Soneto #650, Col. Frida Kahlo",
+        "telefono": "6567370967",
+        "email": "espiridion@adminbiblio.com",
+        "reseña": "Biblioteca histórica y acogedora",
+        "latitud": 31.598683255899747,
+        "longitud": -106.368954174609
+    },
+    {
+        "id": 18,
+        "nombre": "Biblioteca Jesús Escobar y Armendáriz",
+        "direccion": "C. Torcaza #7980, Col. Granjas de Chapultepec",
+        "telefono": "6567370966",
+        "email": "espiridion@adminbiblio.com",
+        "reseña": "Biblioteca histórica y acogedora",
+        "latitud": 31.672990575521883,
+        "longitud": -106.48118030500586
+    },
+    {
+        "id": 19,
+        "nombre": "Biblioteca Juan Udieta",
+        "direccion": "Domicilio Conocido, Comunidad El Millón",
+        "telefono": "6567370972",
+        "email": "espiridion@adminbiblio.com",
+        "reseña": "Biblioteca histórica y acogedora",
+        "latitud": 31.457450138220924, 
+        "longitud": -106.20048786175653
+    },
+    {
+        "id": 20,
+        "nombre": "Biblioteca Margarita Maza de Juárez",
+        "direccion": "Blvd. Ing. Norberto Norzagaray, Col. Felipe Ángeles",
+        "telefono": "6567370957",
+        "email": "espiridion@adminbiblio.com",
+        "reseña": "Biblioteca histórica y acogedora",
+        "latitud": 31.763767732485068, 
+        "longitud": -106.51237818412118
+    },
+    {
+        "id": 21,
+        "nombre": "Biblioteca Palo Chino",
+        "direccion": "C. Palo Hueco y Palo Chino, Col. Palo Chino",
+        "telefono": "6567370956",
+        "email": "espiridion@adminbiblio.com",
+        "reseña": "Biblioteca histórica y acogedora",
+        "latitud": 31.692839781594895, 
+        "longitud": -106.49047175898193
+    },
+    {
+        "id": 22,
+        "nombre": "Biblioteca Paso del Norte",
+        "direccion": "C. Manuel N. López, Col. Km 20",
+        "telefono": "6567370964",
+        "email": "espiridion@adminbiblio.com",
+        "reseña": "Biblioteca histórica y acogedora",
+        "latitud": 31.611017850472603, 
+        "longitud": -106.45756365585669
+    },
+    {
+        "id": 23,
+        "nombre": "Biblioteca Riberas del Bravo Etapa II",
+        "direccion": "C. Rivera Portugal No. 313, Col. Riberas del Bravo Etapa II",
+        "telefono": "6567370937",
+        "email": "espiridion@adminbiblio.com",
+        "reseña": "Biblioteca histórica y acogedora",
+        "latitud": 31.630482394111272, 
+        "longitud": -106.31951133172753
+    },
+    {
+        "id": 24,
+        "nombre": "Biblioteca Vista Hermosa",
+        "direccion": "C. Yeso s/n entre Caliche y Alumbre",
+        "telefono": "6567370837",
+        "email": "espiridion@adminbiblio.com",
+        "reseña": "Biblioteca histórica y acogedora",
+        "latitud": 31.71659874106603, 
+        "longitud": -106.42886284775955
+    },
+    {
+        "id": 25,
+        "nombre": "Paralibro Monumento a Juárez",
+        "direccion": "C. Vicente Guerrero y Constitución s/n, Col. El Barreal",
+        "telefono": "n/a",
+        "email": "espiridion@adminbiblio.com",
+        "reseña": "Biblioteca histórica y acogedora",
+        "latitud": 31.726163079369375, 
+        "longitud": -106.49490625775901
+    },
+    {
+        "id": 26,
+        "nombre": "Paralibro Maestros Jubilados",
+        "direccion": "C. Luz Del Cid De Orozco y Norberto Hernández, Fracc. Los Colorines",
+        "telefono": "n/a",
+        "email": "espiridion@adminbiblio.com",
+        "reseña": "Biblioteca histórica y acogedora",
+        "latitud": 31.71393469171446, 
+        "longitud": -106.48094576324104
+    }
+
+
+]
