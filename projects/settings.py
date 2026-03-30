@@ -13,12 +13,13 @@ SECRET_KEY = 'django-insecure--w(@_i5)pv&f)2yz_owdps&lmvn$7c9v=tu90dnag4^n2ua360
 
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'biblioaprende.juarez.gob.mx', '10.236.62.83']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'biblioaprende.juarez.gob.mx', '10.236.62.83', 'testbibliotecas.juarez.gob.mx']
 
 
 
 CSRF_TRUSTED_ORIGINS = [
     'https://biblioaprende.juarez.gob.mx',
+    'https://testbibliotecas.juarez.gob.mx',
     'http://biblioaprende.juarez.gob.mx',  # Para pruebas
     'http://10.236.62.83',  # Para pruebas con IP
     'http://10.236.62.83:8085',
