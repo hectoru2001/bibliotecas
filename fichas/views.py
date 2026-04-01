@@ -2,8 +2,9 @@ import csv
 import subprocess
 import tempfile
 import os
+import pytz
 from datetime import datetime
-
+from django.utils import timezone
 from django.shortcuts import render
 from django.utils.dateparse import parse_datetime
 
@@ -21,33 +22,45 @@ def to_int(valor):
         return None
 
 
+
 def safe_parse_datetime(valor):
     if valor in (None, '', 'NULL'):
         return None
 
     if isinstance(valor, datetime):
-        return valor
+        dt = valor
+    else:
+        valor = str(valor).strip()
 
-    valor = str(valor).strip()
+        dt = parse_datetime(valor)
+        if not dt:
+            formatos = [
+                "%Y-%m-%d %H:%M:%S",
+                "%Y-%m-%d",
+                "%d/%m/%Y",
+                "%m/%d/%Y",
 
-    dt = parse_datetime(valor)
-    if dt:
-        return dt
+                "%m/%d/%y %H:%M:%S",  # 🔥 tu caso
+                "%m/%d/%y",
+            ]
 
-    formatos = [
-        "%Y-%m-%d %H:%M:%S",
-        "%Y-%m-%d",
-        "%d/%m/%Y",
-        "%m/%d/%Y"
-    ]
+            for f in formatos:
+                try:
+                    dt = datetime.strptime(valor, f)
+                    break
+                except ValueError:
+                    continue
 
-    for f in formatos:
-        try:
-            return datetime.strptime(valor, f)
-        except ValueError:
-            pass
+    if not dt:
+        print(f"❌ Fecha no reconocida: {valor}")
+        return None
 
-    return None
+    # 🔥 AQUÍ ESTÁ EL FIX IMPORTANTE
+    if timezone.is_naive(dt):
+        tz = pytz.timezone('America/Chihuahua')
+        dt = tz.localize(dt)
+
+    return dt
 
 
 def obtener_tabla_access(ruta):
