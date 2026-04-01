@@ -124,34 +124,43 @@ def importar_fichas(request):
                 return render(request, "cargar_fichas.html", context)
 
             # Procesar archivo en streaming
+            batch = []
+            Ficha.objects.all().delete()
             for fila in leer_access(ruta_tmp, tabla):
 
                 ficha_no = to_int(fila.get("Ficha_No"))
 
                 if not ficha_no:
-                    errores += 1
                     continue
 
                 try:
-                    Ficha.objects.update_or_create(
+                    obj = Ficha(
                         ficha_no=ficha_no,
-                        defaults={
-                            "fecha": safe_parse_datetime(fila.get("Fecha")),
-                            "fechamod": safe_parse_datetime(fila.get("FechaMod")),
-                            "datosfijos": fila.get("DatosFijos"),
-                            "etiquetasmar": fila.get("EtiquetasMARC"),
-                            "tipomaterial": to_int(fila.get("TipoMaterial")) or 0,
-                            "isbn": fila.get("ISBN"),
-                            "titulo": fila.get("Titulo"),
-                            "autor": fila.get("Autor"),
-                            "clasificacion": fila.get("Clasificacion"),
-                        }
+                        fecha=safe_parse_datetime(fila.get("Fecha")),
+                        fechamod=safe_parse_datetime(fila.get("FechaMod")),
+                        datosfijos=fila.get("DatosFijos"),
+                        etiquetasmar=fila.get("EtiquetasMARC"),
+                        tipomaterial=to_int(fila.get("TipoMaterial")) or 0,
+                        isbn=fila.get("ISBN"),
+                        titulo=fila.get("Titulo"),
+                        autor=fila.get("Autor"),
+                        clasificacion=fila.get("Clasificacion"),
                     )
+
+                    batch.append(obj)
+
+                    if len(batch) >= 1000:
+                        Ficha.objects.bulk_create(batch, ignore_conflicts=True)
+                        batch = []
 
                     total += 1
 
                 except Exception:
                     errores += 1
+
+            # insertar lo restante
+            if batch:
+                Ficha.objects.bulk_create(batch, ignore_conflicts=True)
 
         except Exception as e:
             context["error"] = str(e)
