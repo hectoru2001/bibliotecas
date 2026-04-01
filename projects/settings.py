@@ -206,6 +206,9 @@ LOGIN_REDIRECT_URL = 'index'
 LOGOUT_REDIRECT_URL = 'index'
 LOGIN_URL = "login"
 
+DATA_UPLOAD_MAX_MEMORY_SIZE = 576716800  # 550 MB para permitir archivos grandes
+FILE_UPLOAD_MAX_MEMORY_SIZE = 0  
+
 REST_FRAMEWORK = {
     # Use Django's standard `django.contrib.auth` permissions,
     # or allow read-only access for unauthenticated users.
