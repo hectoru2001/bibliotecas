@@ -54,12 +54,19 @@ def importar_fichas(request):
             estado="pendiente"
         )
 
-        subprocess.Popen([
-            "/home/asalas/Produccion/Bibliotecas/venv/bin/python",
-            "/home/asalas/Produccion/Bibliotecas/manage.py",
-            "procesar_fichas",
-            str(imp.id)
-        ])
+        log_file = open("/tmp/procesar.log", "a")
+
+        subprocess.Popen(
+            [
+                "/home/asalas/Produccion/Bibliotecas/venv/bin/python",
+                "/home/asalas/Produccion/Bibliotecas/manage.py",
+                "procesar_fichas",
+                str(imp.id)
+            ],
+            stdout=log_file,
+            stderr=log_file,
+            env={"PYTHONUNBUFFERED": "1"}
+        )
 
         return render(request, "cargar_fichas.html", {
             "mensaje": f"Archivo subido. Importación #{imp.id} en proceso."
