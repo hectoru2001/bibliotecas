@@ -43,6 +43,9 @@ def leer_access(ruta, tabla):
     proceso.stdout.close()
     proceso.wait()
 
+from django.contrib import messages
+import subprocess
+
 def importar_fichas(request):
 
     if request.method == "POST" and request.FILES.get("archivo"):
@@ -54,23 +57,32 @@ def importar_fichas(request):
             estado="pendiente"
         )
 
-        log_file = open("/tmp/procesar.log", "a")
+        try:
+            log_file = open("/tmp/procesar.log", "a")
 
-        subprocess.Popen(
-            [
-                "/home/asalas/Produccion/Bibliotecas/venv/bin/python",
-                "/home/asalas/Produccion/Bibliotecas/manage.py",
-                "procesar_fichas",
-                str(imp.id)
-            ],
-            stdout=log_file,
-            stderr=log_file,
-            env={"PYTHONUNBUFFERED": "1"}
-        )
+            subprocess.Popen(
+                [
+                    "/home/asalas/Produccion/Bibliotecas/venv/bin/python",
+                    "/home/asalas/Produccion/Bibliotecas/manage.py",
+                    "procesar_fichas",
+                    str(imp.id)
+                ],
+                stdout=log_file,
+                stderr=log_file,
+                env={"PYTHONUNBUFFERED": "1"}
+            )
 
-        return render(request, "cargar_fichas.html", {
-            "mensaje": f"Archivo subido. Importación #{imp.id} en proceso."
-        })
+            messages.success(
+                request,
+                f"✔ Archivo subido correctamente. La importación #{imp.id} se está procesando en el servidor en segundo plano. Puedes continuar navegando; el proceso continuará ejecutándose."
+            )
 
-    # 👇 GET o sin archivo
+        except Exception as e:
+            messages.error(
+                request,
+                f"❌ Error al iniciar la importación: {str(e)}"
+            )
+
+        return render(request, "cargar_fichas.html")
+
     return render(request, "cargar_fichas.html")
