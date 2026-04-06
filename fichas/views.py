@@ -60,17 +60,28 @@ def importar_fichas(request):
         try:
             log_file = open("/tmp/procesar.log", "a")
 
-            subprocess.Popen(
-                [
-                    "/home/asalas/Produccion/Bibliotecas/venv/bin/python",
-                    "/home/asalas/Produccion/Bibliotecas/manage.py",
+
+            TEST_SCRIPT = True
+
+            if TEST_SCRIPT:
+                subprocess.Popen(
+                    [
+                        "/home/asalas/Produccion/Bibliotecas/venv/bin/python",
+                        "/home/asalas/Produccion/Bibliotecas/manage.py",
+                        "procesar_fichas",
+                        str(imp.id)
+                    ],
+                    stdout=log_file,
+                    stderr=log_file,
+                    env={"PYTHONUNBUFFERED": "1"}
+                )
+            else:
+                subprocess.Popen([
+                    "/home/hector/Proyectos/Bibliotecas/venv/bin/python",
+                    "/home/hector/Proyectos/Bibliotecas/manage.py",
                     "procesar_fichas",
                     str(imp.id)
-                ],
-                stdout=log_file,
-                stderr=log_file,
-                env={"PYTHONUNBUFFERED": "1"}
-            )
+                ])
 
             messages.success(
                 request,
