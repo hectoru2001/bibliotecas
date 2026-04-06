@@ -55,8 +55,8 @@ def importar_fichas(request):
         )
 
         subprocess.Popen([
-            "/home/hector/Proyectos/Bibliotecas/venv/bin/python",
-            "/home/hector/Proyectos/Bibliotecas/manage.py",
+            "/home/asalas/Produccion/Bibliotecas/venv/bin/python",
+            "/home/asalas/Produccion/Bibliotecas/manage.py",
             "procesar_fichas",
             str(imp.id)
         ])
