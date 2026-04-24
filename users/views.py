@@ -39,7 +39,7 @@ class CustomLoginView(LoginView):
             return reverse_lazy('list_libro')
 
         # Otros roles: decide un destino por defecto
-        return reverse_lazy('admin_dashboard')
+        return reverse_lazy('user_dashboard')
 
     
 

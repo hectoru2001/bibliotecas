@@ -181,7 +181,7 @@
         }
 
         .account-btn::before {
-            content: "í ½í±¤"; /* Icon for the button (you can replace with an actual icon if needed) */
+            content: "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½"; /* Icon for the button (you can replace with an actual icon if needed) */
         }
 
         .account-btn:hover {
@@ -376,62 +376,7 @@
 </head>
 <body>
 <!-- Header -->
-    <header>
-        <div class="logo">
-        <a href="{% url 'public_index' %}">
-            <img src="{% static 'images/biblioaprende.png' %}" alt="Logo">
-        </a>
-        </div>
-        <nav class="main-nav">
-
-            <div class="nav-item">
-                <a href="#" class="nav-link">Eventos</a>
-                <div class="submenu">
-                    <a href="{% url 'lista_biblioaprende' %}">Agenda Biblio Aprende</a>
-                    <a href="{% url 'agenda_cultural' %}">Agenda Cultural</a>
-                </div>
-            </div>
-            <div class="nav-item">
-                <a href="#" class="nav-link">Aprendizaje & Tecnologia</a>
-                <div class="submenu">
-                    <a href="{% url 'coleccion_digital' %}">ColecciÃ³n Digital DGB</a>
-                    <a href="https://wordwall.net/es-mx/community/la-biblioteca">Juega y aprende</a>
-                </div>
-            </div>
-            <div class="nav-item">
-                <a href="#" class="nav-link">Servicios</a>
-                    <div class="submenu">
-                        <div class="dropdown">
-                            <a href="#">PrÃ©stamos</a>
-                            <div class="dropdown-content">
-                                <a href="{% url 'prestamos' %}">PrÃ©stamo de libros en salas</a>
-                                <a href="{% url 'prestamo_domicilio' %}">PrÃ©stamo de libros a domicilio</a>
-                            </div>
-                        </div>
-                        <a href="{% url 'credencializacion' %}">CredencializaciÃ³n</a>
-                        <a href="{% url 'servicio_digital' %}">Servicios Digitales</a>
-                        <a href="{% url 'servicio_cultural' %}">Servicios Culturales</a>
-                        <a href="{% url 'servicio_educativo' %}">Servicio educativo</a>
-                    </div>
-            </div>
-            <div class="nav-item">
-                <a href="#" class="nav-link">Nuestra Historia</a>
-                <div class="submenu">
-                </div>
-            </div>
-            <div class="nav-item">
-                <a href="#" class="nav-link">Sobre nosotros</a>
-                <div class="submenu">
-                    <a href="{% url 'nosotros' %}">Nosotros</a>
-                    <a href="{% url 'contacto' %}">Contacto</a>
-                </div>
-            </div>
-        </nav>
-        <div class="nav-actions">
-            <button class="register-btn" onclick="register()">Registrarse</button>
-            <a href="/usuarios/login/" class="account-btn">Mi Cuenta</a>
-        </div>
-    </header>
+    {% include 'navbar.html' %}
     <div class="container">
         <h2>Servicios digitales</h2>
         <div class="highlight">

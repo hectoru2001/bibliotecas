@@ -1,0 +1,40 @@
+{% load static %}
+    
+    <footer>
+        <div class="footer-column">
+            <img src="{% static 'images/whitemuni.png' %}" alt="Ciudad Juárez Logo">
+            <p>Red de Bibliotecas Públicas Municipales de Ciudad Juárez, comprometidos con el fomento a la lectura y el acceso a la información.</p>
+            <div class="social-icons">
+                <a href="https://facebook.com" target="_blank" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                <a href="https://instagram.com" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+
+            </div>
+        </div>
+        <div class="footer-column">
+            <h3>Enlaces Rápidos</h3>
+            <ul>
+                <li><a href="{% url 'index' %}">Inicio</a></li>
+                <li><a href="{% url 'public_books' %}">Catálogo</a></li>
+                <li><a href="#">Servicios</a></li>
+                <li><a href="#">Eventos</a></li>
+                <li><a href="{% url 'public_biblios' %}">Bibliotecas</a></li>
+            </ul>
+        </div>
+        <div class="footer-column">
+            <h3>Servicios</h3>
+            <ul>
+                <li><a href="#">Préstamo de libros</a></li>
+                <li><a href="#">Recursos digitales</a></li>
+                <li><a href="#">Clubes de lectura</a></li>
+                <li><a href="#">Talleres culturales</a></li>
+                <li><a href="#">Sala de cómputo</a></li>
+            </ul>
+        </div>
+        <div class="footer-column">
+            <h3>Contacto</h3>
+            <p>Calle Ignacio Ramírez 351, 32030 Juárez, Chihuahua</p>
+            <p>(656) 123-4567</p>
+            <p><a href="mailto:bibliotecas@juarez.gob.mx">bibliotecas@juarez.gob.mx</a></p>
+        </div>
+        
+    </footer>

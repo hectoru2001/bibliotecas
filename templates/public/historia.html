@@ -261,50 +261,7 @@
     </style>
 </head>
 <body>
-    <header>
-
-        <div class="logo">
-            <a href="{% url 'public_index' %}">
-                <img src="{% static 'images/Juarez2024-2027-03.png' %}" alt="">
-            </a>
-        </div>
-        <nav class="main-nav">
-            <div class="nav-item">
-                <a href="#" class="nav-link">Sitios de interes</a>
-                <div class="submenu">
-                    <a href="#">Coleccion Digital DGB</a>
-                </div>
-            </div>
-            <div class="nav-item">
-                <a href="#" class="nav-link">Eventos</a>
-                <div class="submenu">
-                    <a href="#">Talleres</a>
-                    <a href="#">Charlas</a>
-                </div>
-            </div>
-            <div class="nav-item">
-                <a href="#" class="nav-link">Aprendizaje & Tecnologia</a>
-                <div class="submenu">
-                    <a href="#">Recursos Digitales</a>
-                </div>
-            </div>
-            <div class="nav-item">
-                <a href="#" class="nav-link">Servicios</a>
-                <div class="submenu">
-                    <a href="#">Préstamos</a>
-                    <a href="#">Consulta en Sala</a>
-                </div>
-            </div>
-            <div class="nav-item">
-                <a href="#" class="nav-link">Sobre nosotros</a>
-                <div class="submenu">
-                    <a href="#">Historia</a>
-                    <a href="#">Contacto</a>
-                </div>
-            </div>
-        </nav>
-        <a href="http://127.0.0.1:8000/usuarios/login/" class="account-btn">Mi Cuenta</a>
-    </header>
+    {% include 'navbar.html' %}
     <div class="container">
         <h2>Historia</h2>
         <div class="highlight">

@@ -901,62 +901,8 @@
     </style>
 </head>
 <body>
-<!-- Header -->
-    <header>
-        <div class="logo">
-            <img src="{% static 'images/newbiblioteca.png' %}" alt="Logo">
-        </div>
-        <nav class="main-nav">
 
-            <div class="nav-item">
-                <a href="#" class="nav-link">Eventos</a>
-                <div class="submenu">
-                    <a href="{% url 'lista_biblioaprende' %}">Agenda Biblio Aprende</a>
-                    <a href="{% url 'agenda_cultural' %}">Agenda Cultural</a>
-                </div>
-            </div>
-            <div class="nav-item">
-                <a href="#" class="nav-link">Aprendizaje & Tecnologia</a>
-                <div class="submenu">
-                    <a href="{% url 'coleccion_digital' %}">Colección Digital DGB</a>
-                    <a href="https://wordwall.net/es-mx/community/la-biblioteca">Juega y aprende</a>
-                </div>
-            </div>
-            <div class="nav-item">
-                <a href="#" class="nav-link">Servicios</a>
-                    <div class="submenu">
-                        <div class="dropdown">
-                            <a href="#">Préstamos</a>
-                            <div class="dropdown-content">
-                                <a href="{% url 'prestamos' %}">Préstamo de libros en salas</a>
-                                <a href="{% url 'prestamo_domicilio' %}">Préstamo de libros a domicilio</a>
-                            </div>
-                        </div>
-                        <a href="{% url 'credencializacion' %}">Credencialización</a>
-                        <a href="{% url 'referencia' %}">Referencia</a>
-                        <a href="{% url 'servicio_digital' %}">Servicios Digitales</a>
-                        <a href="{% url 'servicio_cultural' %}">Servicios Culturales</a>
-                        <a href="{% url 'servicio_educativo' %}">Servicio educativo</a>
-                    </div>
-            </div>
-            <div class="nav-item">
-                <a href="#" class="nav-link">Nuestra Historia</a>
-                <div class="submenu">
-                </div>
-            </div>
-            <div class="nav-item">
-                <a href="#" class="nav-link">Sobre nosotros</a>
-                <div class="submenu">
-                    <a href="{% url 'nosotros' %}">Nosotros</a>
-                    <a href="{% url 'contacto' %}">Contacto</a>
-                </div>
-            </div>
-        </nav>
-        <div class="nav-actions">
-            <button class="register-btn" onclick="register()">Registrarse</button>
-            <a href="/usuarios/login/" class="account-btn">Mi Cuenta</a>
-        </div>
-    </header>
+    {% include 'navbar.html' %}
 
     <!-- Botón para abrir el chatbot -->
     <button class="chatbot-button" onclick="toggleChatbot()">Asistente Virtual</button>
@@ -1030,13 +976,28 @@
     {# ====== FRANJA EXPLORAR BIBLIOTECAS ====== #}
     <section class="band band--overlap">
     <div class="intro intro--hero">
+        
         <h1>Descubre un mundo de conocimiento</h1>
         <p>Explora la red de Bibliotecas Públicas Municipales: colecciones, recursos digitales y eventos.</p>
+
+        <div class="mt-4 inline-flex items-center gap-3 px-4 py-2 rounded-xl bg-white/10 backdrop-blur-md shadow-md">
+                
+        <div class="leading-tight">
+            <p class="text-lg font-semibold">
+            {{ contador_visitas }}
+            </p>
+            <p class="text-xs opacity-70">
+            Visitas Totales
+            </p>
+        </div>
+
+        </div>
 
         <div class="intro-actions">
         <button class="btn-primary" onclick="exploreBiblios()">Explorar Bibliotecas</button>
         <a class="btn-ghost" href="{% url 'ubicaciones' %}">Ver ubicaciones</a>
         </div>
+
     </div>
     </section>
 
@@ -1095,44 +1056,7 @@
     </section>
 
     <!-- Footer -->
-    <footer>
-        <div class="footer-column">
-            <img src="{% static 'images/whitemuni.png' %}" alt="Ciudad Juárez Logo">
-            <p>Red de Bibliotecas Públicas Municipales de Ciudad Juárez, comprometidos con el fomento a la lectura y el acceso a la información.</p>
-            <div class="social-icons">
-                <a href="https://facebook.com" target="_blank" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
-                <a href="https://instagram.com" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-
-            </div>
-        </div>
-        <div class="footer-column">
-            <h3>Enlaces Rápidos</h3>
-            <ul>
-                <li><a href="#">Inicio</a></li>
-                <li><a href="#">Catálogo</a></li>
-                <li><a href="#">Servicios</a></li>
-                <li><a href="#">Eventos</a></li>
-                <li><a href="#">Bibliotecas</a></li>
-            </ul>
-        </div>
-        <div class="footer-column">
-            <h3>Servicios</h3>
-            <ul>
-                <li><a href="#">Préstamo de libros</a></li>
-                <li><a href="#">Recursos digitales</a></li>
-                <li><a href="#">Clubes de lectura</a></li>
-                <li><a href="#">Talleres culturales</a></li>
-                <li><a href="#">Sala de cómputo</a></li>
-            </ul>
-        </div>
-        <div class="footer-column">
-            <h3>Contacto</h3>
-            <p>Calle Ignacio Ramírez 351, 32030 Juárez, Chihuahua</p>
-            <p>(656) 123-4567</p>
-            <p><a href="mailto:bibliotecas@juarez.gob.mx">bibliotecas@juarez.gob.mx</a></p>
-        </div>
-        
-    </footer>
+    {% include 'footer.html' %}
 
     <div class="footer-bottom">
         <div class="footer-content-box"> <div class="footer-logos">
@@ -1147,7 +1071,7 @@
                 </div>
             </div>
             <p><a href="/media/documentos/avisoprivacidadbpm.pdf" target="_blank" class="privacy-link">Aviso de privacidad</a></p>
-            <p>Â© 2024 Bibliotecas Públicas Municipales | Gobierno Municipal de Ciudad Juárez 2024-2027</p>
+            <p>© 2024 Bibliotecas Públicas Municipales | Gobierno Municipal de Ciudad Juárez 2024-2027</p>
         </div>
     </div>
 

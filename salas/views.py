@@ -39,9 +39,7 @@ def reservar_sala(request):
             return render(request, 'public/salas.html', {'form': form})
     else:
         return redirect('salas')
-
-
-
+    
 def salas(request):
     form = SalaForm()
     return render(request, 'public/salas.html', {'form': form})

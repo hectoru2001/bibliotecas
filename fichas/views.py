@@ -1,18 +1,11 @@
 import csv
 import subprocess
-import tempfile
-import os
-import pytz
-from datetime import datetime
-from django.utils import timezone
 from django.shortcuts import render
-from django.utils.dateparse import parse_datetime
-from django.db import transaction
-from .models import Ficha
 import subprocess
 from django.shortcuts import render
 from .models import ImportacionFicha
-
+from django.contrib import messages
+import subprocess
 
 def obtener_tabla_access(ruta):
     try:
@@ -25,7 +18,6 @@ def obtener_tabla_access(ruta):
 
     except subprocess.CalledProcessError:
         return None
-
 
 def leer_access(ruta, tabla):
     proceso = subprocess.Popen(
@@ -42,9 +34,6 @@ def leer_access(ruta, tabla):
 
     proceso.stdout.close()
     proceso.wait()
-
-from django.contrib import messages
-import subprocess
 
 def importar_fichas(request):
 

@@ -4,6 +4,7 @@ from django.urls import reverse_lazy
 from django.views import generic
 from django.shortcuts import render, redirect
 from bibliotecas.models import Biblioteca
+from estadisticas.models import ContadorVisitas
 from .forms import BibliotecaForm
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
@@ -35,14 +36,6 @@ def admin_dashboard(request):
     
     # Inicio del mes actual
     inicio_mes = now.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
-    
-    # DEBUG: Imprimir en consola
-    print("="*50)
-    print(f"DEBUG - Fecha actual (now): {now}")
-    print(f"DEBUG - Inicio del mes: {inicio_mes}")
-    print(f"DEBUG - Hoy (localdate): {hoy}")
-    print(f"DEBUG - Total ReservaSala en BD: {ReservaSala.objects.count()}")
-    print(f"DEBUG - Total VisitaGuiada en BD: {VisitaGuiada.objects.count()}")
     
     # Mostrar algunas fechas de la BD para comparar
     if ReservaSala.objects.exists():
@@ -112,6 +105,12 @@ def admin_dashboard(request):
     
     return render(request, 'admin_dashboard.html', context)
 
+def validar_admin(request):
+    if request.user.is_authenticated and request.user.is_superuser:
+        return redirect('admin_dashboard')
+    else:
+        return redirect('user_dashboard')
+    
 
 class BibliotecaFormView(LoginRequiredMixin, UserPassesTestMixin, generic.FormView):
     template_name = 'bibliotecas/add_biblioteca.html'
@@ -159,7 +158,6 @@ class BibliotecaListView(LoginRequiredMixin, generic.ListView):
             )
         
         return queryset
-
 
 class BibliotecaDetailView(LoginRequiredMixin, UserPassesTestMixin, generic.DetailView):
     model = Biblioteca
@@ -211,7 +209,6 @@ class BibliotecaUpdateView(LoginRequiredMixin, UserPassesTestMixin, generic.Upda
         print(f"Form is invalid! Errors: {form.errors}")
         return super().form_invalid(form)
 
-
 class BibliotecaDeleteView(LoginRequiredMixin, UserPassesTestMixin, generic.DeleteView):
     model = Biblioteca
     template_name = 'bibliotecas/biblioteca_confirm_delete.html'
@@ -230,40 +227,23 @@ class BibliotecaDeleteView(LoginRequiredMixin, UserPassesTestMixin, generic.Dele
             return JsonResponse({'success': True})
         return redirect(success_url)
 
-
 def acceso_denegado(request):
     return render(request, 'acceso_denegado.html')
 
 def index(request):
 
     total_usuarios = Registro.objects.count()
-    
-    if request.user.is_authenticated:
-        if request.user.is_staff or request.user.is_superuser:
-            # Vista de administrador
-            context = {
-                'total_usuarios': total_usuarios,
-
-            }
-            return render(request, 'admin_dashboard.html', context)
-        else:
-            # Vista de usuario registrado
-            context = {
-                'total_usuarios': total_usuarios,
-            }
-            return render(request, 'users/user_dashboard.html', context)
-    else:
-        # Visitante no autenticado
-        context = {
-            'total_usuarios': total_usuarios,
-        }
-        return render(request, 'public/public_index.html', context)
-
-
-def public_index(request):
+    contador, _ = ContadorVisitas.objects.get_or_create(id=1)
+    contador.total += 1
+    contador.save()
 
     ultimos_libros = Libro.objects.order_by('fecha_creacion')[:4]
-    return render(request, 'public/public_index.html', {'ultimos_libros': ultimos_libros})
+    context = {
+        'total_usuarios': total_usuarios,
+        'ultimos_libros': ultimos_libros,
+        'contador_visitas': contador.total
+    }
+    return render(request, 'public/public_index.html', context)
 
 
 def contacto(request):

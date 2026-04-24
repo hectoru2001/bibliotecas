@@ -7,32 +7,29 @@ from django.utils import timezone
 from datetime import datetime
 import calendar
 
-def stats_form(request):
+def stats_y_datos(request):
     if request.method == 'POST':
-        form = LibraryVisitorStatsForm(request.POST)
-        if form.is_valid():
-            form.save()  # Saves the form data to the database
-            return redirect('stats_form')  # Redirect after saving
+        form_stats = LibraryVisitorStatsForm(request.POST, prefix='stats')
+        form_datos = DatosEstadisticosForm(request.POST, prefix='datos')
+
+        if form_stats.is_valid() and form_datos.is_valid():
+            form_stats.save()
+            form_datos.save()
+            return redirect('stats_y_datos')
     else:
-        form = LibraryVisitorStatsForm()
-    return render(request, 'stats/stats_form.html', {'form': form})
+        form_stats = LibraryVisitorStatsForm(prefix='stats')
+        form_datos = DatosEstadisticosForm(prefix='datos')
+
+    return render(request, 'stats/stats_form.html', {
+        'form_stats': form_stats,
+        'form_datos': form_datos
+    })
 
 def submit_stats(request):
     return render(request, 'stats/confirmation.html')
 
 def confirmation(request):
     return render(request, 'stats/confirmation.html')
-
-def datos_estadisticos(request):
-    if request.method == 'POST':
-        form = DatosEstadisticosForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('datos_estadisticos')
-    else:
-        form = DatosEstadisticosForm()
-    return render(request, 'stats/datos_estadisticos.html', {'form': form})
-
 
 def monthly_log(request):
     context = {'months': range(1, 13), 'years': range(2020, 2026)}

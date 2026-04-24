@@ -4,10 +4,7 @@ from django.urls import path
 from .views import RegisterView
 from . import views
 
-from .views import (
-    UserListView, UserDetailView,
-    UserCreateView, UserUpdateView, UserDeleteView
-)
+from .views import (UserListView, UserDetailView, UserCreateView, UserUpdateView, UserDeleteView)
 
 urlpatterns = [
     path('login/', views.CustomLoginView.as_view(), name='login'),

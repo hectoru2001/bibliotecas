@@ -5,6 +5,7 @@ class LibraryVisitorStats(models.Model):
 
     # Age Range: Adultos mayores de 60 años
     adults_over_60_males = models.PositiveIntegerField(default=0, verbose_name="Adultos mayores de 60 años - Hombres")
+
     adults_over_60_females = models.PositiveIntegerField(default=0, verbose_name="Adultos mayores de 60 años - Mujeres")
     adults_over_60_preschool = models.PositiveIntegerField(default=0, verbose_name=" - Preescolar")
     adults_over_60_primary = models.PositiveIntegerField(default=0, verbose_name=" - Primaria")
@@ -66,6 +67,33 @@ class LibraryVisitorStats(models.Model):
     kids_0_to_12_household = models.PositiveIntegerField(default=0, verbose_name="0 y 12 años - Hogar")
     kids_0_to_12_students = models.PositiveIntegerField(default=0, verbose_name=" 0 y 12 años - Estudiantes")
 
+    # Agregados extra
+    # Personas con discapacidad por rango de edad
+    adults_over_60_disabled = models.PositiveIntegerField(
+        default=0,
+        verbose_name="Adultos mayores de 60 años - Personas con discapacidad"
+    )
+
+    adults_30_to_59_disabled = models.PositiveIntegerField(
+        default=0,
+        verbose_name="Adultos de 30 a 59 años - Personas con discapacidad"
+    )
+
+    young_adults_18_to_29_disabled = models.PositiveIntegerField(
+        default=0,
+        verbose_name="Adultos de 18 a 29 años - Personas con discapacidad"
+    )
+
+    adolescents_13_to_17_disabled = models.PositiveIntegerField(
+        default=0,
+        verbose_name="Adolescentes de 13 a 17 años - Personas con discapacidad"
+    )
+
+    kids_0_to_12_disabled = models.PositiveIntegerField(
+        default=0,
+        verbose_name="Niños de 0 a 12 años - Personas con discapacidad"
+    )
+
     # Materials Used
     general_collection = models.PositiveIntegerField(default=0, verbose_name="Colección General")
     reference_collection = models.PositiveIntegerField(default=0, verbose_name="Colección de Consulta")
@@ -85,14 +113,26 @@ class LibraryVisitorStats(models.Model):
     # Actividades de Fomento a la Lectura
     reading_promotion_adults_over_60_males = models.PositiveIntegerField(default=0, verbose_name="Asistentes adultos mayores de 60 hombres - Adultos mayores de 60 años (Hombres)")
     reading_promotion_adults_over_60_females = models.PositiveIntegerField(default=0, verbose_name="Asistentes adultos mayores de 60 hombres - Adultos mayores de 60 años (Mujeres)")
+    reading_promotion_adults_over_60_invalids = models.PositiveIntegerField(default=0, verbose_name="Asistentes adultos mayores de 60 hombres - Adultos mayores de 60 años (Personas con discapacidad)")
     reading_promotion_adults_30_to_59_males = models.PositiveIntegerField(default=0, verbose_name="Asistentes adultos  - Adultos entre 30 y 59 años (Hombres)")
     reading_promotion_adults_30_to_59_females = models.PositiveIntegerField(default=0, verbose_name="Asistentes adultos  - Adultos entre 30 y 59 años (Mujeres)")
+    reading_promotion_adults_30_to_59_invalids = models.PositiveIntegerField(default=0, verbose_name="Asistentes adultos  - Adultos entre 30 y 59 años (Personas con discapacidad)")
     reading_promotion_young_adults_18_to_29_males = models.PositiveIntegerField(default=0, verbose_name="Asistentes adultos  - Adultos jóvenes entre 18 y 29 años (Hombres)")
     reading_promotion_young_adults_18_to_29_females = models.PositiveIntegerField(default=0, verbose_name="Asistentes adultos  - Adultos jóvenes entre 18 y 29 años (Mujeres)")
+    reading_promotion_young_adults_18_to_29_invalids = models.PositiveIntegerField(default=0, verbose_name="Asistentes adultos  - Adultos jóvenes entre 18 y 29 años (Personas con discapacidad)")
     reading_promotion_adolescents_13_to_17_males = models.PositiveIntegerField(default=0, verbose_name="Asistentes - Adolescentes entre 13 y 17 años (Hombres)")
     reading_promotion_adolescents_13_to_17_females = models.PositiveIntegerField(default=0, verbose_name="Asistentes  - Adolescentes entre 13 y 17 años (Mujeres)")
+    reading_promotion_adolescents_13_to_17_invalids = models.PositiveIntegerField(default=0, verbose_name="Asistentes - Adolescentes entre 13 y 17 años (Personas con discapacidad)")
     reading_promotion_children_0_to_12_males = models.PositiveIntegerField(default=0, verbose_name="Asistentes  - Niños entre 0 y 12 años (Hombres)")
     reading_promotion_children_0_to_12_females = models.PositiveIntegerField(default=0, verbose_name="Asistentes - Niños entre 0 y 12 años (Mujeres)")
+    reading_promotion_children_0_to_12_invalids = models.PositiveIntegerField(default=0, verbose_name="Asistentes - Niños entre 0 y 12 años (Personas con discapacidad)")
+
+
+    total_over_60 = models.PositiveIntegerField(default=0, verbose_name="Total Adultos mayores de 60 años")
+    total_30_to_59 = models.PositiveIntegerField(default=0, verbose_name="Total Adultos entre 30 y 59 años")
+    total_18_to_29 = models.PositiveIntegerField(default=0, verbose_name="Total Adultos jóvenes entre 18 y 29 años")
+    total_13_to_17 = models.PositiveIntegerField(default=0, verbose_name="Total Adolescentes entre 13 y 17 años")
+    total_0_to_12 = models.PositiveIntegerField(default=0, verbose_name="Total Niños entre 0 y 12 años")
 
     # Visitas Guiadas
     guided_visits_adults_over_60_males = models.PositiveIntegerField(default=0, verbose_name="Visitas Guiadas -  (Hombres)")
@@ -121,27 +161,41 @@ class LibraryVisitorStats(models.Model):
     cultural_activity_type = models.CharField(max_length=50, choices=CULTURAL_ACTIVITY_CHOICES, default='', blank=True, verbose_name="Tipo de Actividad Cultural")
     cultural_adults_over_60_males = models.PositiveIntegerField(default=0, verbose_name="Act. Cultural - Adultos mayores de 60 años (Hombres)")
     cultural_adults_over_60_females = models.PositiveIntegerField(default=0, verbose_name="Act. Cultural - Adultos mayores de 60 años (Mujeres)")
+    activities_adults_over_60 = models.PositiveIntegerField(default=0, verbose_name="Act. Cultural - Actividades")
     cultural_adults_30_to_59_males = models.PositiveIntegerField(default=0, verbose_name="Act. Cultural - Adultos entre 30 y 59 años (Hombres)")
     cultural_adults_30_to_59_females = models.PositiveIntegerField(default=0, verbose_name="Act. Cultural - Adultos entre 30 y 59 años (Mujeres)")
+    activities_adults_30_to_59 = models.PositiveIntegerField(default=0, verbose_name="Act. Cultural - Actividades")
     cultural_young_adults_18_to_29_males = models.PositiveIntegerField(default=0, verbose_name="Act. Cultural - Adultos jóvenes entre 18 y 29 años (Hombres)")
     cultural_young_adults_18_to_29_females = models.PositiveIntegerField(default=0, verbose_name="Act. Cultural - Adultos jóvenes entre 18 y 29 años (Mujeres)")
+    activities_young_adults_18_to_29 = models.PositiveIntegerField(default=0, verbose_name="Act. Cultural - Actividades")
     cultural_adolescents_13_to_17_males = models.PositiveIntegerField(default=0, verbose_name="Act. Cultural - Adolescentes entre 13 y 17 años (Hombres)")
     cultural_adolescents_13_to_17_females = models.PositiveIntegerField(default=0, verbose_name="Act. Cultural - Adolescentes entre 13 y 17 años (Mujeres)")
+    activities_adolescents_13_to_17 = models.PositiveIntegerField(default=0, verbose_name="Act. Cultural - Actividades")
     cultural_children_0_to_12_males = models.PositiveIntegerField(default=0, verbose_name="Act. Cultural - Niños entre 0 y 12 años (Hombres)")
     cultural_children_0_to_12_females = models.PositiveIntegerField(default=0, verbose_name="Act. Cultural - Niños entre 0 y 12 años (Mujeres)")
+    activities_children_0_to_12 = models.PositiveIntegerField(default=0, verbose_name="Act. Cultural - Actividades")
 
     # Módulo de Servicios Digitales
     digital_services_adults_over_60_males = models.PositiveIntegerField(default=0, verbose_name="Módulo de Servicios Digitales -  (Hombres)")
     digital_services_adults_over_60_females = models.PositiveIntegerField(default=0, verbose_name="Módulo de Servicios Digitales -  (Mujeres)")
+    courses_done_adults_over_60 = models.PositiveIntegerField(default=0, verbose_name="Módulo de Servicios Digitales - Cursos realizados por adultos mayores de 60 años")
+    course_attendees_adults_over_60 = models.PositiveIntegerField(default=0, verbose_name="Módulo de Servicios Digitales - Asistentes a cursos por adultos mayores de 60 años")
     digital_services_adults_30_to_59_males = models.PositiveIntegerField(default=0, verbose_name="Módulo de Servicios Digitales -  (Hombres)")
     digital_services_adults_30_to_59_females = models.PositiveIntegerField(default=0, verbose_name="Módulo de Servicios Digitales -  (Mujeres)")
+    courses_done_adults_30_to_59 = models.PositiveIntegerField(default=0, verbose_name="Módulo de Servicios Digitales - Cursos realizados por adultos entre 30 y 59 años")
+    course_attendees_adults_30_to_59 = models.PositiveIntegerField(default=0, verbose_name="Módulo de Servicios Digitales - Asistentes a cursos por adultos entre 30 y 59 años")
     digital_services_young_adults_18_to_29_males = models.PositiveIntegerField(default=0, verbose_name="Módulo de Servicios Digitales -  (Hombres)")
     digital_services_young_adults_18_to_29_females = models.PositiveIntegerField(default=0, verbose_name="Módulo de Servicios Digitales -  (Mujeres)")
+    courses_done_young_adults_18_to_29 = models.PositiveIntegerField(default=0, verbose_name="Módulo de Servicios Digitales - Cursos realizados por adultos jóvenes entre 18 y 29 años")
+    course_attendees_young_adults_18_to_29 = models.PositiveIntegerField(default=0, verbose_name="Módulo de Servicios Digitales - Asistentes a cursos por adultos jóvenes entre 18 y 29 años")
     digital_services_adolescents_13_to_17_males = models.PositiveIntegerField(default=0, verbose_name="Módulo de Servicios Digitales -  (Hombres)")
     digital_services_adolescents_13_to_17_females = models.PositiveIntegerField(default=0, verbose_name="Módulo de Servicios Digitales -  (Mujeres)")
+    courses_done_adolescents_13_to_17 = models.PositiveIntegerField(default=0, verbose_name="Módulo de Servicios Digitales - Cursos realizados por adolescentes entre 13 y 17 años")
+    course_attendees_adolescents_13_to_17 = models.PositiveIntegerField(default=0, verbose_name="Módulo de Servicios Digitales - Asistentes a cursos por adolescentes entre 13 y 17 años")
     digital_services_children_0_to_12_males = models.PositiveIntegerField(default=0, verbose_name="Módulo de Servicios Digitales -  (Hombres)")
     digital_services_children_0_to_12_females = models.PositiveIntegerField(default=0, verbose_name="Módulo de Servicios Digitales -  (Mujeres)")
-
+    courses_done_children_0_to_12 = models.PositiveIntegerField(default=0, verbose_name="Módulo de Servicios Digitales - Cursos realizados por niños entre 0 y 12 años")
+    course_attendees_children_0_to_12 = models.PositiveIntegerField(default=0, verbose_name="Módulo de Servicios Digitales - Asistentes a cursos por niños entre 0 y 12 años")
     
 
     class Meta:
@@ -156,9 +210,9 @@ class DatosEstadisticos(models.Model):
     date = models.DateField(auto_now_add=True)
 
     # ---- Sección 1: Libros Más Leídos ----
-    libros_general = models.PositiveIntegerField(default=0, verbose_name="General")
-    libros_consulta = models.PositiveIntegerField(default=0, verbose_name="Consulta")
-    libros_infantil = models.PositiveIntegerField(default=0, verbose_name="Infantil")
+    libros_general = models.CharField(max_length=100, default='', verbose_name="General")
+    libros_consulta = models.CharField(max_length=100, default='', verbose_name="Consulta")
+    libros_infantil = models.CharField(max_length=100, default='', verbose_name="Infantil")
 
     # ---- Sección 2: Colección SEP-Centenaria "Mochila Viajera" ----
     sep_titulos_consultados = models.TextField(blank=True, default='', verbose_name="Títulos más consultados en préstamo de colección")
@@ -192,3 +246,9 @@ class DatosEstadisticos(models.Model):
 
     def __str__(self):
         return f"Datos Estadísticos del {self.date}"
+
+class ContadorVisitas(models.Model):
+    total = models.IntegerField(default=0)
+
+    def __str__(self):
+        return f"Contador de Visitas: {self.total}"

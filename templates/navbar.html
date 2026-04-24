@@ -1,49 +1,123 @@
 {% load static %}
-<header>
-        <div class="logo">
-            <img src="{% static 'images/newbiblioteca.png' %}" alt="Logo">
-        </div>
-        <nav class="main-nav">
 
-            <div class="nav-item">
-                <a href="#" class="nav-link">Aprendizaje & Tecnologia</a>
-                <div class="submenu">
-                    <a href="{% url 'coleccion_digital' %}">Colección Digital DGB</a>
-                    <a href="https://wordwall.net/es-mx/community/la-biblioteca">Juega y aprende</a>
-                </div>
+<style>
+    .nav-item {
+position: relative;
+}
+
+/* Oculto por defecto */
+.submenu {
+display: none;
+position: absolute;
+top: 100%;
+right: 0;
+min-width: 180px;
+box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+border-radius: 8px;
+padding: 5px 0;
+z-index: 100;
+}
+
+/* Mostrar en hover */
+.nav-item:hover .submenu {
+display: block;
+}
+
+/* Links */
+.submenu a {
+display: block;
+padding: 10px 15px;
+text-decoration: none;
+}
+
+
+/* Divider */
+.divider {
+height: 1px;
+background: #e5e5e5;
+margin: 5px 0;
+}
+
+/* Logout rojo */
+.logout {
+color: #d9534f;
+}
+
+</style>
+
+<header>
+    <div class="logo">
+        <img src="{% static 'images/newbiblioteca.png' %}" alt="Logo">
+    </div>
+    <nav class="main-nav">
+
+        <div class="nav-item">
+            <a href="#" class="nav-link">Eventos</a>
+            <div class="submenu">
+                <a href="{% url 'lista_biblioaprende' %}">Agenda Biblio Aprende</a>
+                <a href="{% url 'agenda_cultural' %}">Agenda Cultural</a>
             </div>
-            <div class="nav-item">
-                <a href="#" class="nav-link">Servicios</a>
-                    <div class="submenu">
-                        <div class="dropdown">
-                            <a href="#">Préstamos</a>
-                            <div class="dropdown-content">
-                                <a href="{% url 'prestamos' %}">Préstamo de libros en salas</a>
-                                <a href="{% url 'prestamo_domicilio' %}">Préstamo de libros a domicilio</a>
-                            </div>
-                        </div>
-                        <a href="{% url 'credencializacion' %}">Credencialización</a>
-                        <a href="{% url 'referencia' %}">Referencia</a>
-                        <a href="{% url 'servicio_digital' %}">Servicios Digitales</a>
-                        <a href="{% url 'servicio_cultural' %}">Servicios Culturales</a>
-                        <a href="{% url 'servicio_educativo' %}">Servicio educativo</a>
-                    </div>
-            </div>
-            <div class="nav-item">
-                <a href="#" class="nav-link">Nuestra Historia</a>
-                <div class="submenu">
-                </div>
-            </div>
-            <div class="nav-item">
-                <a href="#" class="nav-link">Sobre nosotros</a>
-                <div class="submenu">
-                    <a href="{% url 'nosotros' %}">Nosotros</a>
-                    <a href="{% url 'contacto' %}">Contacto</a>
-                </div>
-            </div>
-        </nav>
-        <div class="nav-actions">
-            <button class="register-btn" onclick="register()">Registrarse</button>
-            <a href="/usuarios/login/" class="account-btn">Mi Cuenta</a>
         </div>
+        <div class="nav-item">
+            <a href="#" class="nav-link">Aprendizaje & Tecnología</a>
+            <div class="submenu">
+                <a href="{% url 'coleccion_digital' %}">Colección Digital DGB</a>
+                <a href="https://wordwall.net/es-mx/community/la-biblioteca">Juega y aprende</a>
+            </div>
+        </div>
+        <div class="nav-item">
+            <a href="#" class="nav-link">Servicios</a>
+                <div class="submenu">
+                    <div class="dropdown">
+                        <a href="#">Préstamos</a>
+                        <div class="dropdown-content">
+                            <a href="{% url 'prestamos' %}">Préstamo de libros en salas</a>
+                            <a href="{% url 'prestamo_domicilio' %}">Préstamo de libros a domicilio</a>
+                        </div>
+                    </div>
+                    <a href="{% url 'credencializacion' %}">Credencialización</a>
+                    <a href="{% url 'referencia' %}">Referencia</a>
+                    <a href="{% url 'servicio_digital' %}">Servicios Digitales</a>
+                    <a href="{% url 'servicio_cultural' %}">Servicios Culturales</a>
+                    <a href="{% url 'servicio_educativo' %}">Servicio Educativo</a>
+                </div>
+        </div>
+        <div class="nav-item">
+            <a href="#" class="nav-link">Nuestra Historia</a>
+            <div class="submenu">
+                <div class="dropdown">
+                    <a href="#">Libros Ciudad Juárez</a>
+                    <a href="#">Autores Ciudad Juárez</a>
+                </div>
+            </div>
+        </div>
+        <div class="nav-item">
+            <a href="#" class="nav-link">Sobre nosotros</a>
+            <div class="submenu">
+                <a href="{% url 'nosotros' %}">Nosotros</a>
+                <a href="{% url 'contacto' %}">Contacto</a>
+            </div>
+        </div>
+    </nav>
+    {% if user.is_authenticated %}
+
+    <div class="nav-item user-menu">
+        <span class="nav-link">
+            Bienvenido, {{ user.username|capfirst }}
+        </span>
+
+    <div class="submenu">
+        <a href="{% url 'validar_admin' %}">Panel de Control</a>
+        <div class="divider"></div>
+        <a href="/usuarios/logout/" class="logout">Cerrar sesión</a>
+    </div>
+
+    </div>
+    {% else %}
+    <div class="nav-actions">
+        <a class="register-btn" href="/usuarios/login/">Iniciar Sesión</a>
+        <a href="/usuarios/registro/" class="account-btn">Registrarse</a>
+    </div>
+    {% endif %}
+
     </header>

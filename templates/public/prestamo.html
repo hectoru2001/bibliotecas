@@ -1,7 +1,8 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    {% load static %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -288,68 +289,8 @@
 </head>
 <body>
 <!-- Header -->
-    <header>
-        <div class="logo">
-          <a href="{% url 'public_index' %}">
-            <img src="{% static 'images/muni.png' %}" alt="">
-          </a>
-        </div>
-        
-        </div>
-        <nav class="main-nav">
+    {% include 'navbar.html' %}
 
-            <div class="nav-item">
-                <a href="#" class="nav-link">Eventos</a>
-                <div class="submenu">
-                    <a href="{% url 'lista_biblioaprende' %}">Agenda Biblio Aprende</a>
-                    <a href="{% url 'agenda_cultural' %}">Agenda Cultural</a>
-                </div>
-            </div>
-            <div class="nav-item">
-                <a href="#" class="nav-link">Aprendizaje & Tecnologia</a>
-                <div class="submenu">
-                    <a href="{% url 'coleccion_digital' %}">Colección Digital DGB</a>
-                    <a href="https://wordwall.net/es-mx/community/la-biblioteca">Juega y aprende</a>
-                </div>
-            </div>
-            <div class="nav-item">
-                <a href="#" class="nav-link">Servicios</a>
-                    <div class="submenu">
-                        <div class="dropdown">
-                            <a href="#">Préstamos</a>
-                            <div class="dropdown-content">
-                                <a href="{% url 'prestamos' %}">Préstamo de libros en salas</a>
-                                <a href="{% url 'prestamo_domicilio' %}">Préstamo de libros a domicilio</a>
-                            </div>
-                        </div>
-                        <a href="{% url 'credencializacion' %}">Credencialización</a>
-                        <a href="{% url 'referencia' %}">Referencia</a>
-                        <a href="{% url 'servicio_digital' %}">Servicios Digitales</a>
-                        <a href="{% url 'servicio_cultural' %}">Servicios Culturales</a>
-                        <a href="{% url 'servicio_educativo' %}">Servicio educativo</a>
-                    </div>
-            </div>
-            <div class="nav-item">
-                <a href="#" class="nav-link">Nuestra Historia</a>
-                <div class="submenu">
-                </div>
-            </div>
-            <div class="nav-item">
-                <a href="#" class="nav-link">Sobre nosotros</a>
-                <div class="submenu">
-                    <a href="{% url 'nosotros' %}">Nosotros</a>
-                    <a href="{% url 'contacto' %}">Contacto</a>
-                </div>
-            </div>
-        </nav>
-        <div class="right-section">
-            <!-- Nuevo logo derecho -->
-            <img src="{% static 'images/educacion.png' %}" alt="Nuevo Logo" class="right-logo">
-
-            <!-- Botón Mi Cuenta -->
-            <a href="/usuarios/login/" class="account-btn">Mi Cuenta</a>
-        </div>
-    </header>
     
     <div class="container">
         <h2>Servicio de prestamos</h2>
@@ -372,44 +313,6 @@
     
     </div>
     <!-- Footer -->
-    <footer>
-        <div class="footer-column">
-            <img src="{% static 'images/jrz24-47-02.png' %}" alt="Ciudad Juárez Logo">
-            <p>Red de Bibliotecas Públicas Municipales de Ciudad Juárez, comprometidos con el fomento a la lectura y el acceso a la información.</p>
-            <div class="social-icons">
-                <a href="https://facebook.com" target="_blank" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
-                <a href="https://instagram.com" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-                <a href="https://youtube.com" target="_blank" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
-                <a href="https://twitter.com" target="_blank" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
-                
-            </div>
-        </div>
-        <div class="footer-column">
-            <h3>Enlaces Rápidos</h3>
-            <ul>
-                <li><a href="#">Inicio</a></li>
-                <li><a href="#">Catálogo</a></li>
-                <li><a href="#">Servicios</a></li>
-                <li><a href="#">Eventos</a></li>
-                <li><a href="#">Bibliotecas</a></li>
-            </ul>
-        </div>
-        <div class="footer-column">
-            <h3>Servicios</h3>
-            <ul>
-                <li><a href="#">Préstamo de libros</a></li>
-                <li><a href="#">Recursos digitales</a></li>
-                <li><a href="#">Clubes de lectura</a></li>
-                <li><a href="#">Talleres culturales</a></li>
-                <li><a href="#">Sala de cómputo</a></li>
-            </ul>
-        </div>
-        <div class="footer-column">
-            <h3>Contacto</h3>
-            <p>?? Av. 16 de Septiembre 1818, Ciudad Juárez, Chihuahua</p>
-            <p>?? (656) 123-4567</p>
-            <p>?? <a href="mailto:bibliotecas@juarez.gob.mx">bibliotecas@juarez.gob.mx</a></p>
-        </div>
-    </footer>
+    {% include 'footer.html' %}
 </body>
 </html>

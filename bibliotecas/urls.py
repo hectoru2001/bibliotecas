@@ -4,7 +4,6 @@ from . import views
 
 urlpatterns = [
     path('', index, name='index'),
-    path('public/', views.public_index, name='public_index'),
     path('contacto/', views.contacto, name='contacto'),
     path('bibliotecas/', BibliotecaListView.as_view(), name='list_biblioteca'),
     path('bibliotecas/agregar/', BibliotecaFormView.as_view(), name='add_biblioteca'),
@@ -25,4 +24,5 @@ urlpatterns = [
     path('ubicaciones/', views.ubicaciones, name='ubicaciones'),
     path('visita/', views.visita, name='visita'),
     path('public_biblios/', views.public_biblios, name='public_biblios'),
+    path('valida_admin/', views.validar_admin, name='validar_admin'),
 ]
